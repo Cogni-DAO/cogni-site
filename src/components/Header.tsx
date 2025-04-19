@@ -3,6 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Search } from 'lucide-react';
 import { Input } from './ui/input';
+import { ThemeToggle } from './ThemeToggle';
 
 const Header = () => {
   return (
@@ -27,6 +28,7 @@ const Header = () => {
           <Link to="/explore" className="text-sm font-medium hover:text-knowledge">Explore</Link>
           <Link to="/recent" className="text-sm font-medium hover:text-knowledge">Recent</Link>
           <Link to="/contribute" className="text-sm font-medium hover:text-knowledge">Contribute</Link>
+          <ThemeToggle />
         </nav>
       </div>
     </header>
