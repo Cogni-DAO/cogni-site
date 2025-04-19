@@ -99,3 +99,39 @@
 .content-section {
   @apply border-t pt-4 mt-4 first:border-t-0 first:pt-0 first:mt-0;
 }
+
+/* Graph view styles */
+.center-node {
+  font-weight: bold;
+}
+
+.related-node {
+  cursor: pointer;
+  background-color: hsl(var(--card));
+  color: hsl(var(--card-foreground));
+  border: 1px solid hsl(var(--border));
+  padding: 6px 12px;
+  border-radius: 4px;
+}
+
+.related-node:hover {
+  border-color: hsl(var(--accent));
+  box-shadow: 0 0 0 1px hsl(var(--accent));
+}
+
+.knowledge-edge {
+  stroke: hsl(var(--primary));
+}
+
+.block-specific-edge {
+  stroke: hsl(var(--accent));
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

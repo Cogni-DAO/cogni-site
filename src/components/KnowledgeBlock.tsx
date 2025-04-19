@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { ThumbsUp, ThumbsDown, MessageCircle } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { ThumbsUp, ThumbsDown, MessageCircle, Network } from 'lucide-react';
 import { Button } from './ui/button';
 import { Progress } from './ui/progress';
 import { useToast } from '@/components/ui/use-toast';
@@ -24,6 +24,7 @@ const KnowledgeBlock: React.FC<KnowledgeBlockProps> = ({
   const [showFeedback, setShowFeedback] = useState(false);
   const [feedbackText, setFeedbackText] = useState('');
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleFeedback = (type: 'positive' | 'negative') => {
     setShowFeedback(true);
@@ -42,6 +43,10 @@ const KnowledgeBlock: React.FC<KnowledgeBlockProps> = ({
     });
     setShowFeedback(false);
     setFeedbackText('');
+  };
+
+  const viewGraphView = () => {
+    navigate(`/graph/${window.location.pathname.split('/').pop()}?blockId=${id}`);
   };
 
   return (
@@ -97,6 +102,15 @@ const KnowledgeBlock: React.FC<KnowledgeBlockProps> = ({
             >
               <ThumbsDown className="h-3 w-3 mr-1" />
               Needs Work
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-8 text-xs"
+              onClick={viewGraphView}
+            >
+              <Network className="h-3 w-3 mr-1" />
+              View Graph
             </Button>
           </div>
           

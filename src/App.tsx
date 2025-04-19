@@ -10,6 +10,7 @@ import HomePage from "./pages/HomePage";
 import NodePage from "./pages/NodePage";
 import ExplorePage from "./pages/ExplorePage";
 import NotFound from "./pages/NotFound";
+import GraphView from "./pages/GraphView";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +26,7 @@ const App = () => (
               <Route path="/" element={<HomePage />} />
               <Route path="/node/:slug" element={<NodePage />} />
               <Route path="/explore" element={<ExplorePage />} />
+              <Route path="/graph/:slug" element={<GraphView />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
