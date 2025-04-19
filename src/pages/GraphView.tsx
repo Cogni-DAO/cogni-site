@@ -17,21 +17,19 @@ import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTheme } from 'next-themes';
 
-// Define our node types
-interface KnowledgeNode {
+// Define our custom interface for the knowledge node in this component
+interface KnowledgeNodeDisplay {
   id: string;
   title: string;
   slug: string;
-  content: string;
   description: string;
-  links: { id: string; title: string; slug: string }[];
+  verificationPercentage: number;
   blocks: {
     id: string;
     title: string;
     content: string;
     links: { title: string; slug: string }[];
   }[];
-  verificationPercentage: number;
   relatedNodes: {
     id: string;
     title: string;
@@ -49,7 +47,7 @@ const GraphView = () => {
 
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const [centerNode, setCenterNode] = useState<KnowledgeNode | null>(null);
+  const [centerNode, setCenterNode] = useState<KnowledgeNodeDisplay | null>(null);
 
   // Generate graph nodes and edges based on the current knowledge node
   const generateGraph = useCallback(() => {
@@ -65,7 +63,19 @@ const GraphView = () => {
     // Get related nodes for this node
     const relatedNodesData = getRelatedKnowledgeNodes(currentNode.relatedNodes);
     
-    setCenterNode(currentNode);
+    // Create a display-compatible version of the knowledge node
+    const displayNode: KnowledgeNodeDisplay = {
+      ...currentNode,
+      relatedNodes: relatedNodesData.map(node => ({
+        id: node.id,
+        title: node.title,
+        slug: node.slug,
+        description: node.description,
+        verificationPercentage: node.verificationPercentage
+      }))
+    };
+    
+    setCenterNode(displayNode);
 
     // Create nodes array - center node and related nodes
     const flowNodes: Node[] = [
