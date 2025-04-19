@@ -15,7 +15,12 @@ import GraphView from "./pages/GraphView";
 const queryClient = new QueryClient();
 
 const App = () => (
-  <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+  <ThemeProvider
+    attribute="class"
+    defaultTheme="system"
+    enableSystem
+    disableTransitionOnChange={false} // Enable transitions between themes
+  >
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />

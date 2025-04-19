@@ -83,8 +83,20 @@
     @apply border-border;
   }
 
+  html {
+    /* Ensure html has background color matching theme */
+    @apply bg-background;
+  }
+
   body {
     @apply bg-background text-foreground;
+    /* Add transition for smooth theme changes */
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* Add page transition effect */
+  #root main {
+    @apply transition-opacity duration-300;
   }
 
   .knowledge-link {
@@ -112,6 +124,7 @@
   border: 1px solid hsl(var(--border));
   padding: 6px 12px;
   border-radius: 4px;
+  transition: all 0.2s ease;
 }
 
 .related-node:hover {
@@ -134,4 +147,11 @@
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
+}
+
+/* Ensure smooth theme changes for all elements */
+*,
+*::before,
+*::after {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
