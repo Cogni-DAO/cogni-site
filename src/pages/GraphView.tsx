@@ -1,7 +1,8 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams, useSearchParams, Link } from 'react-router-dom';
-import ReactFlow, {
+import {
+  ReactFlow,
   Controls,
   Background,
   useNodesState,
@@ -11,7 +12,7 @@ import ReactFlow, {
   Edge,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { knowledgeNodes } from '@/data/knowledgeNodes';
+import { getKnowledgeNodeBySlug, getRelatedKnowledgeNodes } from '@/data/knowledgeNodes';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTheme } from 'next-themes';
@@ -55,12 +56,15 @@ const GraphView = () => {
     if (!slug) return;
 
     // Find the current node
-    const currentNode = knowledgeNodes.find(node => node.slug === slug);
+    const currentNode = getKnowledgeNodeBySlug(slug);
     if (!currentNode) {
       console.error(`Node with slug "${slug}" not found`);
       return;
     }
 
+    // Get related nodes for this node
+    const relatedNodesData = getRelatedKnowledgeNodes(currentNode.relatedNodes);
+    
     setCenterNode(currentNode);
 
     // Create nodes array - center node and related nodes
@@ -79,9 +83,9 @@ const GraphView = () => {
 
     // Add related nodes in a circle around the center
     const radius = 250;
-    const relatedNodesCount = currentNode.relatedNodes.length;
+    const relatedNodesCount = relatedNodesData.length;
     
-    currentNode.relatedNodes.forEach((relatedNode, index) => {
+    relatedNodesData.forEach((relatedNode, index) => {
       // Calculate position in a circle
       const angle = (index / relatedNodesCount) * 2 * Math.PI;
       const x = radius * Math.cos(angle);
@@ -100,7 +104,7 @@ const GraphView = () => {
     });
 
     // Create edges from center to all related nodes
-    const flowEdges: Edge[] = currentNode.relatedNodes.map(relatedNode => ({
+    const flowEdges: Edge[] = relatedNodesData.map(relatedNode => ({
       id: `e-${currentNode.id}-${relatedNode.id}`,
       source: currentNode.id,
       target: relatedNode.id,
@@ -114,7 +118,7 @@ const GraphView = () => {
       if (block) {
         // For each link in the block, add a special edge if the target exists
         block.links.forEach(link => {
-          const targetNode = currentNode.relatedNodes.find(rn => rn.slug === link.slug);
+          const targetNode = relatedNodesData.find(rn => rn.slug === link.slug);
           if (targetNode) {
             flowEdges.push({
               id: `e-block-${blockId}-${targetNode.id}`,
