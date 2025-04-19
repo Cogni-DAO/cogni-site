@@ -51,7 +51,7 @@
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
 
-    --card: 222.2 84% 4.9%;
+    --card: 222.2 84% 9.8%;
     --card-foreground: 210 40% 98%;
 
     --popover: 222.2 84% 4.9%;
@@ -93,7 +93,7 @@
 }
 
 .content-block {
-  @apply border border-border rounded-lg p-4 hover:shadow-sm transition-shadow duration-200 bg-white;
+  @apply border border-border rounded-lg p-4 hover:shadow-sm transition-shadow duration-200 bg-card text-card-foreground;
 }
 
 .content-section {
