@@ -1,209 +1,40 @@
 
-import React, { useCallback, useEffect, useState } from 'react';
-import { useParams, useSearchParams, Link, useNavigate } from 'react-router-dom';
-import {
-  ReactFlow,
-  Controls,
-  Background,
-  useNodesState,
-  useEdgesState,
-  BackgroundVariant,
-  Node,
-  Edge,
-} from '@xyflow/react';
+import React, { useEffect } from 'react';
+import { useParams, useSearchParams } from 'react-router-dom';
 import '@xyflow/react/dist/style.css';
-import { getKnowledgeNodeBySlug, getRelatedKnowledgeNodes } from '@/data/knowledgeNodes';
-import { ArrowLeft } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { useTheme } from 'next-themes';
-
-// Define our custom interface for the knowledge node in this component
-interface KnowledgeNodeDisplay {
-  id: string;
-  title: string;
-  slug: string;
-  description: string;
-  verificationPercentage: number;
-  blocks: {
-    id: string;
-    title: string;
-    content: string;
-    links: { title: string; slug: string }[];
-  }[];
-  relatedNodes: {
-    id: string;
-    title: string;
-    slug: string;
-    description: string;
-    verificationPercentage: number;
-  }[];
-}
+import GraphHeader from '@/components/graph/GraphHeader';
+import GraphVisualization from '@/components/graph/GraphVisualization';
+import { useKnowledgeGraph } from '@/hooks/useKnowledgeGraph';
 
 const GraphView = () => {
   const { slug } = useParams<{ slug: string }>();
   const [searchParams] = useSearchParams();
   const blockId = searchParams.get('blockId');
-  const { theme } = useTheme();
-  const navigate = useNavigate();
 
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const [centerNode, setCenterNode] = useState<KnowledgeNodeDisplay | null>(null);
-
-  // Generate graph nodes and edges based on the current knowledge node
-  const generateGraph = useCallback(() => {
-    if (!slug) return;
-
-    // Find the current node
-    const currentNode = getKnowledgeNodeBySlug(slug);
-    if (!currentNode) {
-      console.error(`Node with slug "${slug}" not found`);
-      return;
-    }
-
-    // Get related nodes for this node
-    const relatedNodesData = getRelatedKnowledgeNodes(currentNode.relatedNodes);
-    
-    // Create a display-compatible version of the knowledge node
-    const displayNode: KnowledgeNodeDisplay = {
-      ...currentNode,
-      relatedNodes: relatedNodesData.map(node => ({
-        id: node.id,
-        title: node.title,
-        slug: node.slug,
-        description: node.description,
-        verificationPercentage: node.verificationPercentage
-      }))
-    };
-    
-    setCenterNode(displayNode);
-
-    // Create nodes array - center node and related nodes
-    const flowNodes: Node[] = [
-      {
-        id: currentNode.id,
-        position: { x: 0, y: 0 },
-        data: { 
-          label: currentNode.title,
-          verificationPercentage: currentNode.verificationPercentage
-        },
-        type: 'centerNode',
-        className: 'center-node'
-      }
-    ];
-
-    // Add related nodes in a circle around the center
-    const radius = 250;
-    const relatedNodesCount = relatedNodesData.length;
-    
-    relatedNodesData.forEach((relatedNode, index) => {
-      // Calculate position in a circle
-      const angle = (index / relatedNodesCount) * 2 * Math.PI;
-      const x = radius * Math.cos(angle);
-      const y = radius * Math.sin(angle);
-
-      flowNodes.push({
-        id: relatedNode.id,
-        position: { x, y },
-        data: { 
-          label: relatedNode.title,
-          slug: relatedNode.slug,
-          verificationPercentage: relatedNode.verificationPercentage
-        },
-        className: 'related-node'
-      });
-    });
-
-    // Create edges from center to all related nodes
-    const flowEdges: Edge[] = relatedNodesData.map(relatedNode => ({
-      id: `e-${currentNode.id}-${relatedNode.id}`,
-      source: currentNode.id,
-      target: relatedNode.id,
-      animated: true,
-      className: 'knowledge-edge'
-    }));
-
-    // If a specific block is specified, highlight its connections
-    if (blockId) {
-      const block = currentNode.blocks.find(b => b.id === blockId);
-      if (block) {
-        // For each link in the block, add a special edge if the target exists
-        block.links.forEach(link => {
-          const targetNode = relatedNodesData.find(rn => rn.slug === link.slug);
-          if (targetNode) {
-            flowEdges.push({
-              id: `e-block-${blockId}-${targetNode.id}`,
-              source: currentNode.id,
-              target: targetNode.id,
-              animated: true,
-              style: { strokeWidth: 3 },
-              className: 'block-specific-edge'
-            });
-          }
-        });
-      }
-    }
-
-    setNodes(flowNodes);
-    setEdges(flowEdges);
-  }, [slug, blockId, setNodes, setEdges]);
+  const {
+    nodes,
+    edges,
+    centerNode,
+    onNodesChange,
+    onEdgesChange,
+    generateGraph
+  } = useKnowledgeGraph(slug, blockId);
 
   useEffect(() => {
     generateGraph();
   }, [generateGraph]);
 
-  const handleNodeClick = (event: React.MouseEvent, node: Node) => {
-    // Only handle clicks on related nodes, not the center node
-    if (node.id !== centerNode?.id && node.data.slug) {
-      event.preventDefault();
-      // Use navigate instead of directly changing window.location
-      navigate(`/node/${node.data.slug}`);
-    }
-  };
-
-  // Custom Node components
-  const nodeTypes = {
-    centerNode: ({ data }: { data: any }) => (
-      <div className="px-4 py-2 rounded-lg bg-primary text-primary-foreground font-bold">
-        {data.label}
-      </div>
-    )
-  };
-
   return (
     <div className="flex flex-col h-[calc(100vh-4rem)]">
-      <div className="flex items-center p-4 border-b">
-        <Link to={`/node/${slug}`}>
-          <Button variant="ghost" size="sm" className="gap-2">
-            <ArrowLeft size={16} />
-            Back to {centerNode?.title || 'Knowledge Node'}
-          </Button>
-        </Link>
-        <h1 className="ml-4 text-xl font-serif font-bold">
-          Knowledge Graph: {centerNode?.title || 'Loading...'}
-        </h1>
-      </div>
-      
+      <GraphHeader slug={slug} centerNode={centerNode} />
       <div className="flex-1 w-full">
-        <ReactFlow
+        <GraphVisualization
           nodes={nodes}
           edges={edges}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
-          nodeTypes={nodeTypes}
-          onNodeClick={handleNodeClick}
-          fitView
-          attributionPosition="bottom-right"
-          className="bg-background"
-        >
-          <Background 
-            variant={BackgroundVariant.Dots} 
-            color={theme === 'dark' ? '#2a2a2a' : '#f0f0f0'}
-            gap={20} 
-            size={1} 
-          />
-          <Controls position="bottom-right" />
-        </ReactFlow>
+          centerId={centerNode?.id}
+        />
       </div>
     </div>
   );
