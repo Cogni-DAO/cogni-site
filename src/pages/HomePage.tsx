@@ -1,38 +1,26 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { getFeaturedKnowledgeNodes } from '@/data/knowledgeNodes';
 import KnowledgeRelatedNodes from '@/components/KnowledgeRelatedNodes';
 import { Button } from '@/components/ui/button';
-import { Search, ArrowRight, BookOpen, Users, Star } from 'lucide-react';
+import { ArrowRight, BookOpen, Users, Star } from 'lucide-react';
+import ChatInterface from '@/components/ChatInterface';
 
 const HomePage = () => {
   const featuredNodes = getFeaturedKnowledgeNodes(6);
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl">
-      {/* Hero Section */}
+      {/* Hero Section with Chat */}
       <div className="py-10 md:py-16 text-center">
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-4 bg-gradient-to-r from-knowledge-dark via-knowledge to-knowledge-light bg-clip-text text-transparent">
           Fractal Knowledge Nexus
         </h1>
         <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-8">
-          Explore recursively structured knowledge with human verification and interconnected concepts.
+          Chat with your knowledge base and explore interconnected concepts.
         </p>
         
-        <div className="flex flex-col md:flex-row items-center justify-center gap-4 max-w-xl mx-auto">
-          <div className="relative w-full">
-            <Input 
-              placeholder="Search for a concept..." 
-              className="pr-10 w-full"
-            />
-            <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          </div>
-          <Button className="w-full md:w-auto" size="lg">
-            <BookOpen className="mr-2 h-4 w-4" />
-            Start Exploring
-          </Button>
-        </div>
+        <ChatInterface />
       </div>
       
       {/* Features Section */}
@@ -95,8 +83,5 @@ const HomePage = () => {
     </div>
   );
 };
-
-// Import Input separately to avoid JSX issues with other components
-import { Input } from '@/components/ui/input';
 
 export default HomePage;
