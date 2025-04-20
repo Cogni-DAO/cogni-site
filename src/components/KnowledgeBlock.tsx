@@ -1,10 +1,17 @@
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ThumbsUp, ThumbsDown, MessageCircle, Network } from 'lucide-react';
+import { ThumbsUp, ThumbsDown, MessageSquare, Network } from 'lucide-react';
 import { Button } from './ui/button';
 import { Progress } from './ui/progress';
-import { useToast } from '@/components/ui/use-toast';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/hooks/use-toast';
 
 interface KnowledgeBlockProps {
   id: string;
@@ -14,6 +21,29 @@ interface KnowledgeBlockProps {
   verificationPercentage: number;
 }
 
+interface FloatingCommentButtonProps {
+  onComment: () => void;
+  position: { x: number; y: number } | null;
+}
+
+const FloatingCommentButton: React.FC<FloatingCommentButtonProps> = ({ onComment, position }) => {
+  if (!position) return null;
+
+  return (
+    <div
+      className="fixed z-50 bg-primary text-primary-foreground rounded-full p-2 shadow-lg cursor-pointer hover:bg-primary/90 transition-colors"
+      style={{
+        left: `${position.x}px`,
+        top: `${position.y}px`,
+        transform: 'translate(-50%, -50%)'
+      }}
+      onClick={onComment}
+    >
+      <MessageSquare className="h-4 w-4" />
+    </div>
+  );
+};
+
 const KnowledgeBlock: React.FC<KnowledgeBlockProps> = ({
   id,
   title,
@@ -21,28 +51,64 @@ const KnowledgeBlock: React.FC<KnowledgeBlockProps> = ({
   links,
   verificationPercentage
 }) => {
-  const [showFeedback, setShowFeedback] = useState(false);
-  const [feedbackText, setFeedbackText] = useState('');
+  const [commentPosition, setCommentPosition] = useState<{ x: number; y: number } | null>(null);
+  const [isCommentDialogOpen, setIsCommentDialogOpen] = useState(false);
+  const [commentText, setCommentText] = useState('');
+  const contentRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const handleSelectionChange = () => {
+      const selection = window.getSelection();
+      if (!selection || selection.isCollapsed || !contentRef.current) {
+        setCommentPosition(null);
+        return;
+      }
+
+      // Check if the selection is within our content div
+      let node = selection.anchorNode;
+      while (node && node !== contentRef.current) {
+        node = node.parentNode;
+      }
+      if (!node) {
+        setCommentPosition(null);
+        return;
+      }
+
+      const range = selection.getRangeAt(0);
+      const rect = range.getBoundingClientRect();
+      
+      setCommentPosition({
+        x: rect.left + (rect.width / 2),
+        y: rect.top - 20
+      });
+    };
+
+    document.addEventListener('selectionchange', handleSelectionChange);
+    return () => document.removeEventListener('selectionchange', handleSelectionChange);
+  }, []);
+
   const handleFeedback = (type: 'positive' | 'negative') => {
-    setShowFeedback(true);
     toast({
-      title: type === 'positive' ? 'Thank you for your positive feedback!' : 'We appreciate your input',
-      description: 'Your feedback helps improve the quality of our knowledge base.',
+      title: type === 'positive' ? "Thank you for your positive feedback!" : "We appreciate your input",
+      description: "Your feedback helps improve the quality of our knowledge base.",
       duration: 3000,
     });
   };
 
-  const submitTextFeedback = () => {
-    toast({
-      title: 'Feedback Submitted',
-      description: 'Thank you for helping improve this content.',
-      duration: 3000,
-    });
-    setShowFeedback(false);
-    setFeedbackText('');
+  const submitComment = () => {
+    if (commentText.trim()) {
+      toast({
+        title: "Comment Submitted",
+        description: "Thank you for helping improve this content.",
+        duration: 3000,
+      });
+      setCommentText('');
+    }
+    setIsCommentDialogOpen(false);
+    setCommentPosition(null);
+    window.getSelection()?.removeAllRanges();
   };
 
   const viewGraphView = () => {
@@ -62,7 +128,7 @@ const KnowledgeBlock: React.FC<KnowledgeBlockProps> = ({
       <Progress value={verificationPercentage} className="h-1 mb-3" />
       
       <div className="prose prose-sm max-w-none">
-        <p>{content}</p>
+        <div ref={contentRef}>{content}</div>
         
         {links.length > 0 && (
           <div className="mt-3">
@@ -103,48 +169,45 @@ const KnowledgeBlock: React.FC<KnowledgeBlockProps> = ({
               <ThumbsDown className="h-3 w-3 mr-1" />
               Needs Work
             </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              className="h-8 text-xs"
-              onClick={viewGraphView}
-            >
-              <Network className="h-3 w-3 mr-1" />
-              View Graph
-            </Button>
           </div>
           
           <Button 
             variant="ghost" 
             size="sm" 
             className="h-8 text-xs"
-            onClick={() => setShowFeedback(!showFeedback)}
+            onClick={viewGraphView}
           >
-            <MessageCircle className="h-3 w-3 mr-1" />
-            Add Comment
+            <Network className="h-3 w-3 mr-1" />
+            View Graph
           </Button>
         </div>
-        
-        {showFeedback && (
-          <div className="mt-3 animate-fade-in">
-            <textarea
-              className="w-full p-2 text-sm border rounded-md h-24"
-              placeholder="Please provide specific feedback to help improve this content..."
-              value={feedbackText}
-              onChange={(e) => setFeedbackText(e.target.value)}
+      </div>
+
+      <FloatingCommentButton 
+        position={commentPosition}
+        onComment={() => setIsCommentDialogOpen(true)}
+      />
+
+      <Dialog open={isCommentDialogOpen} onOpenChange={setIsCommentDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add Comment</DialogTitle>
+          </DialogHeader>
+          <div className="mt-4">
+            <Textarea
+              placeholder="Write your comment here..."
+              value={commentText}
+              onChange={(e) => setCommentText(e.target.value)}
+              className="min-h-[100px]"
             />
-            <div className="flex justify-end mt-2">
-              <Button 
-                size="sm" 
-                onClick={submitTextFeedback}
-                disabled={!feedbackText.trim()}
-              >
-                Submit Feedback
+            <div className="flex justify-end mt-4">
+              <Button onClick={submitComment} disabled={!commentText.trim()}>
+                Submit Comment
               </Button>
             </div>
           </div>
-        )}
-      </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
