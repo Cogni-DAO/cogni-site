@@ -1,6 +1,6 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
-import { useParams, useSearchParams, Link } from 'react-router-dom';
+import { useParams, useSearchParams, Link, useNavigate } from 'react-router-dom';
 import {
   ReactFlow,
   Controls,
@@ -44,6 +44,7 @@ const GraphView = () => {
   const [searchParams] = useSearchParams();
   const blockId = searchParams.get('blockId');
   const { theme } = useTheme();
+  const navigate = useNavigate();
 
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
@@ -154,7 +155,9 @@ const GraphView = () => {
   const handleNodeClick = (event: React.MouseEvent, node: Node) => {
     // Only handle clicks on related nodes, not the center node
     if (node.id !== centerNode?.id && node.data.slug) {
-      window.location.href = `/node/${node.data.slug}`;
+      event.preventDefault();
+      // Use navigate instead of directly changing window.location
+      navigate(`/node/${node.data.slug}`);
     }
   };
 
