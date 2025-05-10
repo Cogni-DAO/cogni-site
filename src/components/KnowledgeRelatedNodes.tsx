@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { Progress } from './ui/progress';
 import { ArrowRight } from 'lucide-react';
 
@@ -24,9 +23,9 @@ const KnowledgeRelatedNodes: React.FC<KnowledgeRelatedNodesProps> = ({ nodes }) 
       <h2 className="text-xl font-serif font-bold mb-4">Related Knowledge Nodes</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {nodes.map((node) => (
-          <Link 
-            key={node.id} 
-            to={`/node/${node.slug}`}
+          <Link
+            key={node.id}
+            href={`/node/${node.slug}`}
             className="content-block hover:border-knowledge group"
           >
             <div className="flex items-start justify-between mb-2">
@@ -38,16 +37,16 @@ const KnowledgeRelatedNodes: React.FC<KnowledgeRelatedNodesProps> = ({ nodes }) 
                 <span className="font-medium">{node.verificationPercentage}%</span>
               </div>
             </div>
-            
+
             <Progress value={node.verificationPercentage} className="h-1 mb-3" />
-            
+
             <p className="text-sm text-muted-foreground line-clamp-2">
               {node.description}
             </p>
-            
+
             <div className="mt-2 flex justify-end">
               <span className="text-xs text-knowledge flex items-center">
-                Explore 
+                Explore
                 <ArrowRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform duration-200" />
               </span>
             </div>
