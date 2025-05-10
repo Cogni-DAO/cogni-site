@@ -1,0 +1,56 @@
+{
+    "type": "Task",
+    "status": "todo",
+    "project": "CogniMemorySystem-POC",
+    "name": "Integrate Full Chat Functionality & Clean-Up",
+    "description": "Merge real chat components copied from legacy repo into the new Next.js codebase, remove demo chat, deduplicate shared UI/util code, wire API & schemas, and prune unused components.",
+    "implementation_details": {
+        "target_files": [
+            "pages/index.tsx",
+            "src/components/ChatInterface.tsx (delete)",
+            "src/components/New/Chat.tsx",
+            "src/components/New/Message.tsx",
+            "src/components/New/SuggestedActions.tsx",
+            "src/components/New/chat-interface/index.ts",
+            "src/components/New/icons.tsx",
+            "src/components/ui/button.tsx",
+            "src/components/ui/textarea.tsx",
+            "src/components/New/ui/button.tsx",
+            "src/components/New/ui/textarea.tsx",
+            "src/lib/utils.ts",
+            "src/lib/new-lib/utils.ts",
+            "app/api/ai/chat/route.ts",
+            "src/schemas/generated/*",
+            "src/schemas/*",
+            "src/utils/validateInput.ts"
+        ]
+    },
+    "action_items": [
+        "[ ] Relocate components under src/components/New/ to src/components/chat/ (remove the New/ layer). Export an index barrel if convenient.",
+        "[ ] Delete placeholder src/components/ChatInterface.tsx and remove its import/usage from pages/index.tsx. Replace with new <Chat /> component.",
+        "[ ] Consolidate Button component: keep src/components/ui/button.tsx as single source of truth, merging incoming variant props if different; update imports in new chat files.",
+        "[ ] Consolidate Textarea component the same way.",
+        "[ ] Merge additional helpers from src/lib/new-lib/utils.ts into existing src/lib/utils.ts and delete the duplicate path; fix related imports.",
+        "[ ] Ensure app/api/ai/chat/route.ts is in place and exports the handler (no conversion needed under Next.js).",
+        "[ ] Update Chat component fetch calls to use `/api/ai/chat` (absolute relative path).",
+        "[ ] Move all files in src/schemas/generated/ to src/schemas/, add barrel index.ts exporting relevant types; delete example_usage.ts if not referenced.",
+        "[ ] Ensure validateInput.ts is used by the new chat flow; if not, integrate validation or remove file.",
+        "[ ] Run `next lint` and fix any import/path errors.",
+        "[ ] Remove any UI components, hooks, or pages left totally unreferenced after this migration (grep for imports)."
+    ],
+    "test_criteria": [
+        "[ ] `next build` completes with no TypeScript errors.",
+        "[ ] Chat interactions work locally via `next dev`: user sends message, assistant responds via API.",
+        "[ ] Duplicate utils/button/textarea files are removed; only one canonical file for each remains.",
+        "[ ] /api/ai/chat returns expected JSON matching chat_response.d.ts schema.",
+        "[ ] No remaining references to ChatInterface component in codebase.",
+        "[ ] Lighthouse score not degraded after chat integration."
+    ],
+    "success_criteria": [
+        "[ ] Full-featured chat experience replaces demo stub on Home (pages/index.tsx).",
+        "[ ] Clean, deduplicated component & util structure in src/components/ui and src/lib.",
+        "[ ] All chat request/response schemas live under src/schemas/ and are imported via a barrel.",
+        "[ ] next build, lint and any tests run green on CI pipeline or local runs."
+    ],
+    "current_status": "Chat files copied; awaiting Next.js migration completion before integration."
+}

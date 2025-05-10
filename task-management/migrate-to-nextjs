@@ -1,0 +1,66 @@
+{
+    "type": "Task",
+    "status": "todo",
+    "project": "CogniMemorySystem-POC",
+    "name": "Migrate Front-End from Vite to Next.js (SSR Ready)",
+    "description": "Switch the React front-end to Next.js 14 (app router) to enable built-in API routes, SSR, and routing. This will make integrating the legacy chat API handler trivial and set us up for future server-rendered features.",
+    "implementation_details": {
+        "target_files": [
+            "package.json",
+            "vite.config.ts (delete)",
+            "src/main.tsx (delete)",
+            "index.html (delete)",
+            "tsconfig.json",
+            "tsconfig.app.json (delete) ",
+            "tsconfig.node.json (delete)",
+            "next.config.js (new)",
+            "postcss.config.js",
+            "tailwind.config.ts",
+            "src/pages/* -> pages/*.tsx (move/rename)",
+            "src/components/**/* (retain)",
+            "pages/_app.tsx (new)",
+            "pages/_document.tsx (new optional)",
+            "app/api/ai/chat/route.ts (move intact from copied repo)",
+            "src/lib/utils.ts (keep)",
+            "src/styles/globals.css (new)"
+        ]
+    },
+    "action_items": [
+        "[ ] Install Next.js + peer deps: npm i next@latest react@latest react-dom@latest.",
+        "[ ] Replace dev scripts in package.json with: \"dev\": \"next dev\", \"build\": \"next build\", \"start\": \"next start\"; remove vite-specific scripts & deps.",
+        "[ ] Delete vite.config.ts and related devDependencies (@vitejs/plugin-react-swc).",
+        "[ ] Remove React Router: uninstall react-router-dom; excise <BrowserRouter> wrapper (currently in src/main.tsx) and convert Links/Routes to Next.js pages & <Link> component.",
+        "[ ] Move/rename React pages: \n       • src/pages/HomePage.tsx → pages/index.tsx\n       • src/pages/ExplorePage.tsx → pages/explore.tsx\n       • src/pages/GraphView.tsx → pages/graph.tsx\n       • src/pages/NodePage.tsx → pages/node/[id].tsx (dynamic route)\n       • src/pages/NotFound.tsx → pages/404.tsx",
+        "[ ] Create pages/_app.tsx to set up Tailwind CSS, ThemeProvider, React-Query QueryClientProvider, etc.",
+        "[ ] Configure Tailwind for Next (postcss + tailwind config unchanged; just ensure content paths include `./pages/**/*.{ts,tsx}` & `./app/**/*.{ts,tsx}` ).",
+        "[ ] Update tsconfig paths alias (\"@/*\") and add `baseUrl` of `.`.",
+        "[ ] Add next.config.js with `compiler.styledComponents` or any needed options; configure `webpack` alias if cva utils path remains.",
+        "[ ] Port chat API handler: copy app/api/ai/chat/route.ts (from legacy) into `app/api/ai/chat/route.ts` (Next 14 app router). No modifications expected.",
+        "[ ] Update front-end Chat component fetch calls to hit `/api/ai/chat` (no /api proxy needed).",
+        "[ ] Remove index.html and src/main.tsx (Vite entry) since Next handles document root.",
+        "[ ] Verify lint + typecheck passes: `next build --no-lint` then enable lint fix.",
+        "[ ] Configure `next lint` or keep eslint config as is, adding Next.js ESLint plugin.",
+        "[ ] Update README with new dev commands.",
+        "[ ] Replace <img> with `next/image` if any assets are present.",
+        "[ ] Test custom font rendering under Next.js font optimization pipeline (e.g., Google Fonts, local fonts).",
+        "[ ] Decide whether to keep classic `pages/` router long-term or move to `app/` directory; document decision in README and code comments. If moving, consider placing everything under `src/app` to keep existing src/ structure."
+    ],
+    "test_criteria": [
+        "[ ] `next dev` launches site on localhost:3000 with all routes rendering successfully.",
+        "[ ] SSR pages load via View Source (html rendered).",
+        "[ ] Chat works end-to-end via `/api/ai/chat` route.",
+        "[ ] No remaining imports from `react-router-dom` or Vite packages.",
+        "[ ] `next build` completes with zero TypeScript errors.",
+        "[ ] Lighthouse basic score not significantly regressed.",
+        "[ ] Storybook (if later added) still compiles.",
+        "[ ] Project page (`/graph` or `/explore`) fetches and renders initial data server-side (confirm via network tab or View Source)."
+    ],
+    "success_criteria": [
+        "[ ] Production build served by `next start` is functional.",
+        "[ ] Chat API route requires no additional server for deployment (handled by Next).",
+        "[ ] Tailwind styles and shadcn components render correctly.",
+        "[ ] Project CI pipeline updated & green (build/lint/test)."
+    ],
+    "current_status": "Discussion stage — awaiting approval to proceed with migration.",
+    "note": "We're starting with classic `pages/` routing for clarity, while using App Router for API routes. This hybrid keeps migration simple now and leaves an easy path to full `app/` migration later."
+}
