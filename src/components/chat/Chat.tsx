@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Message, MessageComponent } from "./Message";
 import { SuggestedActions } from "./SuggestedActions";
 import { motion, AnimatePresence } from "framer-motion";
-import { generateUUID } from "@/lib/new-lib/utils";
+import { generateUUID } from "@/lib/utils";
 import type { ChatRequest } from "@/schemas/generated/chatrequest";
 import { createChatRequest } from "@/utils/validateInput";
 
@@ -106,7 +106,7 @@ export default function Chat() {
       const chatRequest: ChatRequest = createChatRequest(userMessage, { stream: true });
 
       // Send the request to the API with streaming enabled
-      const response = await fetch("/api/ai/chat", {
+      const response = await fetch("/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
