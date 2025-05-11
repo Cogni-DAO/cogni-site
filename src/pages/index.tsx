@@ -1,28 +1,38 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { getFeaturedKnowledgeNodes } from '@/data/knowledgeNodes';
-import KnowledgeRelatedNodes from '@/components/KnowledgeRelatedNodes';
-import { Button } from '@/components/ui/button';
-import { ArrowRight, BookOpen, Users, Star } from 'lucide-react';
-import ChatInterface from '@/components/ChatInterface';
+// Update this page (the content is just a fallback if you fail to update the page)
 
-const HomePage = () => {
-  const featuredNodes = getFeaturedKnowledgeNodes(6);
+import React from 'react'
+import Link from 'next/link'
+import Image from 'next/image'
+import { getFeaturedKnowledgeNodes } from '@/data/knowledgeNodes'
+import KnowledgeRelatedNodes from '@/components/KnowledgeRelatedNodes'
+import { Button } from '@/components/ui/button'
+import { ArrowRight, BookOpen, Users, Star } from 'lucide-react'
+import Chat from '@/components/chat'
+
+export default function Home() {
+  const featuredNodes = getFeaturedKnowledgeNodes(6)
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl">
       {/* Hero Section with Chat */}
       <div className="py-10 md:py-16 text-center">
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-4 bg-gradient-to-r from-knowledge-dark via-knowledge to-knowledge-light bg-clip-text text-transparent">
-          Fractal Knowledge Nexus
+        <div className="mb-6 flex justify-center">
+          <Image
+            src="/TransparentBrainOnly.png"
+            alt="CogniDAO Brain Logo"
+            width={180}
+            height={180}
+            priority
+          />
+        </div>
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-4 pb-5 bg-gradient-to-r from-[hsl(var(--brain-purple))] via-[hsl(var(--accent))] to-[hsl(var(--brain-cyan))] bg-clip-text text-transparent">
+          CogniDAO
         </h1>
         <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-8">
-          Chat with your knowledge base and explore interconnected concepts.
+          Empowering communities to build fairly
         </p>
-        
-        <ChatInterface />
+        <Chat />
       </div>
-      
       {/* Features Section */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 py-12 border-y border-border my-12">
         <div className="text-center">
@@ -34,7 +44,6 @@ const HomePage = () => {
             Explore complex topics broken down into intuitive, interconnected blocks of information.
           </p>
         </div>
-        
         <div className="text-center">
           <div className="bg-secondary h-12 w-12 rounded-full flex items-center justify-center mx-auto mb-4">
             <Users className="h-6 w-6 text-knowledge" />
@@ -44,7 +53,6 @@ const HomePage = () => {
             Content is progressively refined through expert and community verification processes.
           </p>
         </div>
-        
         <div className="text-center">
           <div className="bg-secondary h-12 w-12 rounded-full flex items-center justify-center mx-auto mb-4">
             <Star className="h-6 w-6 text-knowledge" />
@@ -55,25 +63,22 @@ const HomePage = () => {
           </p>
         </div>
       </div>
-      
       {/* Featured Knowledge Nodes */}
       <div className="mb-12">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-serif font-bold">Featured Knowledge Nodes</h2>
-          <Link to="/explore" className="text-knowledge flex items-center hover:text-knowledge-dark">
+          <Link href="/explore" className="text-knowledge flex items-center hover:text-knowledge-dark">
             View all nodes
             <ArrowRight className="h-4 w-4 ml-1" />
           </Link>
         </div>
-        
         <KnowledgeRelatedNodes nodes={featuredNodes} />
       </div>
-      
       {/* CTA Section */}
       <div className="bg-secondary/60 rounded-xl p-8 text-center mb-12">
         <h2 className="text-2xl font-serif font-bold mb-4">Ready to Contribute?</h2>
         <p className="text-muted-foreground max-w-2xl mx-auto mb-6">
-          Join our community of knowledge contributors and help refine, expand, and verify the fractal knowledge base.
+          Join our community of knowledge contributors and help refine, expand, and verify the CogniDAO knowledge base.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button variant="outline">Learn More</Button>
@@ -81,7 +86,5 @@ const HomePage = () => {
         </div>
       </div>
     </div>
-  );
-};
-
-export default HomePage;
+  )
+}

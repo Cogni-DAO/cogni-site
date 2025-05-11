@@ -1,6 +1,5 @@
-
 import React, { useState, useRef, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import Link from 'next/link';
 import { ThumbsUp, ThumbsDown, MessageSquare, Network } from 'lucide-react';
 import { Button } from './ui/button';
 import { Progress } from './ui/progress';
@@ -56,7 +55,6 @@ const KnowledgeBlock: React.FC<KnowledgeBlockProps> = ({
   const [commentText, setCommentText] = useState('');
   const contentRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
-  const navigate = useNavigate();
 
   useEffect(() => {
     const handleSelectionChange = () => {
@@ -78,7 +76,7 @@ const KnowledgeBlock: React.FC<KnowledgeBlockProps> = ({
 
       const range = selection.getRangeAt(0);
       const rect = range.getBoundingClientRect();
-      
+
       setCommentPosition({
         x: rect.left + (rect.width / 2),
         y: rect.top - 20
@@ -112,7 +110,7 @@ const KnowledgeBlock: React.FC<KnowledgeBlockProps> = ({
   };
 
   const viewGraphView = () => {
-    navigate(`/graph/${window.location.pathname.split('/').pop()}?blockId=${id}`);
+    // Implement viewGraphView function
   };
 
   return (
@@ -124,20 +122,20 @@ const KnowledgeBlock: React.FC<KnowledgeBlockProps> = ({
           <span className="font-medium">{verificationPercentage}%</span>
         </div>
       </div>
-      
+
       <Progress value={verificationPercentage} className="h-1 mb-3" />
-      
+
       <div className="prose prose-sm max-w-none">
         <div ref={contentRef}>{content}</div>
-        
+
         {links.length > 0 && (
           <div className="mt-3">
             <span className="text-sm font-medium">Related Nodes:</span>
             <div className="flex flex-wrap gap-2 mt-1">
               {links.map((link) => (
-                <Link 
+                <Link
                   key={link.slug}
-                  to={`/node/${link.slug}`}
+                  href={`/node/${link.slug}`}
                   className="text-xs bg-secondary px-2 py-1 rounded-full hover:bg-knowledge hover:text-white transition-colors duration-200"
                 >
                   {link.title}
@@ -147,22 +145,22 @@ const KnowledgeBlock: React.FC<KnowledgeBlockProps> = ({
           </div>
         )}
       </div>
-      
+
       <div className="mt-4 border-t border-border pt-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <Button 
-              variant="outline" 
-              size="sm" 
+            <Button
+              variant="outline"
+              size="sm"
               className="h-8 text-xs"
               onClick={() => handleFeedback('positive')}
             >
               <ThumbsUp className="h-3 w-3 mr-1" />
               Helpful
             </Button>
-            <Button 
-              variant="outline" 
-              size="sm" 
+            <Button
+              variant="outline"
+              size="sm"
               className="h-8 text-xs"
               onClick={() => handleFeedback('negative')}
             >
@@ -170,10 +168,10 @@ const KnowledgeBlock: React.FC<KnowledgeBlockProps> = ({
               Needs Work
             </Button>
           </div>
-          
-          <Button 
-            variant="ghost" 
-            size="sm" 
+
+          <Button
+            variant="ghost"
+            size="sm"
             className="h-8 text-xs"
             onClick={viewGraphView}
           >
@@ -183,7 +181,7 @@ const KnowledgeBlock: React.FC<KnowledgeBlockProps> = ({
         </div>
       </div>
 
-      <FloatingCommentButton 
+      <FloatingCommentButton
         position={commentPosition}
         onComment={() => setIsCommentDialogOpen(true)}
       />

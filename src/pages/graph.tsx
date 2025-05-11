@@ -1,15 +1,18 @@
-
 import React, { useEffect } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import '@xyflow/react/dist/style.css';
 import GraphHeader from '@/components/graph/GraphHeader';
 import GraphVisualization from '@/components/graph/GraphVisualization';
 import { useKnowledgeGraph } from '@/hooks/useKnowledgeGraph';
 
-const GraphView = () => {
-  const { slug } = useParams<{ slug: string }>();
-  const [searchParams] = useSearchParams();
-  const blockId = searchParams.get('blockId');
+const GraphPage = () => {
+  const router = useRouter();
+  const slugFromQuery = router.query.slug;
+  const blockIdFromQuery = router.query.blockId;
+
+  // Ensure slug and blockId are strings or undefined, not string[]
+  const slug = Array.isArray(slugFromQuery) ? slugFromQuery[0] : slugFromQuery;
+  const blockId = Array.isArray(blockIdFromQuery) ? blockIdFromQuery[0] : blockIdFromQuery;
 
   const {
     nodes,
@@ -40,4 +43,4 @@ const GraphView = () => {
   );
 };
 
-export default GraphView;
+export default GraphPage;
