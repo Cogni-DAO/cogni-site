@@ -1,6 +1,5 @@
-
 import React, { useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { getKnowledgeNodeBySlug, getRelatedKnowledgeNodes } from '@/data/knowledgeNodes';
 import KnowledgeBlock from '@/components/KnowledgeBlock';
 import KnowledgeRelatedNodes from '@/components/KnowledgeRelatedNodes';
@@ -9,44 +8,45 @@ import { ChevronLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const NodePage = () => {
-  const { slug } = useParams<{ slug: string }>();
-  const navigate = useNavigate();
-  
+  const router = useRouter();
+  const slugFromQuery = router.query.slug;
+  const slug = Array.isArray(slugFromQuery) ? slugFromQuery[0] : slugFromQuery;
+
   const node = slug ? getKnowledgeNodeBySlug(slug) : null;
   const relatedNodes = node ? getRelatedKnowledgeNodes(node.relatedNodes) : [];
-  
+
   useEffect(() => {
     // Scroll to top when node changes
     window.scrollTo(0, 0);
-    
+
     // If node not found, could redirect to 404 or home
     if (slug && !node) {
       console.error(`Node with slug "${slug}" not found`);
     }
   }, [slug, node]);
-  
+
   if (!node) {
     return (
       <div className="container mx-auto px-4 py-16 text-center">
         <h1 className="text-2xl font-bold mb-4">Knowledge Node Not Found</h1>
-        <p className="text-muted-foreground mb-6">The node you're looking for doesn't exist or has been moved.</p>
-        <Button onClick={() => navigate('/')}>Return to Homepage</Button>
+        <p className="text-muted-foreground mb-6">The node you&apos;re looking for doesn&apos;t exist or has been moved.</p>
+        <Button onClick={() => router.push('/')}>Return to Homepage</Button>
       </div>
     );
   }
-  
+
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
-      <Button 
-        variant="ghost" 
-        size="sm" 
-        className="mb-4" 
-        onClick={() => navigate(-1)}
+      <Button
+        variant="ghost"
+        size="sm"
+        className="mb-4"
+        onClick={() => router.back()}
       >
         <ChevronLeft className="h-4 w-4 mr-1" />
         Back
       </Button>
-      
+
       {/* Node Header */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-2">
@@ -56,12 +56,12 @@ const NodePage = () => {
             <span className="font-medium">{node.verificationPercentage}%</span>
           </div>
         </div>
-        
+
         <Progress value={node.verificationPercentage} className="h-2 mb-4" />
-        
+
         <p className="text-lg text-muted-foreground">{node.description}</p>
       </div>
-      
+
       {/* Knowledge Blocks */}
       <div className="space-y-6 mb-12">
         {node.blocks.map((block) => (
@@ -75,7 +75,7 @@ const NodePage = () => {
           />
         ))}
       </div>
-      
+
       {/* Related Nodes */}
       {relatedNodes.length > 0 && (
         <KnowledgeRelatedNodes nodes={relatedNodes} />

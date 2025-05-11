@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -9,7 +8,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import Layout from "./components/Layout";
 import HomePage from "./pages/HomePage";
 import NodePage from "./pages/NodePage";
-import ExplorePage from "./pages/ExplorePage";
+import ExplorePage from "./pages/explore";
 import NotFound from "./pages/NotFound";
 import GraphView from "./pages/GraphView";
 import "./App.css";
@@ -19,7 +18,7 @@ const queryClient = new QueryClient();
 // Wrapper for animated routes
 const AnimatedRoutes = () => {
   const location = useLocation();
-  
+
   return (
     <AnimatePresence mode="wait">
       <motion.div
