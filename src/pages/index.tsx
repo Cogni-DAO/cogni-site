@@ -6,7 +6,7 @@ import { getFeaturedKnowledgeNodes } from '@/data/knowledgeNodes'
 import KnowledgeRelatedNodes from '@/components/KnowledgeRelatedNodes'
 import { Button } from '@/components/ui/button'
 import { ArrowRight, BookOpen, Users, Star } from 'lucide-react'
-import ChatInterface from '@/components/ChatInterface'
+import Chat from '@/components/chat'
 
 export default function Home() {
   const featuredNodes = getFeaturedKnowledgeNodes(6)
@@ -21,7 +21,7 @@ export default function Home() {
         <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-8">
           Chat with your knowledge base and explore interconnected concepts.
         </p>
-        <ChatInterface />
+        <Chat />
       </div>
       {/* Features Section */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 py-12 border-y border-border my-12">

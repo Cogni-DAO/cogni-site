@@ -26,10 +26,10 @@
         ]
     },
     "action_items": [
-        "[ ] Relocate components under src/components/New/ to src/components/chat/ (remove the New/ layer). Export an index barrel if convenient.",
-        "[ ] Delete placeholder src/components/ChatInterface.tsx and remove its import/usage from pages/index.tsx. Replace with new <Chat /> component.",
-        "[ ] Consolidate Button component: keep src/components/ui/button.tsx as single source of truth, merging incoming variant props if different; update imports in new chat files.",
-        "[ ] Consolidate Textarea component the same way.",
+        "[x] Relocate components under src/components/New/ to src/components/chat/ (remove the New/ layer). Export an index barrel if convenient.",
+        "[x] Delete placeholder src/components/ChatInterface.tsx and remove its import/usage from pages/index.tsx. Replace with new <Chat /> component.",
+        "[x] Consolidate Button component: keep src/components/ui/button.tsx as single source of truth, merging incoming variant props if different; update imports in new chat files.",
+        "[x] Consolidate Textarea component the same way.",
         "[ ] Merge additional helpers from src/lib/new-lib/utils.ts into existing src/lib/utils.ts and delete the duplicate path; fix related imports.",
         "[ ] Ensure app/api/ai/chat/route.ts is in place and exports the handler (no conversion needed under Next.js).",
         "[ ] Update Chat component fetch calls to use `/api/ai/chat` (absolute relative path).",

@@ -2,8 +2,8 @@
 
 import { useRef, useEffect, useState, useCallback } from "react";
 import { SendIcon, StopIcon } from "./icons";
-import { Button } from "./ui/button";
-import { Textarea } from "./ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { Message, MessageComponent } from "./Message";
 import { SuggestedActions } from "./SuggestedActions";
 import { motion, AnimatePresence } from "framer-motion";
