@@ -3,7 +3,7 @@
  */
 
 import type { ChatMessage } from './chat_message';
-import type { ChatResponse } from './chat_response';
+// import type { ChatResponse } from './chat_response'; // Removed unused import
 
 /**
  * Send a message to the Cogni API
@@ -38,20 +38,20 @@ async function sendMessage(message: string): Promise<ReadableStream> {
 async function processStreamingResponse(stream: ReadableStream): Promise<void> {
   const reader = stream.getReader();
   const decoder = new TextDecoder();
-  
+
   try {
     while (true) {
       const { done, value } = await reader.read();
-      
+
       if (done) {
         console.log('Stream complete');
         break;
       }
-      
+
       // Decode the chunk and append to UI
       const chunk = decoder.decode(value);
       console.log('Received chunk:', chunk);
-      
+
       // In a real application, you would update the UI here
       // updateChatUI(chunk);
     }
@@ -60,9 +60,8 @@ async function processStreamingResponse(stream: ReadableStream): Promise<void> {
   }
 }
 
-/**
- * Example usage in an async function
- */
+/*
+// Removed unused function exampleUsage
 async function exampleUsage() {
   try {
     // Send a message to the API
@@ -74,6 +73,7 @@ async function exampleUsage() {
     console.error('Error:', error);
   }
 }
+*/
 
 // Call the example function
 // exampleUsage();

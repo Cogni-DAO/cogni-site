@@ -35,7 +35,7 @@
         "[x] Configure Tailwind for Next: content paths in tailwind.config.ts updated for src/ and app/ directories.",
         "[x] Update tsconfig paths alias (\\\"@/*\\\") and add `baseUrl` of `.`.",
         "[ ] Add next.config.js with `compiler.styledComponents` or any needed options; configure `webpack` alias if cva utils path remains.",
-        "[~] Verify lint + typecheck passes: `next lint` runs (shows pre-existing errors); `next build` pending.",
+        "[x] Verify lint + typecheck passes: `next lint` runs and `next build` completes successfully.",
         "[x] Configure `next lint`: .eslintrc.json created with Next.js ESLint plugin.",
         "[ ] Fix default 404 page - currently using a standard Next.js 404 page.",
         "[ ] Update README with new dev commands.",

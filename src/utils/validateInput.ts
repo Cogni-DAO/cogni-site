@@ -5,8 +5,8 @@
  */
 
 import Ajv from 'ajv';
-import schema from '@/schemas/chatrequest.schema.json';
-import type { ChatRequest } from '@/schemas/chatrequest';
+import schema from '@/schemas/generated/chatrequest.schema.json';
+import type { ChatRequest } from '@/schemas/generated/chatrequest';
 
 // Initialize Ajv instance
 const ajv = new Ajv();
@@ -32,17 +32,17 @@ export function validateChatRequest(input: unknown): input is ChatRequest {
  * @returns A valid ChatRequest object
  */
 export function createChatRequest(
-  message: string, 
+  message: string,
   options?: { stream?: boolean }
 ): ChatRequest {
   const request: ChatRequest = {
     message,
     stream: options?.stream ?? true
   };
-  
+
   if (!validateChatRequest(request)) {
     throw new Error('Invalid ChatRequest: ' + JSON.stringify(validate.errors));
   }
-  
+
   return request;
 } 

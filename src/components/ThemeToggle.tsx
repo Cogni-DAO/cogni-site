@@ -1,11 +1,10 @@
-
 import React, { useEffect, useState } from 'react';
 import { useTheme } from "next-themes";
 import { Moon, Sun } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 
 export const ThemeToggle = () => {
-  const { theme, setTheme, resolvedTheme } = useTheme();
+  const { setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   // Make sure component is mounted before accessing theme
@@ -17,7 +16,7 @@ export const ThemeToggle = () => {
   const toggleTheme = () => {
     const newTheme = resolvedTheme === 'dark' ? 'light' : 'dark';
     setTheme(newTheme);
-    
+
     // Set a class on the HTML element immediately to prevent flash
     if (newTheme === 'dark') {
       document.documentElement.classList.add('dark');
@@ -28,9 +27,9 @@ export const ThemeToggle = () => {
 
   if (!mounted) {
     return (
-      <Button 
-        variant="ghost" 
-        size="icon" 
+      <Button
+        variant="ghost"
+        size="icon"
         className="hover:bg-secondary opacity-0"
       >
         <Sun className="h-[1.2rem] w-[1.2rem]" />
@@ -39,9 +38,9 @@ export const ThemeToggle = () => {
   }
 
   return (
-    <Button 
-      variant="ghost" 
-      size="icon" 
+    <Button
+      variant="ghost"
+      size="icon"
       onClick={toggleTheme}
       className="hover:bg-secondary"
       aria-label={`Switch to ${resolvedTheme === 'dark' ? 'light' : 'dark'} mode`}

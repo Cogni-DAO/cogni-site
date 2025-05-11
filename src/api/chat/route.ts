@@ -1,9 +1,11 @@
 // import { openai } from '@ai-sdk/openai';
-import type { ChatRequest } from '@/schemas/chatrequest';
-import { createChatRequest, validateChatRequest } from '@/utils/validateInput';
+// import type { ChatRequest } from '@/schemas/chatrequest'; // Commented out
+// import { createChatRequest, validateChatRequest } from '@/utils/validateInput'; // Commented out
 // New imports for the complete request schema and history messages
-import type { CompleteQueryRequest } from '@/schemas/completequeryrequest';
-import type { HistoryMessage } from '@/schemas/historymessage';
+import type { CompleteQueryRequest, HistoryMessage, Role as HistoryMessageRole } from '@/schemas/generated/completequeryrequest';
+// import { OpenAIStream, StreamingTextResponse } from 'ai'; // Commented out
+// import { ChatRequest, createChatRequest, validateChatRequest } from '@/schemas/chat'; // Already commented
+// import { здоровый } from '@/utils/requests'; // Commented out
 
 /**
  * Chat API Route
@@ -17,22 +19,39 @@ import type { HistoryMessage } from '@/schemas/historymessage';
  * Includes error handling for JSON parsing and API communication.
  */
 
+// IMPORTANT! Set the runtime to edge
+export const runtime = 'edge';
+
 export async function POST(req: Request) {
   try {
     // Parse the request
     const clonedReq = req.clone();
     const rawBody = await clonedReq.text();
     console.log('[Chat API] Received raw body:', rawBody); // Log raw body
-    
-    // Parse the JSON manually with error handling
-    let body;
+
+    // Use types from schemas
+    interface IncomingMessageItem {
+      role?: HistoryMessageRole | string; // Allow schema roles or any string from input
+      content?: string;
+      text?: string; // Frontend might send 'text' alias for content
+    }
+
+    interface IncomingApiRequestBody {
+      messages?: IncomingMessageItem[];
+      message?: string; // For simple, non-array messages
+      model?: string;   // Assuming model and temp are strings/numbers from body
+      temperature?: number;
+      system_message?: string;
+    }
+
+    let body: IncomingApiRequestBody;
     try {
-      body = JSON.parse(rawBody);
+      body = JSON.parse(rawBody) as IncomingApiRequestBody;
     } catch (e) {
       console.error("JSON parse error:", e);
       return Response.json({ error: 'Invalid JSON' }, { status: 400 });
     }
-    
+
     console.log('[Chat API] Parsed request body:', body); // Log parsed body
 
     // Construct the payload for FastAPI based on CompleteQueryRequest schema
@@ -42,10 +61,15 @@ export async function POST(req: Request) {
 
     if (body.messages && Array.isArray(body.messages) && body.messages.length > 0) {
       // If 'messages' array exists, use it for history and extract the last message
-      messageHistory = body.messages.slice(0, -1).map((msg: any) => ({
-        role: msg.role || 'user', // Assign default role if missing
-        content: msg.content || msg.text || '',
-      }));
+      messageHistory = body.messages.slice(0, -1).map(
+        (msg: IncomingMessageItem): HistoryMessage => {
+          const roleToUse: HistoryMessageRole = (msg.role === 'user' || msg.role === 'assistant' || msg.role === 'system') ? msg.role : 'user';
+          return {
+            role: roleToUse,
+            content: msg.content || msg.text || '',
+          };
+        }
+      );
       const lastMessage = body.messages[body.messages.length - 1];
       currentMessage = lastMessage.content || lastMessage.text;
 
@@ -69,7 +93,7 @@ export async function POST(req: Request) {
       system_message: body.system_message,
       // stream: body.stream // Assuming stream is handled separately or implicitly by FastAPI
     };
-    
+
     // Optional: Add validation using Ajv if needed later
     // const errors = validateCompleteQueryRequest(fastApiPayload); // Assuming such a validator exists
     // if (errors) { ... handle validation errors ... }
@@ -82,7 +106,7 @@ export async function POST(req: Request) {
       const fastapiUrl = process.env.FASTAPI_URL || 'http://localhost:8000'; // Fallback for safety
       response = await fetch(`${fastapiUrl}/chat`, {
         method: 'POST',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${process.env.COGNI_HOME_API_KEY || 'dev-key'}`
         },
@@ -90,7 +114,7 @@ export async function POST(req: Request) {
       });
     } catch (error) {
       console.error(
-        `Error connecting to FastAPI backend at ${process.env.FASTAPI_URL}/chat:`, 
+        `Error connecting to FastAPI backend at ${process.env.FASTAPI_URL}/chat:`,
         error
       );
       console.log("Using fallback response due to connection error."); // Keep this for clarity
@@ -99,7 +123,7 @@ export async function POST(req: Request) {
       // Create a simple text stream for the response
       const { readable, writable } = new TransformStream();
       const writer = writable.getWriter();
-      
+
       // Simulate a streaming response with a simple message
       (async () => {
         const encoder = new TextEncoder();
@@ -109,16 +133,16 @@ export async function POST(req: Request) {
           "In normal operation, I would be able to provide more accurate information about CogniDAO and related topics. ",
           "Please check that the backend service is running or try again later."
         ];
-        
+
         for (const part of fallbackResponses) {
           await writer.write(encoder.encode(part));
           // Add a small delay to simulate streaming
           await new Promise(resolve => setTimeout(resolve, 100));
         }
-        
+
         await writer.close();
       })();
-      
+
       console.log('[Chat API] Returning stream response.'); // Log returning stream
 
       return new Response(readable, {
@@ -133,36 +157,39 @@ export async function POST(req: Request) {
     if (!response.ok) {
       throw new Error(`FastAPI error: ${response.status}`);
     }
-    
+
     // Stream the response
     const { readable, writable } = new TransformStream();
     const writer = writable.getWriter();
-    
+
     // Read from FastAPI in the background
     (async () => {
       try {
         const streamReader = response.body?.getReader();
         if (!streamReader) {
           console.error("No stream reader available");
+          // It's important to close the writer if we can't proceed
+          await writer.close();
           return;
         }
-        
+
         while (true) {
           const { value, done } = await streamReader.read();
-          
+
           if (done) {
             await writer.close();
             break;
           }
-          
+
           await writer.write(value);
         }
       } catch (error) {
         console.error("Error in stream processing:", error);
-        writer.abort(error);
+        // Ensure writer is aborted or closed on error
+        try { await writer.abort(error); } catch { /* ignore abort error */ }
       }
     })();
-    
+
     console.log('[Chat API] Returning stream response.'); // Log returning stream
 
     return new Response(readable, {

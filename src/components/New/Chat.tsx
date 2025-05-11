@@ -4,11 +4,11 @@ import { useRef, useEffect, useState, useCallback } from "react";
 import { SendIcon, StopIcon } from "./icons";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
-import { Message, MessageComponent, MessageRole } from "./Message";
+import { Message, MessageComponent } from "./Message";
 import { SuggestedActions } from "./SuggestedActions";
 import { motion, AnimatePresence } from "framer-motion";
-import { cn, generateUUID } from "../lib/utils";
-import type { ChatRequest } from "@/schemas/chatrequest";
+import { generateUUID } from "@/lib/new-lib/utils";
+import type { ChatRequest } from "@/schemas/generated/chatrequest";
 import { createChatRequest } from "@/utils/validateInput";
 
 export default function Chat() {
@@ -18,16 +18,16 @@ export default function Chat() {
   const [userRequestedStop, setUserRequestedStop] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  
+
   // Create refs to track state in async contexts
   const isStreamingRef = useRef(false);
   const userRequestedStopRef = useRef(false);
-  
+
   // Keep refs in sync with state
   useEffect(() => {
     isStreamingRef.current = isStreaming;
   }, [isStreaming]);
-  
+
   useEffect(() => {
     userRequestedStopRef.current = userRequestedStop;
   }, [userRequestedStop]);
@@ -62,7 +62,7 @@ export default function Chat() {
   const stopStreaming = () => {
     setUserRequestedStop(true);
     userRequestedStopRef.current = true;
-    
+
     // Mark messages as not streaming
     setMessages(messages => messages.map(message => ({
       ...message,
@@ -74,20 +74,20 @@ export default function Chat() {
     // Reset the user stop flag at the beginning of a new message
     setUserRequestedStop(false);
     userRequestedStopRef.current = false;
-    
+
     if (!userMessage.trim()) return;
-    
+
     // Add user message to chat
     const newUserMessage: Message = {
       id: generateUUID(),
       role: 'user',
       content: userMessage
     };
-    
+
     setMessages(prev => [...prev, newUserMessage]);
     setInput("");
     resetHeight();
-    
+
     // Create a placeholder for the assistant's message
     const assistantMessageId = generateUUID();
     const placeholderMessage: Message = {
@@ -96,7 +96,7 @@ export default function Chat() {
       content: '',
       isStreaming: true
     };
-    
+
     setMessages(prev => [...prev, placeholderMessage]);
     setIsStreaming(true);
     isStreamingRef.current = true;
@@ -104,7 +104,7 @@ export default function Chat() {
     try {
       // Create a validated request payload
       const chatRequest: ChatRequest = createChatRequest(userMessage, { stream: true });
-      
+
       // Send the request to the API with streaming enabled
       const response = await fetch("/api/ai/chat", {
         method: "POST",
@@ -128,23 +128,23 @@ export default function Chat() {
       // Read the stream
       const decoder = new TextDecoder();
       let streamedContent = "";
-      
+
       while (isStreamingRef.current && !userRequestedStopRef.current) {
         try {
           const { done, value } = await reader.read();
-          
+
           if (done) break;
-          
+
           // Decode the chunk and process it
           const chunk = decoder.decode(value, { stream: true });
-          
+
           // Simply append the chunk directly to streamedContent
           streamedContent += chunk;
-          
+
           // Update the UI with each chunk
-          setMessages(prev => 
-            prev.map(msg => 
-              msg.id === assistantMessageId 
+          setMessages(prev =>
+            prev.map(msg =>
+              msg.id === assistantMessageId
                 ? { ...msg, content: streamedContent }
                 : msg
             )
@@ -154,20 +154,20 @@ export default function Chat() {
           break;
         }
       }
-      
+
       // Mark streaming as complete
-      setMessages(prev => 
-        prev.map(msg => 
+      setMessages(prev =>
+        prev.map(msg =>
           msg.id === assistantMessageId
             ? { ...msg, isStreaming: false }
             : msg
         )
       );
-      
+
     } catch (error) {
       console.error("Error details:", error);
-      setMessages(prev => 
-        prev.map(msg => 
+      setMessages(prev =>
+        prev.map(msg =>
           msg.id === assistantMessageId
             ? { ...msg, content: "Sorry, I encountered an error. Please try again.", isStreaming: false }
             : msg
@@ -177,7 +177,7 @@ export default function Chat() {
       // Only set isStreaming to false here, after all stream processing is complete
       setIsStreaming(false);
       isStreamingRef.current = false;
-      
+
       // Reset the user stop flag
       setUserRequestedStop(false);
       userRequestedStopRef.current = false;
@@ -200,10 +200,10 @@ export default function Chat() {
   useEffect(() => {
     // Initialize the flag
     setUserRequestedStop(false);
-    
+
     // Clean up
     return () => {
-      delete window.userRequestedStop;
+      // delete window.userRequestedStop; // Removed problematic delete
     };
   }, []);
 
@@ -211,11 +211,11 @@ export default function Chat() {
 
   return (
     <div className="w-full flex flex-col h-[600px] rounded-lg overflow-hidden border border-gray-800">
-      
+
       <div className="flex-1 overflow-y-auto flex flex-col space-y-4 p-4 bg-black">
         <AnimatePresence>
           {messages.length === 0 ? (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -229,14 +229,13 @@ export default function Chat() {
               <MessageComponent
                 key={message.id}
                 message={message}
-                isLoading={message.isStreaming}
               />
             ))
           )}
         </AnimatePresence>
         <div ref={messagesEndRef} />
       </div>
-      
+
       <div className="p-4 border-t border-gray-800 bg-black">
         <form onSubmit={handleSubmit} className="relative">
           <Textarea
@@ -255,7 +254,7 @@ export default function Chat() {
               }
             }}
           />
-          
+
           <div className="absolute right-3 bottom-[5px]">
             {isStreaming ? (
               <Button
