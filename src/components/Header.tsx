@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Search } from 'lucide-react';
 import { Input } from './ui/input';
 import { ThemeToggle } from './ThemeToggle';
@@ -9,10 +10,14 @@ const Header = () => {
     <header className="border-b border-border sticky top-0 bg-background/95 backdrop-blur-sm z-10">
       <div className="container mx-auto py-4 px-4 flex items-center justify-between">
         <Link href="/" className="flex items-center space-x-2">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-knowledge to-knowledge-dark flex items-center justify-center">
-            <span className="text-white font-bold">K</span>
-          </div>
-          <h1 className="text-xl font-serif font-bold">Fractal Knowledge</h1>
+          <Image
+            src="/TransparentBrainOnly.png"
+            alt="Cogni Brain Logo"
+            width={32}
+            height={32}
+            className="rounded-full"
+          />
+          <h1 className="text-xl font-serif font-bold bg-gradient-to-r from-[hsl(var(--brain-purple))] via-[hsl(var(--accent))] to-[hsl(var(--brain-cyan))] bg-clip-text text-transparent">Cogni</h1>
         </Link>
 
         <div className="hidden md:flex items-center max-w-md w-full relative">

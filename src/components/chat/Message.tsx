@@ -41,10 +41,7 @@ export function MessageComponent({
         )}>
           <div
             data-testid="message-content"
-            className={cn('px-0 py-0', {
-              'text-foreground': message.role === 'user',
-              'text-muted-foreground': message.role === 'assistant',
-            })}
+            className={cn('px-0 py-0 text-foreground')}
           >
             {message.content}
             {message.isStreaming && (
