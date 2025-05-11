@@ -210,18 +210,18 @@ export default function Chat() {
   console.log("[Chat] Rendering component. Messages count:", messages.length); // Log Chat render
 
   return (
-    <div className="w-full flex flex-col h-[600px] rounded-lg overflow-hidden border border-gray-800">
+    <div className="w-full flex flex-col h-[600px] rounded-lg overflow-hidden border-2 border-border">
 
-      <div className="flex-1 overflow-y-auto flex flex-col space-y-4 p-4 bg-black">
+      <div className="flex-1 overflow-y-auto flex flex-col space-y-4 p-4 bg-background">
         <AnimatePresence>
           {messages.length === 0 ? (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="flex-1 flex flex-col gap-6 items-center justify-center text-gray-400 p-4"
+              className="flex-1 flex flex-col gap-6 items-center justify-center text-muted-foreground p-4"
             >
-              <p className="text-center text-lg">Ask a question or try a suggestion below</p>
+              <p className="text-center text-lg">Chat with Cogni to learn about the project</p>
               <SuggestedActions onSuggestionClick={handleSuggestionClick} />
             </motion.div>
           ) : (
@@ -236,14 +236,14 @@ export default function Chat() {
         <div ref={messagesEndRef} />
       </div>
 
-      <div className="p-4 border-t border-gray-800 bg-black">
+      <div className="p-4 border-t border-border bg-background">
         <form onSubmit={handleSubmit} className="relative">
           <Textarea
             ref={textareaRef}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Send a message..."
-            className="resize-none min-h-[40px] max-h-[40px] pr-12 bg-gray-900 border-gray-700 rounded-full py-2 px-4 text-white placeholder:text-gray-400 focus:ring-1 focus:ring-gray-600 focus:border-gray-600"
+            className="resize-none min-h-[40px] max-h-[40px] pr-12 bg-background border-input rounded-full py-2 px-4 text-foreground placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring focus-visible:border-ring"
             disabled={isStreaming}
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !e.shiftKey) {
@@ -261,7 +261,7 @@ export default function Chat() {
                 type="button"
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8 rounded-full hover:bg-gray-700 text-gray-400"
+                className="h-8 w-8 rounded-full hover:bg-accent text-muted-foreground"
                 onClick={stopStreaming}
                 aria-label="Stop generating"
               >
@@ -272,7 +272,7 @@ export default function Chat() {
                 type="submit"
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8 rounded-full hover:bg-gray-700 text-gray-400 hover:text-white"
+                className="h-8 w-8 rounded-full hover:bg-accent text-muted-foreground hover:text-accent-foreground"
                 disabled={!input.trim()}
                 aria-label="Send message"
               >

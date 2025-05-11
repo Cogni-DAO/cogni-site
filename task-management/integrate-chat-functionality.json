@@ -34,6 +34,9 @@
         "[x] Update Chat component fetch calls to use `/api/chat`.",
         "[ ] Move all files in src/schemas/generated/ to src/schemas/, add barrel index.ts exporting relevant types; delete example_usage.ts if not referenced.",
         "[ ] Ensure validateInput.ts is used by the new chat flow; if not, integrate validation or remove file.",
+        "[x] Apply theme-aware styling to `Chat.tsx` (borders, backgrounds, text, input, buttons).",
+        "[x] Apply theme-aware styling to `Message.tsx` (icons, message text, streaming indicator).",
+        "[x] Apply theme-aware styling to `SuggestedActions.tsx` (buttons, text), potentially defining new semantic colors in theme if needed.",
         "[ ] Run `next lint` and fix any import/path errors.",
         "[ ] Remove any UI components, hooks, or pages left totally unreferenced after this migration (grep for imports)."
     ],

@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
 import { memo } from 'react';
 
 interface SuggestedActionsProps {
@@ -46,16 +45,18 @@ function PureSuggestedActions({ onSuggestionClick }: SuggestedActionsProps) {
           transition={{ delay: 0.05 * index }}
           key={`suggested-action-${suggestedAction.title}-${index}`}
         >
-          <Button
-            variant="ghost"
+          <button
+            type="button"
             onClick={() => onSuggestionClick(suggestedAction.action)}
-            className="text-left border border-indigo-500/30 bg-indigo-900/20 rounded-xl px-4 py-3.5 text-sm gap-1 sm:flex-col w-full h-auto justify-start items-start text-white hover:bg-indigo-900/40"
+            className="unified-interactive-card group text-left flex-col w-full h-auto justify-start items-start text-sm gap-1"
           >
-            <span className="font-medium">{suggestedAction.title}</span>
-            <span className="text-indigo-200">
+            <span className="block font-medium group-hover:text-primary transition-colors duration-200">
+              {suggestedAction.title}
+            </span>
+            <span className="block text-card-foreground">
               {suggestedAction.label}
             </span>
-          </Button>
+          </button>
         </motion.div>
       ))}
     </div>

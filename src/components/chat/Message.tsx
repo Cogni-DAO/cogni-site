@@ -30,7 +30,7 @@ export function MessageComponent({
       >
         {message.role === 'assistant' && (
           <div className="size-8 flex items-center justify-center shrink-0">
-            <div className="text-white w-7 h-7 flex items-center justify-center">
+            <div className="text-primary w-7 h-7 flex items-center justify-center">
               <SparklesIcon size={16} />
             </div>
           </div>
@@ -42,20 +42,20 @@ export function MessageComponent({
           <div
             data-testid="message-content"
             className={cn('px-0 py-0', {
-              'text-white': message.role === 'user',
-              'text-gray-300': message.role === 'assistant',
+              'text-foreground': message.role === 'user',
+              'text-muted-foreground': message.role === 'assistant',
             })}
           >
             {message.content}
             {message.isStreaming && (
-              <span className="ml-1 inline-block w-2 h-4 bg-gray-400 animate-pulse" />
+              <span className="ml-1 inline-block w-2 h-4 bg-muted animate-pulse" />
             )}
           </div>
         </div>
 
         {message.role === 'user' && (
           <div className="size-8 flex items-center justify-center shrink-0">
-            <div className="text-white w-7 h-7 flex items-center justify-center">
+            <div className="text-foreground w-7 h-7 flex items-center justify-center">
               <UserIcon size={16} />
             </div>
           </div>
