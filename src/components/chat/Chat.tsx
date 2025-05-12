@@ -8,8 +8,8 @@ import { Message, MessageComponent } from "./Message";
 import { SuggestedActions } from "./SuggestedActions";
 import { motion, AnimatePresence } from "framer-motion";
 import { generateUUID } from "@/lib/utils";
-import type { ChatRequest } from "@/schemas/generated/chatrequest";
-import { createChatRequest } from "@/utils/validateInput";
+import type { ChatRequest } from "@/utils/chat";
+import { createChatRequest } from "@/utils/chat";
 
 export default function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
