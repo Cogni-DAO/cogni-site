@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { fetchBlocks, type BlocksResponse } from '@/utils/blocks';
+import { BlockRenderer } from '@/components/BlockRenderer';
+import type { MemoryBlock } from '@/api/models';
 
 export default function BlocksPage() {
     const [blocks, setBlocks] = useState<BlocksResponse | null>(null);
@@ -48,37 +50,13 @@ export default function BlocksPage() {
                         <p className="col-span-full text-center text-muted-foreground">No memory blocks found.</p>
                     ) : (
                         blocks.map((block) => (
-                            <div key={block.id} className="content-block animate-fade-in border rounded-lg p-4 shadow-sm">
-                                <div className="flex items-start justify-between mb-2">
-                                    <h3 className="text-lg font-serif font-semibold">{block.id || 'Untitled'}</h3>
-                                    <span className="text-xs bg-secondary px-2 py-1 rounded-full">
-                                        {block.type}
-                                    </span>
-                                </div>
-
-                                <div className="prose prose-sm max-w-none">
-                                    <div>{block.text}</div>
-                                </div>
-
-                                {block.tags && block.tags.length > 0 && (
-                                    <div className="mt-3">
-                                        <span className="text-sm font-medium">Tags:</span>
-                                        <div className="flex flex-wrap gap-2 mt-1">
-                                            {block.tags.map((tag, index) => (
-                                                <span key={index} className="text-xs bg-secondary px-2 py-1 rounded-full hover:bg-knowledge hover:text-white transition-colors duration-200">
-                                                    {tag}
-                                                </span>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-
-                                {block.created_at && (
-                                    <div className="mt-4 text-sm text-muted-foreground">
-                                        {new Date(block.created_at).toLocaleString()}
-                                    </div>
-                                )}
-                            </div>
+                            <BlockRenderer
+                                key={block.id || `block-${Math.random()}`}
+                                blockId={block.id || 'unknown'}
+                                blockType={block.type}
+                                blockVersion={String(block.block_version ?? block.schema_version ?? 'unknown')}
+                                data={block as MemoryBlock}
+                            />
                         ))
                     )}
                 </div>

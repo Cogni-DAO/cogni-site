@@ -45,11 +45,11 @@ const schemaIndexPath = path.resolve(process.cwd(), 'schemas', 'index.json');
 // Define the fallback fetch URL (allow override via environment variable)
 const schemaIndexFetchUrl = process.env.SCHEMA_INDEX_URL || 'http://localhost:8000/schemas/index.json';
 
-// Define the output directory for renderer components
-const renderersDir = path.resolve(process.cwd(), 'src', 'components', 'block_renderers');
+// Define the output directory for renderer components - MOVING TO UNUSED
+const renderersDir = path.resolve(process.cwd(), 'src', 'components', 'unused_block_renderers');
 
-// Define the output path for the manifest file
-const manifestPath = path.resolve(process.cwd(), 'src', 'lib', 'blockRendererRegistry.data.ts');
+// Define the output path for the manifest file - ALSO MOVE TO UNUSED
+const manifestPath = path.resolve(process.cwd(), 'src', 'lib', 'unused_blockRendererRegistry.data.ts');
 
 // Define the template for the generated renderer component
 const rendererTemplate = (type: string, version: number | string) => `
