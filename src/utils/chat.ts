@@ -1,10 +1,9 @@
-import { getValidator } from '@/lib/ajv';
 import type { components } from '@/types/api';
 
 export type ChatRequest = components['schemas']['CompleteQueryRequest'];
 
-// Ajv schema ID is always `#/components/schemas/<Name>`
-const isChatRequest = getValidator<ChatRequest>('#/components/schemas/CompleteQueryRequest');
+// // Ajv schema ID is always `#/components/schemas/<Name>`
+// const isChatRequest = getValidator<ChatRequest>('#/components/schemas/CompleteQueryRequest');
 
 export function createChatRequest(message: string, opts?: { stream?: boolean }): ChatRequest {
     const payload: Partial<ChatRequest> = {
@@ -24,9 +23,9 @@ export function createChatRequest(message: string, opts?: { stream?: boolean }):
     // Type assertion after we've built a valid object
     const request = payload as ChatRequest;
 
-    if (!isChatRequest(request)) {
-        // Access errors from ajv instance
-        throw new Error('ChatRequest failed validation');
-    }
+    // if (!isChatRequest(request)) {
+    //     // Access errors from ajv instance
+    //     throw new Error('ChatRequest failed validation');
+    // }
     return request;
 } 

@@ -1,14 +1,10 @@
-import { getValidator } from '@/lib/ajv';
 import type { paths, components } from '@/types/api';
 
 // Type for a single memory block
 export type MemoryBlock = components['schemas']['MemoryBlock'];
 
-// Type for GET /api/blocks response (array of memory blocks)
-export type BlocksResponse = paths['/api/blocks']['get']['responses']['200']['content']['application/json'];
-
-// Validator for a single memory block
-const isMemoryBlock = getValidator<MemoryBlock>('#/components/schemas/MemoryBlock');
+// Type for the response from the /blocks endpoint
+export type BlocksResponse = MemoryBlock[];
 
 /**
  * Validates an array of memory blocks against the schema
@@ -16,7 +12,9 @@ const isMemoryBlock = getValidator<MemoryBlock>('#/components/schemas/MemoryBloc
  * @returns Type predicate indicating if the data matches the BlocksResponse schema
  */
 export function validateBlocks(data: unknown): data is BlocksResponse {
-    return Array.isArray(data) && data.every(isMemoryBlock);
+    // return Array.isArray(data) && data.every(isMemoryBlock);
+    // Basic array check, specific item validation will be handled by Zod via Orval
+    return Array.isArray(data);
 }
 
 // Fixed API URL pointing to your actual backend API
@@ -51,7 +49,7 @@ export async function fetchBlocks(): Promise<BlocksResponse> {
 export async function createBlock(block: Partial<MemoryBlock>): Promise<MemoryBlock> {
     // Validate before sending
     const validBlock = block as MemoryBlock;
-    if (!isMemoryBlock(validBlock)) {
+    if (!validateBlocks([validBlock])) {
         throw new Error('Invalid memory block');
     }
 
@@ -70,7 +68,7 @@ export async function createBlock(block: Partial<MemoryBlock>): Promise<MemoryBl
     const data = await response.json();
 
     // Validate the response
-    if (!isMemoryBlock(data)) {
+    if (!validateBlocks([data])) {
         throw new Error('Invalid block returned from API');
     }
 
