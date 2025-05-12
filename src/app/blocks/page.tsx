@@ -45,29 +45,39 @@ export default function BlocksPage() {
             {blocks && (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {blocks.length === 0 ? (
-                        <p className="col-span-full text-center text-gray-500">No memory blocks found.</p>
+                        <p className="col-span-full text-center text-muted-foreground">No memory blocks found.</p>
                     ) : (
                         blocks.map((block) => (
-                            <div key={block.id} className="border rounded-lg p-4 shadow-sm">
-                                <div className="flex justify-between items-start mb-2">
-                                    <h2 className="text-xl font-semibold">{block.id || 'Untitled'}</h2>
-                                    <span className="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded">
+                            <div key={block.id} className="content-block animate-fade-in border rounded-lg p-4 shadow-sm">
+                                <div className="flex items-start justify-between mb-2">
+                                    <h3 className="text-lg font-serif font-semibold">{block.id || 'Untitled'}</h3>
+                                    <span className="text-xs bg-secondary px-2 py-1 rounded-full">
                                         {block.type}
                                     </span>
                                 </div>
-                                <p className="text-gray-700">{block.text}</p>
+
+                                <div className="prose prose-sm max-w-none">
+                                    <div>{block.text}</div>
+                                </div>
+
                                 {block.tags && block.tags.length > 0 && (
-                                    <div className="mt-3 flex flex-wrap gap-2">
-                                        {block.tags.map((tag, index) => (
-                                            <span key={index} className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">
-                                                {tag}
-                                            </span>
-                                        ))}
+                                    <div className="mt-3">
+                                        <span className="text-sm font-medium">Tags:</span>
+                                        <div className="flex flex-wrap gap-2 mt-1">
+                                            {block.tags.map((tag, index) => (
+                                                <span key={index} className="text-xs bg-secondary px-2 py-1 rounded-full hover:bg-knowledge hover:text-white transition-colors duration-200">
+                                                    {tag}
+                                                </span>
+                                            ))}
+                                        </div>
                                     </div>
                                 )}
-                                <div className="mt-4 text-sm text-gray-500">
-                                    {block.created_at && new Date(block.created_at).toLocaleString()}
-                                </div>
+
+                                {block.created_at && (
+                                    <div className="mt-4 text-sm text-muted-foreground">
+                                        {new Date(block.created_at).toLocaleString()}
+                                    </div>
+                                )}
                             </div>
                         ))
                     )}
