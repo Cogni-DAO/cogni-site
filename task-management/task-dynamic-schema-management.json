@@ -10,7 +10,7 @@
     "[x] **orval.config.js**  ➜\n```js\nexport default {\n  output: {\n    mode: 'tags',                        // hooks per tag (Chat, Blocks)\n    target: 'src/api',                  // generated code goes here\n    schemas: 'src/api/schemas',         // zod schemas emitted here\n    client: 'fetch-zod'                 // zod runtime validation!\n  },\n  input: './schemas/api/openapi.json',  // path committed by backend script\n  hooks: {\n    afterAllFilesWrite: ['npm run gen:renderers']\n  }\n};\n```",
     "[x] **package.json scripts**  ➜  `{ \"gen:api\": \"orval\", \"gen:renderers\": \"ts-node scripts/gen-renderers.ts\" }`.",
     "## 🖼️  RENDERER STUB GENERATOR",
-    "[ ] **scripts/gen-renderers.ts**  ➜  Fetch `/schemas/index.json` (local file committed by backend export) and for each unseen `{type,version}` write `components/block_renderers/{type}.v{version}.tsx` with a minimal `<pre>` placeholder.",
+    "[x] **scripts/gen-renderers.ts**  ➜  Fetch `/schemas/index.json` (local file committed by backend export) and for each unseen `{type,version}` write `components/block_renderers/{type}.v{version}.tsx` with a minimal `<pre>` placeholder.",
     "[ ] **Dynamic loader**  ➜  In `lib/blockRendererRegistry.ts`, use `import.meta.glob('./components/block_renderers/*.tsx')` (lazy) to map filenames `{type}.v{ver}.tsx` → renderer.",
     "## 🧹  REMOVE AJV",
     "[ ] Delete `utils/validateInput.ts` and Ajv glue. orval hooks return zod‑validated data automatically.",

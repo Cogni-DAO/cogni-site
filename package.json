@@ -12,7 +12,7 @@
     "gen:types:preview": "node scripts/gen-openapi.js preview",
     "gen:types:prod": "node scripts/gen-openapi.js prod",
     "gen:api": "orval",
-    "gen:renderers": "ts-node scripts/gen-renderers.ts"
+    "gen:renderers": "node --loader ts-node/esm scripts/gen-renderers.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
