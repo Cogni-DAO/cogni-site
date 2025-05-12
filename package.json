@@ -10,7 +10,9 @@
     "lint": "next lint",
     "gen:types": "node scripts/gen-openapi.js dev",
     "gen:types:preview": "node scripts/gen-openapi.js preview",
-    "gen:types:prod": "node scripts/gen-openapi.js prod"
+    "gen:types:prod": "node scripts/gen-openapi.js prod",
+    "gen:api": "orval",
+    "gen:renderers": "ts-node scripts/gen-renderers.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
@@ -44,7 +46,6 @@
     "@tanstack/react-query": "^5.56.2",
     "@xyflow/react": "^12.6.0",
     "ajv": "^8.17.1",
-    "ajv-formats": "^2.1.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
@@ -80,11 +81,12 @@
     "eslint-plugin-react-refresh": "^0.4.9",
     "globals": "^15.9.0",
     "lovable-tagger": "^1.1.7",
-    "openapi-typescript": "7.8.0",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.11",
     "ts-node": "^10.9.1",
     "typescript": "^5.5.3",
-    "typescript-eslint": "^8.0.1"
+    "typescript-eslint": "^8.0.1",
+    "orval": "latest",
+    "openapi-typescript": "^7.8.0"
   }
 }
