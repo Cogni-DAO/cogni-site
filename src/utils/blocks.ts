@@ -17,6 +17,21 @@ export function validateBlocks(data: unknown): data is BlocksResponse {
     return Array.isArray(data);
 }
 
+/**
+ * Validates a single memory block against the schema
+ * @param data - The data to validate
+ * @returns Type predicate indicating if the data matches the MemoryBlock schema
+ */
+export function validateBlock(data: unknown): data is MemoryBlock {
+    // Basic check for required properties
+    return Boolean(
+        data &&
+        typeof data === 'object' &&
+        'type' in data &&
+        'text' in data
+    );
+}
+
 // Fixed API URL pointing to your actual backend API
 const API_URL = 'http://localhost:8000';
 
@@ -36,6 +51,28 @@ export async function fetchBlocks(): Promise<BlocksResponse> {
     // Validate the response data
     if (!validateBlocks(data)) {
         throw new Error('Invalid blocks response from API');
+    }
+
+    return data;
+}
+
+/**
+ * Fetches a single memory block by ID
+ * @param id - The ID of the block to fetch
+ * @returns Promise resolving to a validated memory block
+ */
+export async function fetchBlockById(id: string): Promise<MemoryBlock> {
+    const response = await fetch(`${API_URL}/api/blocks/${id}`);
+
+    if (!response.ok) {
+        throw new Error(`Failed to fetch block: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+
+    // Validate the response data
+    if (!validateBlock(data)) {
+        throw new Error('Invalid block response from API');
     }
 
     return data;

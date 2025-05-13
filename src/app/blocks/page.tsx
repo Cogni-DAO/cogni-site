@@ -1,32 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { fetchBlocks, type BlocksResponse } from '@/utils/blocks';
-import MemoryBlockRenderer from '@/components/MemoryBlockRenderer';
-import type { MemoryBlock } from '@/data/models';
+import { useBlocks } from '@/hooks/useBlocks';
+import MemoryBlockListItem from '@/components/MemoryBlockListItem';
 
 export default function BlocksPage() {
-    const [blocks, setBlocks] = useState<BlocksResponse | null>(null);
-    const [isLoading, setIsLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string | null>(null);
-
-    useEffect(() => {
-        async function loadBlocks() {
-            try {
-                setIsLoading(true);
-                const data = await fetchBlocks();
-                setBlocks(data);
-                setError(null);
-            } catch (err) {
-                console.error('Failed to fetch blocks:', err);
-                setError(err instanceof Error ? err.message : 'Failed to load blocks');
-            } finally {
-                setIsLoading(false);
-            }
-        }
-
-        loadBlocks();
-    }, []);
+    const { blocks, isLoading, isError } = useBlocks();
 
     return (
         <div className="container mx-auto p-6">
@@ -38,9 +16,9 @@ export default function BlocksPage() {
                 </div>
             )}
 
-            {error && (
+            {isError && (
                 <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                    <p><strong>Error:</strong> {error}</p>
+                    <p><strong>Error:</strong> {isError.message || 'Failed to load blocks'}</p>
                 </div>
             )}
 
@@ -50,12 +28,9 @@ export default function BlocksPage() {
                         <p className="col-span-full text-center text-muted-foreground">No memory blocks found.</p>
                     ) : (
                         blocks.map((block) => (
-                            <MemoryBlockRenderer
+                            <MemoryBlockListItem
                                 key={block.id || `block-${Math.random()}`}
-                                blockId={block.id || 'unknown'}
-                                blockType={block.type}
-                                blockVersion={String(block.block_version ?? block.schema_version ?? 'unknown')}
-                                data={block as MemoryBlock}
+                                block={block}
                             />
                         ))
                     )}

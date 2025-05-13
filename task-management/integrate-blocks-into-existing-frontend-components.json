@@ -1,7 +1,7 @@
 {
     "name": "Integrate MemoryBlock Data via Adapter Pattern and Themed Renderers",
     "description": "Render MemoryBlocks using existing themes by retaining BlockRenderer, creating specific renderers (refactoring KnowledgeBlock into KnowledgeRenderer), implementing an adapter layer for data transformation, and using data fetching hooks.",
-    "status": "todo",
+    "status": "in-progress",
     "tasks": [
         {
             "id": "define-renderer-props",
@@ -10,13 +10,13 @@
             "notes": [
                 "KnowledgeRendererProps should mirror the data needed by the original KnowledgeBlock structure."
             ],
-            "status": "todo"
+            "status": "completed"
         },
         {
             "id": "refactor-knowledgeblock-to-renderer",
             "summary": "Refactor KnowledgeBlock into KnowledgeRenderer",
             "details": "Create `src/components/block_renderers/KnowledgeRenderer.tsx`. Accept `KnowledgeRendererProps`.\n- Copy the JSX structure, styling (`content-block`, `prose`, etc.), and presentation logic from the original `src/components/KnowledgeBlock.tsx`.\n- Adapt the component to render using the incoming `KnowledgeRendererProps`.\n- Remove dependencies on props not included in `KnowledgeRendererProps` (like direct `verificationPercentage` if not adapted).\n- The original `src/components/KnowledgeBlock.tsx` can be deleted after this.",
-            "status": "todo"
+            "status": "completed"
         },
         {
             "id": "create-memoryblock-adapter",
@@ -26,49 +26,49 @@
                 "Mapping `block.links` (BlockLink[]) to `displayLinks` requires deciding how to generate the `href` (likely '/blocks/[id]'?) and `title` (e.g., `link.relation + ': ' + link.to_id`).",
                 "Mapping for `verificationPercentage` depends on the answer to blocking question."
             ],
-            "status": "todo"
+            "status": "completed"
         },
         {
             "id": "update-blockrenderer-dispatcher",
             "summary": "Update BlockRenderer Dispatcher",
             "details": "Modify `src/components/BlockRenderer.tsx`. It should still accept `BlockRendererProps` (containing `{ data: MemoryBlock }`).\n- Inside the `switch (blockType)` statement:\n    - For each known type (e.g., 'knowledge', 'project'), call the corresponding adapter function from `memoryBlockAdapters.ts` (e.g., `const adaptedProps = adaptMemoryBlockToKnowledgeProps(props.data);`).\n    - Render the specific renderer component, passing the `adaptedProps` (e.g., `<KnowledgeRenderer {...adaptedProps} />`).\n    - Keep the `default` case rendering `<UnknownBlockRenderer {...props} />`.",
-            "status": "todo"
+            "status": "completed"
         },
         {
             "id": "create-memoryblock-list-item",
             "summary": "Create MemoryBlockListItem Component (Card View)",
             "details": "Create `src/components/MemoryBlockListItem.tsx`. It should accept props `{ block: MemoryBlock }`.\n- Render a single MemoryBlock card for list views.\n- Use `<Link href={'/blocks/' + block.id}>` as the root element.\n- **Critically:** Copy the *exact* JSX structure and apply the *exact* CSS classes used for each item within the `.map()` function of `src/components/KnowledgeRelatedNodes.tsx` to replicate the visual style.\n- Extract *minimal* data for display (title snippet from `block.metadata.title` or `block.text`, description snippet, etc.) from the `block` prop and place it into the copied JSX structure.",
-            "status": "todo"
+            "status": "completed"
         },
         {
             "id": "create-data-fetching-hooks",
             "summary": "Create Data Fetching Hooks",
             "details": "Implement reusable data fetching hooks using SWR (or chosen library) and the Orval-generated API client (`src/api/`).\n- Create `src/hooks/useBlocks.ts`: Fetches the list of blocks (e.g., using `fetchBlocks()` from utils or a generated client function). Handles loading, error, and data states.\n- Create `src/hooks/useBlock.ts`: Fetches a single block by ID (`useBlock(id: string)`). Handles loading, error, and data states. **Depends on backend/fetch logic update.**",
-            "status": "todo"
+            "status": "completed"
         },
         {
             "id": "update-blocks-list-page",
             "summary": "Update Blocks Page for List View",
             "details": "Modify `src/app/blocks/page.tsx`.\n- Use the `useBlocks()` hook to fetch data.\n- Display loading/error states based on the hook's return values.\n- If data is available, map over it and render `<MemoryBlockListItem key={block.id} block={block} />` for each block.",
-            "status": "todo"
+            "status": "completed"
         },
         {
             "id": "create-detail-page",
             "summary": "Create Dynamic Detail Page (/blocks/[id])",
             "details": "Create the dynamic route page `src/app/blocks/[id]/page.tsx`.\n- Make it a Client Component ('use client').\n- Extract the `id` parameter from the URL.\n- Use the `useBlock(id)` hook to fetch the specific `MemoryBlock` data.\n- Display loading/error states.\n- If data is fetched successfully, prepare the props for `BlockRenderer` (`const rendererProps = { data: fetchedBlock, blockId: ..., blockType: ..., blockVersion: ... }`) and render `<BlockRenderer {...rendererProps} />`.",
-            "status": "todo"
+            "status": "completed"
         },
         {
             "id": "backend-fetch-by-id",
             "summary": "Implement Backend/Fetch Logic for Single Block",
             "details": "Ensure the backend API provides an endpoint (e.g., `/blocks/{block_id}`) or modify fetch logic (`src/utils/blocks.ts` or API client) to fetch a single `MemoryBlock` by ID.",
-            "status": "pending-dependency"
+            "status": "in-progress"
         },
         {
             "id": "handle-blocking-questions",
             "summary": "Address Blocking Questions",
             "details": "Update adapter logic based on answers:\n- How to fetch/determine related blocks/nodes for the `links` prop transformation.\n- Where `verificationPercentage` data originates in `MemoryBlock` (e.g., `confidence.human_verified`?) and how to adapt it.",
-            "status": "blocked"
+            "status": "completed"
         },
         {
             "id": "cleanup-components",

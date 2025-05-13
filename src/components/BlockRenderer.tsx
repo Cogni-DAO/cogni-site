@@ -1,9 +1,20 @@
 import React from 'react';
 import type { BlockRendererProps } from '@/lib/types';
+import { MemoryBlockType } from '@/data/models/memoryBlockType';
 
-// Import actual renderers
+// Import renderers
+import KnowledgeRenderer from './block_renderers/KnowledgeRenderer';
 import { ProjectRenderer } from './block_renderers/ProjectRenderer';
 import { UnknownBlockRenderer } from './block_renderers/UnknownBlockRenderer';
+
+// Import adapters
+import {
+    adaptMemoryBlockToKnowledgeProps,
+    adaptMemoryBlockToProjectProps,
+    adaptMemoryBlockToTaskProps,
+    adaptMemoryBlockToDocProps,
+    adaptMemoryBlockToLogProps
+} from '@/lib/adapters/memoryBlockAdapters';
 
 // TODO: Create and import these other renderers as needed
 // import { TaskRenderer } from './renderers/TaskRenderer';
@@ -33,18 +44,29 @@ const PlaceholderRenderer: React.FC<BlockRendererProps> = ({ blockType, data, bl
 );
 
 export const BlockRenderer: React.FC<BlockRendererProps> = (props) => {
-    const { blockType } = props;
+    const { blockType, data } = props;
 
     switch (blockType) {
-        case 'project':
+        case MemoryBlockType.knowledge:
+            const knowledgeProps = adaptMemoryBlockToKnowledgeProps(data);
+            return <KnowledgeRenderer {...knowledgeProps} />;
+
+        case MemoryBlockType.project:
+            // ProjectRenderer still uses BlockRendererProps, not ProjectRendererProps
             return <ProjectRenderer {...props} />;
-        case 'task':
+
+        case MemoryBlockType.task:
+            // Use the PlaceholderRenderer until TaskRenderer is implemented
             return <PlaceholderRenderer {...props} />;
-        case 'log':
+
+        case MemoryBlockType.doc:
+            // Use the PlaceholderRenderer until DocRenderer is implemented
             return <PlaceholderRenderer {...props} />;
-        case 'doc':
+
+        case MemoryBlockType.log:
+            // Use the PlaceholderRenderer until LogRenderer is implemented
             return <PlaceholderRenderer {...props} />;
-        // Add other cases like 'knowledge' if needed
+
         default:
             return <UnknownBlockRenderer {...props} />;
     }
