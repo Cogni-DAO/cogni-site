@@ -59,10 +59,28 @@
             "status": "completed"
         },
         {
+            "id": "create-base-block-renderer",
+            "summary": "Create BaseBlockRenderer for Consistent Block Rendering",
+            "details": "Create `src/components/block_renderers/BaseBlockRenderer.tsx` as a foundational component.\n- Accept entire `block: MemoryBlock` as a prop rather than deconstructing fields\n- Use slot-based composition (render props) rather than inheritance\n- Standardize theming with utility classes (Tailwind) for visual consistency\n- Extract reusable subcomponents:\n  - ProgressBar (verification status display)\n  - ActionButtons (Helpful, Needs Work, etc.)\n  - LinkList (Related nodes display)\n- Provide sensible defaults with customization options\n- Match styling from original KnowledgeBlock/node pages",
+            "status": "completed"
+        },
+        {
+            "id": "refactor-existing-renderers",
+            "summary": "Refactor Existing Renderers to Use BaseBlockRenderer",
+            "details": "Update existing renderers (KnowledgeRenderer, ProjectRenderer) to use the BaseBlockRenderer.\n- Implement DocRenderer, TaskRenderer, and LogRenderer using the base component\n- Ensure each renderer maintains type-specific customizations while reusing the base layout\n- Update the BlockRenderer dispatcher to use the appropriate renderer for each type\n- Use adapter functions to transform MemoryBlock data into the format needed by each renderer",
+            "status": "in-progress"
+        },
+        {
+            "id": "create-content-format-renderers",
+            "summary": "Create Format Renderers for Different Content Types",
+            "details": "Create a separate utility for rendering content in different formats (markdown, plain text, etc.).\n- Extract format rendering logic from specific block renderers\n- Create a central `FormatRenderer` component that handles different content formats\n- Implement support for markdown formatting with proper handling of headers, lists, code blocks, and emphasis\n- Create a clean API for block renderers to use when displaying formatted content",
+            "status": "completed"
+        },
+        {
             "id": "backend-fetch-by-id",
             "summary": "Implement Backend/Fetch Logic for Single Block",
             "details": "Ensure the backend API provides an endpoint (e.g., `/blocks/{block_id}`) or modify fetch logic (`src/utils/blocks.ts` or API client) to fetch a single `MemoryBlock` by ID.",
-            "status": "in-progress"
+            "status": "completed"
         },
         {
             "id": "handle-blocking-questions",

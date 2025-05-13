@@ -6,6 +6,7 @@ import { MemoryBlockType } from '@/data/models/memoryBlockType';
 import KnowledgeRenderer from './block_renderers/KnowledgeRenderer';
 import { ProjectRenderer } from './block_renderers/ProjectRenderer';
 import { UnknownBlockRenderer } from './block_renderers/UnknownBlockRenderer';
+import DocRenderer from './block_renderers/DocRenderer';
 
 // Import adapters
 import {
@@ -60,8 +61,8 @@ export const BlockRenderer: React.FC<BlockRendererProps> = (props) => {
             return <PlaceholderRenderer {...props} />;
 
         case MemoryBlockType.doc:
-            // Use the PlaceholderRenderer until DocRenderer is implemented
-            return <PlaceholderRenderer {...props} />;
+            // Use our new DocRenderer
+            return <DocRenderer block={data} />;
 
         case MemoryBlockType.log:
             // Use the PlaceholderRenderer until LogRenderer is implemented

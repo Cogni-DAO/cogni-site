@@ -10,6 +10,7 @@ import type {
   ErrorResponse,
   MemoryBlock
 } from './models';
+import { MemoryBlockType } from "./models/memoryBlockType";
 
 
 
@@ -26,9 +27,9 @@ export type getAllBlocksApiBlocksGetResponse500 = {
   data: ErrorResponse
   status: 500
 }
-    
+
 export type getAllBlocksApiBlocksGetResponseComposite = getAllBlocksApiBlocksGetResponse200 | getAllBlocksApiBlocksGetResponse500;
-    
+
 export type getAllBlocksApiBlocksGetResponse = getAllBlocksApiBlocksGetResponseComposite & {
   headers: Headers;
 }
@@ -36,21 +37,21 @@ export type getAllBlocksApiBlocksGetResponse = getAllBlocksApiBlocksGetResponseC
 export const getGetAllBlocksApiBlocksGetUrl = () => {
 
 
-  
+
 
   return `/api/blocks`
 }
 
-export const getAllBlocksApiBlocksGet = async ( options?: RequestInit): Promise<getAllBlocksApiBlocksGetResponse> => {
-  
+export const getAllBlocksApiBlocksGet = async (options?: RequestInit): Promise<getAllBlocksApiBlocksGetResponse> => {
+
   const res = await fetch(getGetAllBlocksApiBlocksGetUrl(),
-  {      
-    ...options,
-    method: 'GET'
-    
-    
-  }
-)
+    {
+      ...options,
+      method: 'GET'
+
+
+    }
+  )
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text()
   const data: getAllBlocksApiBlocksGetResponse['data'] = body ? JSON.parse(body) : {}
@@ -72,9 +73,9 @@ export type createBlockApiBlocksPostResponse422 = {
   data: ErrorResponse
   status: 422
 }
-    
+
 export type createBlockApiBlocksPostResponseComposite = createBlockApiBlocksPostResponse201 | createBlockApiBlocksPostResponse422;
-    
+
 export type createBlockApiBlocksPostResponse = createBlockApiBlocksPostResponseComposite & {
   headers: Headers;
 }
@@ -82,27 +83,130 @@ export type createBlockApiBlocksPostResponse = createBlockApiBlocksPostResponseC
 export const getCreateBlockApiBlocksPostUrl = () => {
 
 
-  
+
 
   return `/api/blocks`
 }
 
 export const createBlockApiBlocksPost = async (createMemoryBlockInput: CreateMemoryBlockInput, options?: RequestInit): Promise<createBlockApiBlocksPostResponse> => {
-  
+
   const res = await fetch(getCreateBlockApiBlocksPostUrl(),
-  {      
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      createMemoryBlockInput,)
-  }
-)
+    {
+      ...options,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(
+        createMemoryBlockInput,)
+    }
+  )
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text()
   const data: createBlockApiBlocksPostResponse['data'] = body ? JSON.parse(body) : {}
 
   return { data, status: res.status, headers: res.headers } as createBlockApiBlocksPostResponse
 }
+
+// Sample Knowledge Block
+export const sampleKnowledgeBlock: MemoryBlock = {
+  id: "knowledge-001",
+  type: MemoryBlockType.knowledge,
+  block_version: 1,
+  created_at: "2023-03-10T09:15:00Z",
+  updated_at: "2023-03-10T09:15:00Z",
+  text: "Cognitive architectures provide a framework for organizing and processing information in artificial intelligence systems. They typically include components for perception, learning, memory, and decision-making, all integrated to enable complex cognitive processes.",
+  metadata: {
+    source: "Cognitive Science Journal",
+    author: "Dr. Jane Smith",
+    publication_date: "2023-01-15",
+    keywords: ["cognitive architecture", "AI", "information processing", "memory systems"]
+  },
+  confidence: {
+    human: 0.92,
+    ai: 0.85
+  },
+  links: [
+    {
+      relation: "related",
+      to_id: "doc-001",
+      metadata: {}
+    }
+  ]
+};
+
+// Sample Project Block
+export const sampleProjectBlock: MemoryBlock = {
+  id: "project-001",
+  type: MemoryBlockType.project,
+  block_version: 1,
+  created_at: "2023-02-20T11:40:00Z",
+  updated_at: "2023-02-20T11:40:00Z",
+  text: "A system for storing, retrieving, and connecting information in a cognitive architecture, mimicking aspects of human memory organization.",
+  metadata: {
+    name: "Cognitive Memory System",
+    status: "in-progress",
+    start_date: "2023-02-01",
+    target_completion: "2023-08-30",
+    team_members: ["alex", "jamie", "taylor"],
+    priority: "high"
+  },
+  confidence: {
+    human: 0.85,
+    ai: 0.70
+  },
+  links: [
+    {
+      relation: "related",
+      to_id: "knowledge-001",
+      metadata: {}
+    },
+    {
+      relation: "documents",
+      to_id: "doc-001",
+      metadata: {}
+    }
+  ]
+};
+
+// Sample Doc Block
+export const sampleDocBlock: MemoryBlock = {
+  id: "doc-001",
+  type: MemoryBlockType.doc,
+  block_version: 1,
+  created_at: "2023-04-15T14:30:00Z",
+  updated_at: "2023-04-15T14:30:00Z",
+  text: "# Project Architecture\n\nThis document outlines the high-level architecture of our cognitive memory system.\n\n## Components\n\n### Memory Blocks\nThe fundamental unit of information in our system. Each memory block represents a distinct piece of knowledge, documentation, or task.\n\n### Block Adapters\nComponents that transform raw block data into structured formats that can be rendered by specialized UI components.\n\n### Renderers\nUI components that visualize different types of memory blocks, providing appropriate interactions and formatting.\n\n## Data Flow\n\n1. Blocks are retrieved from the memory store\n2. Block data is passed through type-specific adapters\n3. Renderers display the formatted data to users\n4. User interactions are captured and stored\n\n## Future Enhancements\n\n- Graph-based navigation between related blocks\n- Enhanced search capabilities\n- Integration with external knowledge sources",
+  metadata: {
+    title: "Project Architecture Overview",
+    format: "markdown",
+    version: "1.2",
+    last_reviewed: "2023-07-20T10:15:00Z",
+    audience: "technical teams",
+    contributors: ["alex", "jamie", "taylor"],
+    x_agent_id: "system"
+  },
+  confidence: {
+    human: 0.75,
+    ai: 0.80
+  },
+  links: [
+    {
+      relation: "referenced by",
+      to_id: "knowledge-001",
+      metadata: {}
+    },
+    {
+      relation: "part of",
+      to_id: "project-001",
+      metadata: {}
+    }
+  ]
+};
+
+// Collection of all sample blocks
+export const memoryBlocks = [
+  sampleKnowledgeBlock,
+  sampleProjectBlock,
+  sampleDocBlock
+];
 
 
