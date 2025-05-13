@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { fetchBlocks, type BlocksResponse } from '@/utils/blocks';
-import { BlockRenderer } from '@/components/BlockRenderer';
+import MemoryBlockRenderer from '@/components/MemoryBlockRenderer';
 import type { MemoryBlock } from '@/api/models';
 
 export default function BlocksPage() {
@@ -50,7 +50,7 @@ export default function BlocksPage() {
                         <p className="col-span-full text-center text-muted-foreground">No memory blocks found.</p>
                     ) : (
                         blocks.map((block) => (
-                            <BlockRenderer
+                            <MemoryBlockRenderer
                                 key={block.id || `block-${Math.random()}`}
                                 blockId={block.id || 'unknown'}
                                 blockType={block.type}

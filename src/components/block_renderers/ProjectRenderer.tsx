@@ -7,11 +7,14 @@ export const ProjectRenderer: React.FC<BlockRendererProps> = ({ data, blockId })
     const projectName = projectTitleFromMetadata || data.text || `Project ${blockId}`;
 
     return (
-        <div className="block-renderer project-block border p-4 my-2 rounded bg-blue-50">
-            <h3 className="font-semibold text-lg mb-2 text-blue-800">Project: {projectName}</h3>
-            {/* Display other relevant project details from data or data.metadata */}
+        <div className="block-renderer project-block content-block border p-4 my-2 rounded bg-blue-50">
+            <div className="flex items-start justify-between mb-2">
+                <h3 className="text-lg font-serif font-semibold text-blue-800">Project: {projectName}</h3>
+                {/* Add type/version span if needed, similar to KnowledgeBlock */}
+            </div>
+            {/* Maybe add Progress component if applicable? */}
             {data.metadata?.description && (
-                <p className="text-sm text-blue-700 mb-2">{String(data.metadata.description)}</p>
+                <p className="text-sm text-muted-foreground mb-3">{String(data.metadata.description)}</p>
             )}
             <details className="mt-2 text-xs text-gray-500">
                 <summary className="cursor-pointer">Details</summary>
