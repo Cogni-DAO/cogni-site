@@ -1,6 +1,7 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useFilteredBlocks, type SortOption } from '@/hooks/useFilteredBlocks';
 import MemoryBlockListItem from '@/components/MemoryBlockListItem';
 import { Input } from '@/components/ui/input';
@@ -56,7 +57,10 @@ function MemoryBlockSkeleton() {
 }
 
 export default function ExplorePage() {
-  // Use our filtered blocks hook
+  const searchParams = useSearchParams();
+  const searchFromUrl = searchParams.get('search') || '';
+
+  // Use our filtered blocks hook with initial search from URL
   const {
     blocks,
     totalBlocks,
@@ -68,7 +72,16 @@ export default function ExplorePage() {
     setSortBy,
     blockType,
     setBlockType
-  } = useFilteredBlocks();
+  } = useFilteredBlocks({
+    initialSearchQuery: searchFromUrl
+  });
+
+  // Update search query when URL param changes
+  useEffect(() => {
+    if (searchFromUrl) {
+      setSearchQuery(searchFromUrl);
+    }
+  }, [searchFromUrl, setSearchQuery]);
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl">
