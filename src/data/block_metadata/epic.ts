@@ -1,23 +1,23 @@
 import { z } from 'zod';
 
 /**
- * Metadata schema for MemoryBlocks of type "task".
-Based on the link-first relationship approach where BlockLink is the source of truth for relationships.
+ * Epic metadata schema.
 
-Tasks can have the following relationships via BlockLinks:
-- subtask_of: Points to a parent task or project that this task is part of
-- depends_on: Points to another task that must be completed before this one can start
-- belongs_to_epic: Points to an epic that this task is part of
-- blocks: Points to another task that cannot proceed until this one is complete
-- is_blocked_by: Points to another task that is blocking this one
-- has_bug: Points to a bug that is related to this task
+An Epic represents a large body of work that can be broken down into multiple projects,
+tasks, or stories. It typically represents a significant business initiative or a major
+feature set.
 
-Tasks inherit from ExecutableMetadata and support agent execution with:
+Epics inherit from ExecutableMetadata and support agent execution with:
 - Planning fields (tool_hints, action_items, acceptance_criteria, expected_artifacts)
 - Agent framework fields (execution_timeout_minutes, cost_budget_usd, role_hint)
 - Completion fields (deliverables, validation_report)
+
+Epics can have relationships via BlockLinks:
+- parent_of: Points to projects that are part of this epic
+- epic_contains: Points to tasks that are part of this epic
+- has_bug: Points to bugs that affect this epic
  */
-export const TaskMetadataSchema = z.object({
+export const EpicMetadataSchema = z.object({
   x_timestamp: z.string().datetime().optional(),
   x_agent_id: z.string(),
   x_tool_id: z.union([z.string(), z.null()]).optional(),
@@ -37,41 +37,36 @@ export const TaskMetadataSchema = z.object({
   execution_phase: z.union([z.string(), z.null()]).optional(),
   deliverables: z.array(z.unknown()).optional(),
   validation_report: z.union([z.unknown(), z.null()]).optional(),
-  assignee: z.union([z.string(), z.null()]).optional(),
-  title: z.string(),
+  owner: z.string(),
+  name: z.string(),
   description: z.string(),
-  priority: z.union([z.string(), z.null()]).optional(),
-  story_points: z.union([z.number(), z.null()]).optional(),
-  estimate_hours: z.union([z.number(), z.null()]).optional(),
   start_date: z.union([z.string(), z.null()]).optional(),
-  due_date: z.union([z.string(), z.null()]).optional(),
-  labels: z.array(z.unknown()).optional(),
-  confidence_score: z.union([z.unknown(), z.null()]).optional(),
-  phase: z.union([z.string(), z.null()]).optional(),
-  implementation_details: z.union([z.unknown(), z.null()]).optional(),
-  completed: z.boolean().optional(),
-  current_status: z.union([z.string(), z.null()]).optional()
+  target_date: z.union([z.string(), z.null()]).optional(),
+  priority: z.union([z.string(), z.null()]).optional(),
+  progress_percent: z.union([z.number(), z.null()]).optional(),
+  tags: z.union([z.unknown(), z.null()]).optional(),
+  completed: z.boolean().optional()
 });
 
 /**
- * Metadata schema for MemoryBlocks of type "task".
-Based on the link-first relationship approach where BlockLink is the source of truth for relationships.
+ * Epic metadata schema.
 
-Tasks can have the following relationships via BlockLinks:
-- subtask_of: Points to a parent task or project that this task is part of
-- depends_on: Points to another task that must be completed before this one can start
-- belongs_to_epic: Points to an epic that this task is part of
-- blocks: Points to another task that cannot proceed until this one is complete
-- is_blocked_by: Points to another task that is blocking this one
-- has_bug: Points to a bug that is related to this task
+An Epic represents a large body of work that can be broken down into multiple projects,
+tasks, or stories. It typically represents a significant business initiative or a major
+feature set.
 
-Tasks inherit from ExecutableMetadata and support agent execution with:
+Epics inherit from ExecutableMetadata and support agent execution with:
 - Planning fields (tool_hints, action_items, acceptance_criteria, expected_artifacts)
 - Agent framework fields (execution_timeout_minutes, cost_budget_usd, role_hint)
 - Completion fields (deliverables, validation_report)
+
+Epics can have relationships via BlockLinks:
+- parent_of: Points to projects that are part of this epic
+- epic_contains: Points to tasks that are part of this epic
+- has_bug: Points to bugs that affect this epic
  * Manually defined to match Zod schema exactly (no z.infer<>)
  */
-export interface TaskMetadata {
+export interface EpicMetadata {
   x_timestamp?: string;
   x_agent_id: string;
   x_tool_id?: string | null;
@@ -91,18 +86,13 @@ export interface TaskMetadata {
   execution_phase?: string | null;
   deliverables?: unknown[];
   validation_report?: unknown | null;
-  assignee?: string | null;
-  title: string;
+  owner: string;
+  name: string;
   description: string;
-  priority?: string | null;
-  story_points?: number | null;
-  estimate_hours?: number | null;
   start_date?: string | null;
-  due_date?: string | null;
-  labels?: unknown[];
-  confidence_score?: unknown | null;
-  phase?: string | null;
-  implementation_details?: unknown | null;
+  target_date?: string | null;
+  priority?: string | null;
+  progress_percent?: number | null;
+  tags?: unknown | null;
   completed?: boolean;
-  current_status?: string | null;
 }

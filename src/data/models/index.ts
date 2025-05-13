@@ -28,6 +28,7 @@ export * from './createMemoryBlockInputState';
 export * from './createMemoryBlockInputVisibility';
 export * from './errorResponse';
 export * from './errorResponseCode';
+export * from './getAllBlocksApiV1BlocksGetParams';
 export * from './hTTPValidationError';
 export * from './historyMessage';
 export * from './historyMessageRole';

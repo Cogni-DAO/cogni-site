@@ -19,4 +19,11 @@ export const BlockLinkRelation = {
   depends_on: 'depends_on',
   child_of: 'child_of',
   mentions: 'mentions',
+  parent_of: 'parent_of',
+  belongs_to_epic: 'belongs_to_epic',
+  epic_contains: 'epic_contains',
+  blocks: 'blocks',
+  is_blocked_by: 'is_blocked_by',
+  bug_affects: 'bug_affects',
+  has_bug: 'has_bug',
 } as const;

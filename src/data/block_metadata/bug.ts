@@ -1,23 +1,22 @@
 import { z } from 'zod';
 
 /**
- * Metadata schema for MemoryBlocks of type "task".
-Based on the link-first relationship approach where BlockLink is the source of truth for relationships.
+ * Bug metadata schema.
 
-Tasks can have the following relationships via BlockLinks:
-- subtask_of: Points to a parent task or project that this task is part of
-- depends_on: Points to another task that must be completed before this one can start
-- belongs_to_epic: Points to an epic that this task is part of
-- blocks: Points to another task that cannot proceed until this one is complete
-- is_blocked_by: Points to another task that is blocking this one
-- has_bug: Points to a bug that is related to this task
+A Bug represents an issue, defect, or unexpected behavior in software
+that needs to be addressed.
 
-Tasks inherit from ExecutableMetadata and support agent execution with:
+Bugs inherit from ExecutableMetadata and support agent execution with:
 - Planning fields (tool_hints, action_items, acceptance_criteria, expected_artifacts)
 - Agent framework fields (execution_timeout_minutes, cost_budget_usd, role_hint)
 - Completion fields (deliverables, validation_report)
+
+Bugs can have relationships via BlockLinks:
+- bug_affects: Points to a component, project, or system affected by this bug
+- is_blocked_by: Points to another task or bug that is blocking this one
+- blocks: Points to another task or bug that is blocked by this one
  */
-export const TaskMetadataSchema = z.object({
+export const BugMetadataSchema = z.object({
   x_timestamp: z.string().datetime().optional(),
   x_agent_id: z.string(),
   x_tool_id: z.union([z.string(), z.null()]).optional(),
@@ -37,41 +36,43 @@ export const TaskMetadataSchema = z.object({
   execution_phase: z.union([z.string(), z.null()]).optional(),
   deliverables: z.array(z.unknown()).optional(),
   validation_report: z.union([z.unknown(), z.null()]).optional(),
-  assignee: z.union([z.string(), z.null()]).optional(),
+  reporter: z.string(),
   title: z.string(),
   description: z.string(),
+  assignee: z.union([z.string(), z.null()]).optional(),
   priority: z.union([z.string(), z.null()]).optional(),
-  story_points: z.union([z.number(), z.null()]).optional(),
-  estimate_hours: z.union([z.number(), z.null()]).optional(),
-  start_date: z.union([z.string(), z.null()]).optional(),
+  severity: z.union([z.string(), z.null()]).optional(),
+  version_found: z.union([z.string(), z.null()]).optional(),
+  version_fixed: z.union([z.string(), z.null()]).optional(),
+  steps_to_reproduce: z.union([z.string(), z.null()]).optional(),
   due_date: z.union([z.string(), z.null()]).optional(),
-  labels: z.array(z.unknown()).optional(),
+  labels: z.union([z.unknown(), z.null()]).optional(),
   confidence_score: z.union([z.unknown(), z.null()]).optional(),
-  phase: z.union([z.string(), z.null()]).optional(),
-  implementation_details: z.union([z.unknown(), z.null()]).optional(),
-  completed: z.boolean().optional(),
-  current_status: z.union([z.string(), z.null()]).optional()
+  expected_behavior: z.union([z.string(), z.null()]).optional(),
+  actual_behavior: z.union([z.string(), z.null()]).optional(),
+  environment: z.union([z.string(), z.null()]).optional(),
+  logs_link: z.union([z.string(), z.null()]).optional(),
+  repro_steps: z.union([z.unknown(), z.null()]).optional()
 });
 
 /**
- * Metadata schema for MemoryBlocks of type "task".
-Based on the link-first relationship approach where BlockLink is the source of truth for relationships.
+ * Bug metadata schema.
 
-Tasks can have the following relationships via BlockLinks:
-- subtask_of: Points to a parent task or project that this task is part of
-- depends_on: Points to another task that must be completed before this one can start
-- belongs_to_epic: Points to an epic that this task is part of
-- blocks: Points to another task that cannot proceed until this one is complete
-- is_blocked_by: Points to another task that is blocking this one
-- has_bug: Points to a bug that is related to this task
+A Bug represents an issue, defect, or unexpected behavior in software
+that needs to be addressed.
 
-Tasks inherit from ExecutableMetadata and support agent execution with:
+Bugs inherit from ExecutableMetadata and support agent execution with:
 - Planning fields (tool_hints, action_items, acceptance_criteria, expected_artifacts)
 - Agent framework fields (execution_timeout_minutes, cost_budget_usd, role_hint)
 - Completion fields (deliverables, validation_report)
+
+Bugs can have relationships via BlockLinks:
+- bug_affects: Points to a component, project, or system affected by this bug
+- is_blocked_by: Points to another task or bug that is blocking this one
+- blocks: Points to another task or bug that is blocked by this one
  * Manually defined to match Zod schema exactly (no z.infer<>)
  */
-export interface TaskMetadata {
+export interface BugMetadata {
   x_timestamp?: string;
   x_agent_id: string;
   x_tool_id?: string | null;
@@ -91,18 +92,21 @@ export interface TaskMetadata {
   execution_phase?: string | null;
   deliverables?: unknown[];
   validation_report?: unknown | null;
-  assignee?: string | null;
+  reporter: string;
   title: string;
   description: string;
+  assignee?: string | null;
   priority?: string | null;
-  story_points?: number | null;
-  estimate_hours?: number | null;
-  start_date?: string | null;
+  severity?: string | null;
+  version_found?: string | null;
+  version_fixed?: string | null;
+  steps_to_reproduce?: string | null;
   due_date?: string | null;
-  labels?: unknown[];
+  labels?: unknown | null;
   confidence_score?: unknown | null;
-  phase?: string | null;
-  implementation_details?: unknown | null;
-  completed?: boolean;
-  current_status?: string | null;
+  expected_behavior?: string | null;
+  actual_behavior?: string | null;
+  environment?: string | null;
+  logs_link?: string | null;
+  repro_steps?: unknown | null;
 }

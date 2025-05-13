@@ -24,7 +24,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/chat/": {
+    "/api/v1/chat": {
         parameters: {
             query?: never;
             header?: never;
@@ -34,14 +34,14 @@ export interface paths {
         get?: never;
         put?: never;
         /** Stream Chat */
-        post: operations["stream_chat_chat__post"];
+        post: operations["stream_chat_api_v1_chat_post"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/api/blocks": {
+    "/api/v1/blocks": {
         parameters: {
             query?: never;
             header?: never;
@@ -50,22 +50,42 @@ export interface paths {
         };
         /**
          * Get all memory blocks
-         * @description Retrieves all memory blocks currently stored in the system from the main branch.
+         * @description Retrieves memory blocks currently stored in the system. Can be filtered by block type.
          */
-        get: operations["get_all_blocks_api_blocks_get"];
+        get: operations["get_all_blocks_api_v1_blocks_get"];
         put?: never;
         /**
          * Create a new memory block
          * @description Adds a new memory block to the system using the core creation tool.
          */
-        post: operations["create_block_api_blocks_post"];
+        post: operations["create_block_api_v1_blocks_post"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/schemas/{block_type}/{version}": {
+    "/api/v1/blocks/{block_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a specific memory block by ID
+         * @description Retrieves a specific memory block by its unique identifier.
+         */
+        get: operations["get_block_api_v1_blocks__block_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/schemas/{block_type}/{version}": {
         parameters: {
             query?: never;
             header?: never;
@@ -78,7 +98,7 @@ export interface paths {
          *     If version is 'latest', resolves to the latest version for the type.
          *     Uses application/schema+json media type.
          */
-        get: operations["get_schema_schemas__block_type___version__get"];
+        get: operations["get_schema_api_v1_schemas__block_type___version__get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -87,7 +107,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/schemas/index.json": {
+    "/api/v1/schemas/index.json": {
         parameters: {
             query?: never;
             header?: never;
@@ -98,7 +118,7 @@ export interface paths {
          * Get index of all available block schemas
          * @description Returns a list of all available block schemas with their type, version, and URL.
          */
-        get: operations["get_schema_index_schemas_index_json_get"];
+        get: operations["get_schema_index_api_v1_schemas_index_json_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -126,7 +146,7 @@ export interface components {
              * @description The type of relationship between the blocks
              * @enum {string}
              */
-            relation: "related_to" | "subtask_of" | "depends_on" | "child_of" | "mentions";
+            relation: "related_to" | "subtask_of" | "depends_on" | "child_of" | "mentions" | "parent_of" | "belongs_to_epic" | "epic_contains" | "blocks" | "is_blocked_by" | "bug_affects" | "has_bug";
             /**
              * Priority
              * @description Priority of the link (higher numbers = higher priority)
@@ -316,7 +336,7 @@ export interface components {
              * @description Block type used to determine structure and relationships
              * @enum {string}
              */
-            type: "knowledge" | "task" | "project" | "doc" | "interaction" | "log";
+            type: "knowledge" | "task" | "project" | "doc" | "interaction" | "log" | "epic" | "bug";
             /**
              * Schema Version
              * @description Version of the schema this block adheres to (links to node_schemas table)
@@ -432,7 +452,7 @@ export interface operations {
             };
         };
     };
-    stream_chat_chat__post: {
+    stream_chat_api_v1_chat_post: {
         parameters: {
             query?: never;
             header: {
@@ -467,9 +487,12 @@ export interface operations {
             };
         };
     };
-    get_all_blocks_api_blocks_get: {
+    get_all_blocks_api_v1_blocks_get: {
         parameters: {
-            query?: never;
+            query?: {
+                type?: string;
+                case_insensitive?: boolean;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -485,6 +508,15 @@ export interface operations {
                     "application/json": components["schemas"]["MemoryBlock"][];
                 };
             };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
             /** @description Internal server error */
             500: {
                 headers: {
@@ -496,7 +528,7 @@ export interface operations {
             };
         };
     };
-    create_block_api_blocks_post: {
+    create_block_api_v1_blocks_post: {
         parameters: {
             query?: never;
             header?: never;
@@ -538,7 +570,56 @@ export interface operations {
             };
         };
     };
-    get_schema_schemas__block_type___version__get: {
+    get_block_api_v1_blocks__block_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                block_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MemoryBlock"];
+                };
+            };
+            /** @description Memory block not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_schema_api_v1_schemas__block_type___version__get: {
         parameters: {
             query?: never;
             header?: never;
@@ -570,7 +651,7 @@ export interface operations {
             };
         };
     };
-    get_schema_index_schemas_index_json_get: {
+    get_schema_index_api_v1_schemas_index_json_get: {
         parameters: {
             query?: never;
             header?: never;
