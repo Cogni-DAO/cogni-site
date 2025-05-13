@@ -1,0 +1,49 @@
+{
+    "type": "Task",
+    "status": "todo",
+    "project": "CogniMemorySystem-POC",
+    "name": "Implement /explore Page with Real Memory Blocks",
+    "description": "Update the /explore page to use the real memory blocks API instead of mock data. Implement search, sort, and filter functionality for memory blocks with proper loading states and error handling. Ensure the page displays memory blocks in a responsive grid layout consistent with the existing design.",
+    "implementation_details": {
+        "target_files": [
+            "src/app/explore/page.tsx",
+            "src/hooks/useFilteredBlocks.ts",
+            "src/components/ExploreSearch.tsx",
+            "src/components/ExploreFilters.tsx",
+            "src/components/MemoryBlockGrid.tsx",
+            "src/utils/filterUtils.ts"
+        ]
+    },
+    "action_items": [
+        "[ ] **Create Next.js App Router Page**: Create `src/app/explore/page.tsx` using the client component pattern",
+        "[ ] **Implement useFilteredBlocks Hook**: Create a custom hook that uses `useBlocks()` and applies filtering, sorting, and search logic",
+        "[ ] **Replace MockData**: Remove `getKnowledgeNodes()` usage and implement proper memory block fetching from API",
+        "[ ] **Update UI Components**: Refactor UI to use `MemoryBlockListItem` instead of `KnowledgeRelatedNodes`",
+        "[ ] **Add Loading States**: Implement loading skeletons for blocks while data is being fetched",
+        "[ ] **Add Error Handling**: Display appropriate error messages when API requests fail",
+        "[ ] **Update Search Functionality**: Implement real-time filtering based on block text and metadata",
+        "[ ] **Update Sorting Options**: Update sorting to work with memory block properties (confidence, type, creation date)",
+        "[ ] **Add Filter by Block Type**: Add ability to filter blocks by their type (doc, knowledge, project, etc.)",
+        "[ ] **Ensure Responsive Layout**: Implement responsive grid layout similar to the blocks page",
+        "[ ] **Use Standard Confidence Display**: Ensure confidence scores use `getBlockConfidencePercentage()`"
+    ],
+    "test_criteria": [
+        "[ ] All memory blocks are correctly fetched from the API and displayed",
+        "[ ] Search functionality correctly filters blocks based on text content and metadata",
+        "[ ] Sorting options correctly order blocks by confidence, type, and creation date",
+        "[ ] Filter by type correctly shows only blocks of the selected type",
+        "[ ] Loading states are displayed while data is being fetched",
+        "[ ] Error states are displayed when API requests fail",
+        "[ ] UI is responsive and displays properly on mobile, tablet, and desktop",
+        "[ ] Confidence percentage is consistently calculated and displayed"
+    ],
+    "success_criteria": [
+        "[ ] The Explore page displays real memory blocks from the API",
+        "[ ] Users can search, sort, and filter memory blocks",
+        "[ ] The UI is consistent with the existing design language",
+        "[ ] The page is responsive and works on all device sizes",
+        "[ ] Loading and error states provide good user feedback",
+        "[ ] Performance is optimized for potentially large numbers of memory blocks"
+    ],
+    "current_status": "Ready for implementation. All required components and data structures exist in the codebase."
+}

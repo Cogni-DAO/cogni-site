@@ -1,7 +1,6 @@
 import React from 'react';
 import BaseBlockRenderer from './BaseBlockRenderer';
 import type { MemoryBlock } from '@/data/models/memoryBlock';
-import type { DocMetadata } from '@/data/block_metadata/doc';
 import { MemoryBlockType } from '@/data/models/memoryBlockType';
 import FormatRenderer from '@/utils/formatRenderers';
 import { getBlockConfidencePercentage } from '@/utils/blockUtils';

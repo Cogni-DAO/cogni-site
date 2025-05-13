@@ -127,7 +127,7 @@ export const renderMarkdown = (text: string): JSX.Element[] => {
         inCodeBlock = false;
     };
 
-    lines.forEach((line, index) => {
+    lines.forEach((line) => {
         // Code blocks
         if (line.startsWith('```')) {
             if (inCodeBlock) {

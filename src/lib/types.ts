@@ -1,9 +1,4 @@
 import type { MemoryBlock } from '@/data/models/memoryBlock';
-import type { KnowledgeMetadata } from '@/data/block_metadata/knowledge';
-import type { ProjectMetadata } from '@/data/block_metadata/project';
-import type { TaskMetadata } from '@/data/block_metadata/task';
-import type { DocMetadata } from '@/data/block_metadata/doc';
-import type { LogMetadata } from '@/data/block_metadata/log';
 
 /**
  * Props accepted by the main BlockRenderer component and individual block renderers.
@@ -11,9 +6,8 @@ import type { LogMetadata } from '@/data/block_metadata/log';
 export interface BlockRendererProps {
     blockId: string;
     blockType: string;
-    blockVersion: string; // Keep for now, even if unused in switch
-    data: MemoryBlock; // Use the generated Orval type
-    // Add other common props if needed (e.g., isSelected, callbacks)
+    blockVersion: string;
+    data: MemoryBlock;
 }
 
 /**

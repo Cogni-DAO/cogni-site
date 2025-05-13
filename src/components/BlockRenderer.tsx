@@ -8,21 +8,6 @@ import { ProjectRenderer } from './block_renderers/ProjectRenderer';
 import { UnknownBlockRenderer } from './block_renderers/UnknownBlockRenderer';
 import DocRenderer from './block_renderers/DocRenderer';
 
-// Import adapters
-import {
-    adaptMemoryBlockToKnowledgeProps,
-    adaptMemoryBlockToProjectProps,
-    adaptMemoryBlockToTaskProps,
-    adaptMemoryBlockToDocProps,
-    adaptMemoryBlockToLogProps
-} from '@/lib/adapters/memoryBlockAdapters';
-
-// TODO: Create and import these other renderers as needed
-// import { TaskRenderer } from './renderers/TaskRenderer';
-// import { ThoughtRenderer } from './renderers/ThoughtRenderer'; // Assuming 'Thought' is a type
-// import { LogRenderer } from './renderers/LogRenderer';
-// import { DocRenderer } from './renderers/DocRenderer';
-
 // Placeholder for renderers not yet created
 const PlaceholderRenderer: React.FC<BlockRendererProps> = ({ blockType, data, blockVersion }) => (
     <div className="block-renderer placeholder-block content-block border border-dashed border-gray-400 bg-gray-50 text-gray-700">
@@ -45,23 +30,20 @@ const PlaceholderRenderer: React.FC<BlockRendererProps> = ({ blockType, data, bl
 );
 
 export const BlockRenderer: React.FC<BlockRendererProps> = (props) => {
-    const { blockType, data } = props;
+    const { blockType, blockId, data } = props;
 
     switch (blockType) {
         case MemoryBlockType.knowledge:
-            const knowledgeProps = adaptMemoryBlockToKnowledgeProps(data);
-            return <KnowledgeRenderer {...knowledgeProps} />;
+            return <KnowledgeRenderer block={data} />;
 
         case MemoryBlockType.project:
-            // ProjectRenderer still uses BlockRendererProps, not ProjectRendererProps
-            return <ProjectRenderer {...props} />;
+            return <ProjectRenderer block={data} blockId={blockId} />;
 
         case MemoryBlockType.task:
             // Use the PlaceholderRenderer until TaskRenderer is implemented
             return <PlaceholderRenderer {...props} />;
 
         case MemoryBlockType.doc:
-            // Use our new DocRenderer
             return <DocRenderer block={data} />;
 
         case MemoryBlockType.log:
