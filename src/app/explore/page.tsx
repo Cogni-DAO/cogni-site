@@ -1,3 +1,4 @@
+'use client';
 
 import React, { useState } from 'react';
 import { getKnowledgeNodes } from '@/data/knowledgeNodes';
@@ -13,18 +14,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const ExplorePage = () => {
+export default function ExplorePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('verificationDesc');
-  
+
   const allNodes = getKnowledgeNodes();
-  
+
   // Filter nodes based on search query
-  const filteredNodes = allNodes.filter(node => 
+  const filteredNodes = allNodes.filter(node =>
     node.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     node.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
-  
+
   // Sort nodes based on selected option
   const sortedNodes = [...filteredNodes].sort((a, b) => {
     switch (sortBy) {
@@ -40,11 +41,11 @@ const ExplorePage = () => {
         return 0;
     }
   });
-  
+
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl">
       <h1 className="text-3xl md:text-4xl font-serif font-bold mb-6">Explore Knowledge Nodes</h1>
-      
+
       {/* Search and Filter Controls */}
       <div className="flex flex-col md:flex-row gap-4 mb-8">
         <div className="relative flex-grow">
@@ -56,7 +57,7 @@ const ExplorePage = () => {
           />
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         </div>
-        
+
         <div className="flex items-center space-x-2">
           <span className="text-sm whitespace-nowrap">Sort by:</span>
           <Select value={sortBy} onValueChange={setSortBy}>
@@ -72,7 +73,7 @@ const ExplorePage = () => {
           </Select>
         </div>
       </div>
-      
+
       {/* Results */}
       {sortedNodes.length === 0 ? (
         <div className="text-center py-12">
@@ -86,12 +87,10 @@ const ExplorePage = () => {
             Showing {sortedNodes.length} knowledge {sortedNodes.length === 1 ? 'node' : 'nodes'}
             {searchQuery && ` for search "${searchQuery}"`}
           </p>
-          
+
           <KnowledgeRelatedNodes nodes={sortedNodes} />
         </>
       )}
     </div>
   );
-};
-
-export default ExplorePage;
+}
