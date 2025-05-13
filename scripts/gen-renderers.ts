@@ -19,29 +19,51 @@ interface BlockSchemaInfo {
     // Potentially add other metadata if needed later
 }
 
-// --- Helper function copied from scripts/gen-openapi.ts ---
+// --- Helper function with support for redirects ---
 // Function to fetch data using native http/https
-function fetchData(url: string): Promise<string> {
+function fetchData(url: string, maxRedirects: number = 5): Promise<string> {
     return new Promise((resolve, reject) => {
-        const client = url.startsWith('https') ? https : http;
+        const makeRequest = (currentUrl: string, redirectsLeft: number) => {
+            const client = currentUrl.startsWith('https') ? https : http;
 
-        client.get(url, (res) => {
-            if (res.statusCode !== 200) {
-                reject(new Error(`Failed to fetch: ${res.statusCode}`));
-                return;
-            }
+            console.log(`   Fetching: ${currentUrl}`);
+            client.get(currentUrl, (res) => {
+                if (res.statusCode && res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+                    // Got a redirect
+                    if (redirectsLeft === 0) {
+                        reject(new Error(`Too many redirects (followed ${maxRedirects})`));
+                        return;
+                    }
 
-            let data = '';
-            res.on('data', (chunk) => {
-                data += chunk;
+                    // Construct absolute URL if relative
+                    const redirectUrl = /^https?:\/\//.test(res.headers.location)
+                        ? res.headers.location
+                        : new URL(res.headers.location, new URL(currentUrl).origin).toString();
+
+                    console.log(`   Redirected to: ${redirectUrl}`);
+                    makeRequest(redirectUrl, redirectsLeft - 1);
+                    return;
+                }
+
+                if (res.statusCode !== 200) {
+                    reject(new Error(`Failed to fetch: ${res.statusCode}`));
+                    return;
+                }
+
+                let data = '';
+                res.on('data', (chunk) => {
+                    data += chunk;
+                });
+
+                res.on('end', () => {
+                    resolve(data);
+                });
+            }).on('error', (err) => {
+                reject(err);
             });
+        };
 
-            res.on('end', () => {
-                resolve(data);
-            });
-        }).on('error', (err) => {
-            reject(err);
-        });
+        makeRequest(url, maxRedirects);
     });
 }
 // --- End helper function ---
@@ -50,7 +72,7 @@ function fetchData(url: string): Promise<string> {
 const schemaIndexPath = path.resolve(process.cwd(), 'schemas', 'index.json');
 
 // Define the fallback fetch URL (allow override via environment variable)
-const schemaIndexFetchUrl = process.env.SCHEMA_INDEX_URL || 'http://localhost:8000/schemas/index.json';
+const schemaIndexFetchUrl = process.env.SCHEMA_INDEX_URL || 'http://localhost:8000/api/v1/schemas/index.json';
 
 // Define the output directory for renderer components
 const renderersDir = path.resolve(process.cwd(), 'src', 'components', 'block_renderers');

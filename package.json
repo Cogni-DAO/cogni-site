@@ -8,9 +8,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "gen:types": "node scripts/gen-openapi.js dev",
-    "gen:types:preview": "node scripts/gen-openapi.js preview",
-    "gen:types:prod": "node scripts/gen-openapi.js prod",
+    "gen:types": "node --loader ts-node/esm scripts/gen-openapi.ts dev",
+    "gen:types:preview": "node --loader ts-node/esm scripts/gen-openapi.ts preview",
+    "gen:types:prod": "node --loader ts-node/esm scripts/gen-openapi.ts prod",
     "gen:api": "orval"
   },
   "dependencies": {
