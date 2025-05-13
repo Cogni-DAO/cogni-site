@@ -1,0 +1,6 @@
+# Ignore generated stubs
+src/components/unused_block_renderers/*
+
+# Ignore utility files temporarily
+src/utils/blocks.ts
+src/utils/chat.ts 

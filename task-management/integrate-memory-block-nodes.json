@@ -1,0 +1,49 @@
+{
+    "type": "Task",
+    "status": "todo",
+    "project": "CogniMemorySystem-POC",
+    "name": "Integrate Memory Block Nodes from Backend",
+    "description": "Implement frontend changes to query and display memory block nodes from the new '/api/nodes' backend endpoint, replacing the current static data. This involves regenerating types, creating an API layer, updating the Explore page to fetch and display dynamic data with search and loading/empty states, and adding E2E tests.",
+    "implementation_details": {
+        "target_files": [
+            "src/schemas/generated/knowledgenodeout.d.ts",
+            "package.json",
+            "src/lib/api/knowledgeNodes.ts",
+            "src/pages/explore.tsx",
+            "src/components/NodeCard.tsx",
+            "src/components/SearchBar.tsx",
+            ".env.local",
+            ".env.development",
+            "tests/e2e/explore.spec.ts"
+        ]
+    },
+    "action_items": [
+        "[ ] **Types Regeneration**: Run `npm run gen-types` after backend exports `knowledgenodeout.schema.json` to generate/update `src/schemas/generated/knowledgenodeout.d.ts`.",
+        "[ ] **API Layer Creation**: Create `src/lib/api/knowledgeNodes.ts` with a `getKnowledgeNodes(q = \"\")` function to fetch `KnowledgeNodeOut[]` from `${process.env.NEXT_PUBLIC_BACKEND_URL || ''}/api/nodes?q=${encodeURIComponent(q)}`, including error handling.",
+        "[ ] **Explore Page Data Fetching**: Modify `src/pages/explore.tsx` to replace static data with dynamic data fetched using `getKnowledgeNodes`. Implement loading states (e.g., skeletons) and empty states (e.g., 'No nodes found for \\\"${search}\\\"').",
+        "[ ] **Search Bar Wire-up**: In `src/pages/explore.tsx` (or its search component), debounce search input (300ms) and use the debounced query to call `getKnowledgeNodes` and update displayed nodes.",
+        "[ ] **CORS Origin Verification**: Ensure `NEXT_PUBLIC_BACKEND_URL` in `.env.local` (and/or `.env.development`) matches the backend's CORS allowed origins (e.g., `http://localhost:3000` for dev).",
+        "[ ] **E2E Test Implementation**: Add a Playwright/Cypress test (e.g., `tests/e2e/explore.spec.ts`) that visits `/explore`, types a query, and asserts that at least one node card is displayed.",
+        "[ ] **(Optional) Runtime Validation**: Consider adding runtime validation for the API response in `src/lib/api/knowledgeNodes.ts` using a library like Zod if project standards require it."
+    ],
+    "test_criteria": [
+        "[ ] `npm run gen-types` successfully generates `knowledgenodeout.d.ts` with correct types: `id:int`, `title:str`, `summary:str`, `verification_score:float`.",
+        "[ ] `getKnowledgeNodes` function in `src/lib/api/knowledgeNodes.ts` correctly fetches and returns data, or throws an error on failure.",
+        "[ ] Explore page (`src/pages/explore.tsx`) displays nodes fetched from the API.",
+        "[ ] Loading indicators are shown while data is being fetched on the Explore page.",
+        "[ ] Empty state message is shown when no nodes match the search query or if no nodes exist.",
+        "[ ] Search functionality on Explore page is debounced and correctly filters nodes based on user input.",
+        "[ ] No CORS errors occur when fetching data from the backend in the development environment.",
+        "[ ] E2E test for the Explore page search functionality passes.",
+        "[ ] (If implemented) Runtime validation correctly processes or rejects API responses."
+    ],
+    "success_criteria": [
+        "[ ] The Explore page dynamically displays knowledge nodes fetched from the `/api/nodes` backend endpoint.",
+        "[ ] Users can search for knowledge nodes, and the display updates accordingly with appropriate loading and empty states.",
+        "[ ] TypeScript types for `KnowledgeNodeOut` are up-to-date and used in the API layer and components.",
+        "[ ] The application is robust, with proper error handling for API requests and (optionally) runtime validation.",
+        "[ ] Frontend and backend CORS configurations are compatible.",
+        "[ ] An E2E test verifies the core functionality of fetching and displaying nodes."
+    ],
+    "current_status": "Awaiting implementation. Backend is expected to provide `knowledgenodeout.schema.json`."
+}

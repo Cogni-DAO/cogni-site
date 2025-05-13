@@ -1,7 +1,7 @@
 import React from 'react';
 import { ReactFlow, Controls, Background, BackgroundVariant, Node, Edge, OnNodesChange, OnEdgesChange } from '@xyflow/react';
 import { useTheme } from 'next-themes';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 interface GraphVisualizationProps {
   nodes: Node[];

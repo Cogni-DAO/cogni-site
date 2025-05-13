@@ -1,0 +1,110 @@
+{
+    "name": "Integrate MemoryBlock Data via Adapter Pattern and Themed Renderers",
+    "description": "Render MemoryBlocks using existing themes by retaining BlockRenderer, creating specific renderers (refactoring KnowledgeBlock into KnowledgeRenderer), implementing an adapter layer for data transformation, and using data fetching hooks.",
+    "status": "in-progress",
+    "tasks": [
+        {
+            "id": "define-renderer-props",
+            "summary": "Define Specific Props for Renderers",
+            "details": "In `src/lib/types.ts` (or next to renderers), define specific prop interfaces for each planned renderer: `KnowledgeRendererProps`, `ProjectRendererProps`, `DocRendererProps`, `TaskRendererProps`, etc. These interfaces define the exact data shape each renderer needs, independent of the raw MemoryBlock structure. Include fields like `title`, `content`, `displayLinks: { title: string; href: string }[]`, potentially `status`, `description`, etc., as relevant.",
+            "notes": [
+                "KnowledgeRendererProps should mirror the data needed by the original KnowledgeBlock structure."
+            ],
+            "status": "completed"
+        },
+        {
+            "id": "refactor-knowledgeblock-to-renderer",
+            "summary": "Refactor KnowledgeBlock into KnowledgeRenderer",
+            "details": "Create `src/components/block_renderers/KnowledgeRenderer.tsx`. Accept `KnowledgeRendererProps`.\n- Copy the JSX structure, styling (`content-block`, `prose`, etc.), and presentation logic from the original `src/components/KnowledgeBlock.tsx`.\n- Adapt the component to render using the incoming `KnowledgeRendererProps`.\n- Remove dependencies on props not included in `KnowledgeRendererProps` (like direct `verificationPercentage` if not adapted).\n- The original `src/components/KnowledgeBlock.tsx` can be deleted after this.",
+            "status": "completed"
+        },
+        {
+            "id": "create-memoryblock-adapter",
+            "summary": "Create MemoryBlock Adapter Functions",
+            "details": "Create `src/lib/adapters/memoryBlockAdapters.ts`. Import `MemoryBlock` and the specific renderer prop types (`KnowledgeRendererProps`, etc.).\n- Implement adapter functions, e.g.:\n  - `adaptMemoryBlockToKnowledgeProps(block: MemoryBlock): KnowledgeRendererProps`\n  - `adaptMemoryBlockToProjectProps(block: MemoryBlock): ProjectRendererProps`\n  - ... (for other types)\n- These functions contain the logic to extract, derive, and format data from a `MemoryBlock` object into the specific shape required by each renderer's props.",
+            "notes": [
+                "Mapping `block.links` (BlockLink[]) to `displayLinks` requires deciding how to generate the `href` (likely '/blocks/[id]'?) and `title` (e.g., `link.relation + ': ' + link.to_id`).",
+                "Mapping for `verificationPercentage` depends on the answer to blocking question."
+            ],
+            "status": "completed"
+        },
+        {
+            "id": "update-blockrenderer-dispatcher",
+            "summary": "Update BlockRenderer Dispatcher",
+            "details": "Modify `src/components/BlockRenderer.tsx`. It should still accept `BlockRendererProps` (containing `{ data: MemoryBlock }`).\n- Inside the `switch (blockType)` statement:\n    - For each known type (e.g., 'knowledge', 'project'), call the corresponding adapter function from `memoryBlockAdapters.ts` (e.g., `const adaptedProps = adaptMemoryBlockToKnowledgeProps(props.data);`).\n    - Render the specific renderer component, passing the `adaptedProps` (e.g., `<KnowledgeRenderer {...adaptedProps} />`).\n    - Keep the `default` case rendering `<UnknownBlockRenderer {...props} />`.",
+            "status": "completed"
+        },
+        {
+            "id": "create-memoryblock-list-item",
+            "summary": "Create MemoryBlockListItem Component (Card View)",
+            "details": "Create `src/components/MemoryBlockListItem.tsx`. It should accept props `{ block: MemoryBlock }`.\n- Render a single MemoryBlock card for list views.\n- Use `<Link href={'/blocks/' + block.id}>` as the root element.\n- **Critically:** Copy the *exact* JSX structure and apply the *exact* CSS classes used for each item within the `.map()` function of `src/components/KnowledgeRelatedNodes.tsx` to replicate the visual style.\n- Extract *minimal* data for display (title snippet from `block.metadata.title` or `block.text`, description snippet, etc.) from the `block` prop and place it into the copied JSX structure.",
+            "status": "completed"
+        },
+        {
+            "id": "create-data-fetching-hooks",
+            "summary": "Create Data Fetching Hooks",
+            "details": "Implement reusable data fetching hooks using SWR (or chosen library) and the Orval-generated API client (`src/api/`).\n- Create `src/hooks/useBlocks.ts`: Fetches the list of blocks (e.g., using `fetchBlocks()` from utils or a generated client function). Handles loading, error, and data states.\n- Create `src/hooks/useBlock.ts`: Fetches a single block by ID (`useBlock(id: string)`). Handles loading, error, and data states. **Depends on backend/fetch logic update.**",
+            "status": "completed"
+        },
+        {
+            "id": "update-blocks-list-page",
+            "summary": "Update Blocks Page for List View",
+            "details": "Modify `src/app/blocks/page.tsx`.\n- Use the `useBlocks()` hook to fetch data.\n- Display loading/error states based on the hook's return values.\n- If data is available, map over it and render `<MemoryBlockListItem key={block.id} block={block} />` for each block.",
+            "status": "completed"
+        },
+        {
+            "id": "create-detail-page",
+            "summary": "Create Dynamic Detail Page (/blocks/[id])",
+            "details": "Create the dynamic route page `src/app/blocks/[id]/page.tsx`.\n- Make it a Client Component ('use client').\n- Extract the `id` parameter from the URL.\n- Use the `useBlock(id)` hook to fetch the specific `MemoryBlock` data.\n- Display loading/error states.\n- If data is fetched successfully, prepare the props for `BlockRenderer` (`const rendererProps = { data: fetchedBlock, blockId: ..., blockType: ..., blockVersion: ... }`) and render `<BlockRenderer {...rendererProps} />`.",
+            "status": "completed"
+        },
+        {
+            "id": "create-base-block-renderer",
+            "summary": "Create BaseBlockRenderer for Consistent Block Rendering",
+            "details": "Create `src/components/block_renderers/BaseBlockRenderer.tsx` as a foundational component.\n- Accept entire `block: MemoryBlock` as a prop rather than deconstructing fields\n- Use slot-based composition (render props) rather than inheritance\n- Standardize theming with utility classes (Tailwind) for visual consistency\n- Extract reusable subcomponents:\n  - ProgressBar (verification status display)\n  - ActionButtons (Helpful, Needs Work, etc.)\n  - LinkList (Related nodes display)\n- Provide sensible defaults with customization options\n- Match styling from original KnowledgeBlock/node pages",
+            "status": "completed"
+        },
+        {
+            "id": "refactor-existing-renderers",
+            "summary": "Refactor Existing Renderers to Use BaseBlockRenderer",
+            "details": "Update existing renderers (KnowledgeRenderer, ProjectRenderer) to use the BaseBlockRenderer.\n- Implement DocRenderer, TaskRenderer, and LogRenderer using the base component\n- Ensure each renderer maintains type-specific customizations while reusing the base layout\n- Update the BlockRenderer dispatcher to use the appropriate renderer for each type\n- Use adapter functions to transform MemoryBlock data into the format needed by each renderer",
+            "status": "completed"
+        },
+        {
+            "id": "create-content-format-renderers",
+            "summary": "Create Format Renderers for Different Content Types",
+            "details": "Create a separate utility for rendering content in different formats (markdown, plain text, etc.).\n- Extract format rendering logic from specific block renderers\n- Create a central `FormatRenderer` component that handles different content formats\n- Implement support for markdown formatting with proper handling of headers, lists, code blocks, and emphasis\n- Create a clean API for block renderers to use when displaying formatted content",
+            "status": "completed"
+        },
+        {
+            "id": "standardize-confidence-display",
+            "summary": "Standardize Confidence Display and Terminology",
+            "details": "Create a consistent approach to displaying block confidence/verification metrics.\n- Create a shared utility function for calculating confidence percentages (`getBlockConfidencePercentage`)\n- Update all components to use consistent terminology ('confidence' instead of 'verification')\n- Ensure confidence data is sourced from the canonical location (`block.confidence.human`)\n- Display confidence metrics consistently across all block types and views\n- Apply DRY principles to remove redundant confidence calculation logic",
+            "status": "completed"
+        },
+        {
+            "id": "backend-fetch-by-id",
+            "summary": "Implement Backend/Fetch Logic for Single Block",
+            "details": "Ensure the backend API provides an endpoint (e.g., `/blocks/{block_id}`) or modify fetch logic (`src/utils/blocks.ts` or API client) to fetch a single `MemoryBlock` by ID.",
+            "status": "completed"
+        },
+        {
+            "id": "handle-blocking-questions",
+            "summary": "Address Blocking Questions",
+            "details": "Update adapter logic based on answers:\n- How to fetch/determine related blocks/nodes for the `links` prop transformation.\n- Where `verificationPercentage` data originates in `MemoryBlock` (e.g., `confidence.human_verified`?) and how to adapt it.",
+            "status": "completed"
+        },
+        {
+            "id": "cleanup-components",
+            "summary": "Cleanup Deprecated/Redundant Components",
+            "details": "After verifying the new flow, delete unused components: `MemoryBlockRenderer.tsx` (if created in previous attempt), potentially the original `KnowledgeBlock.tsx` (if fully replaced by `KnowledgeRenderer.tsx`), `BlockRenderer.tsx`'s previous specific renderers (`ProjectRenderer` etc.) *if* the new adapters + renderers cover their types. Keep `UnknownBlockRenderer.tsx`.",
+            "status": "todo"
+        },
+        {
+            "id": "validate-integration",
+            "summary": "Validate Full Integration",
+            "details": "Run linters, build, and visually test:\n- `/blocks` page fetches data via hook, displays loading/error states, and renders cards using `MemoryBlockListItem`.\n- Cards match the style of `KnowledgeRelatedNodes` items.\n- Clicking a card navigates to `/blocks/[id]`.\n- `/blocks/[id]` fetches data via hook, handles loading/error, and renders details using `BlockRenderer` -> specific renderer (e.g., `KnowledgeRenderer`) with the correct theme.",
+            "status": "todo"
+        }
+    ]
+}
