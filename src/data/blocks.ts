@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type {
+  CreateMemoryBlockInput,
   ErrorResponse,
   MemoryBlock
 } from './models';
@@ -55,6 +56,53 @@ export const getAllBlocksApiBlocksGet = async ( options?: RequestInit): Promise<
   const data: getAllBlocksApiBlocksGetResponse['data'] = body ? JSON.parse(body) : {}
 
   return { data, status: res.status, headers: res.headers } as getAllBlocksApiBlocksGetResponse
+}
+
+
+/**
+ * Adds a new memory block to the system using the core creation tool.
+ * @summary Create a new memory block
+ */
+export type createBlockApiBlocksPostResponse201 = {
+  data: MemoryBlock
+  status: 201
+}
+
+export type createBlockApiBlocksPostResponse422 = {
+  data: ErrorResponse
+  status: 422
+}
+    
+export type createBlockApiBlocksPostResponseComposite = createBlockApiBlocksPostResponse201 | createBlockApiBlocksPostResponse422;
+    
+export type createBlockApiBlocksPostResponse = createBlockApiBlocksPostResponseComposite & {
+  headers: Headers;
+}
+
+export const getCreateBlockApiBlocksPostUrl = () => {
+
+
+  
+
+  return `/api/blocks`
+}
+
+export const createBlockApiBlocksPost = async (createMemoryBlockInput: CreateMemoryBlockInput, options?: RequestInit): Promise<createBlockApiBlocksPostResponse> => {
+  
+  const res = await fetch(getCreateBlockApiBlocksPostUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      createMemoryBlockInput,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
+  const data: createBlockApiBlocksPostResponse['data'] = body ? JSON.parse(body) : {}
+
+  return { data, status: res.status, headers: res.headers } as createBlockApiBlocksPostResponse
 }
 
 

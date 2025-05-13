@@ -24,14 +24,23 @@
     "## 🔄 PIPELINE",
     "[ ] CI ➜ Ensure `npm run gen:api && gen:renderers` runs after `backend/export_openapi.py`. Fail CI if `git diff --exit-code schemas/ src/api/` is non-zero",
     "## 🛠️  CODE MOD",
-    "[ ] Replace manual `fetchBlocks()` and `createChatRequest()` with generated hooks from `src/api/chat` and `src/api/blocks`"
+    "[ ] Replace manual `fetchBlocks()` and `createChatRequest()` with generated hooks from `src/api/chat` and `src/api/blocks`",
+    "## 📋 METADATA TYPINGS",
+    "[ ] Extend `scripts/gen-renderers.ts` or create `gen-metadata-models.ts` to fetch each `/schemas/{type}/latest` entry",
+    "[ ] Convert each JSON Schema to `.zod.ts` and `.d.ts` type via `json-schema-to-zod` or `quicktype`",
+    "[ ] Write output to `src/lib/block_metadata/{type}.ts`",
+    "[ ] Refactor renderer stubs to use `props.data: ProjectMetadata`, etc.",
+    "[ ] Optionally create a `BlockMetadataByType` type map for future narrowing"
   ],
   "success_criteria": [
     "• `Doc.v3.tsx`, `Task.v2.tsx`, etc. include real typed props based on zod schemas",
     "• `Task.v2` renders actual block metadata (not just JSON dump)",
     "• `UnknownBlockRenderer` only appears for types not in schema index",
     "• CI fails on schema/render drift",
-    "• All Ajv validation fully removed"
+    "• All Ajv validation fully removed",
+    "• Frontend has real TS types for `ProjectMetadata`, `TaskMetadata`, etc.",
+    "• Renderer components show real fields, not just `<pre>` JSON dumps",
+    "• BlockRendererRegistry can narrow metadata type based on block type"
   ],
   "priority": "high"
 }

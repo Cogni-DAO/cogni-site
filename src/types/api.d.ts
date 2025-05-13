@@ -54,7 +54,11 @@ export interface paths {
          */
         get: operations["get_all_blocks_api_blocks_get"];
         put?: never;
-        post?: never;
+        /**
+         * Create a new memory block
+         * @description Adds a new memory block to the system using the core creation tool.
+         */
+        post: operations["create_block_api_blocks_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -72,6 +76,7 @@ export interface paths {
          * Get JSON schema for a block type and version
          * @description Returns the JSON schema for the given block type and version.
          *     If version is 'latest', resolves to the latest version for the type.
+         *     Uses application/schema+json media type.
          */
         get: operations["get_schema_schemas__block_type___version__get"];
         put?: never;
@@ -197,6 +202,64 @@ export interface components {
              * @description Optional AI-generated confidence score (0.0 to 1.0)
              */
             ai?: number | null;
+        };
+        /**
+         * CreateMemoryBlockInput
+         * @description Input model for creating a new memory block.
+         */
+        CreateMemoryBlockInput: {
+            /**
+             * Type
+             * @description Type of memory block to create (must be registered in schema registry)
+             */
+            type: string;
+            /**
+             * Text
+             * @description Primary content of the memory block
+             */
+            text: string;
+            /**
+             * State
+             * @description Initial state of the block
+             * @default draft
+             */
+            state: ("draft" | "published" | "archived") | null;
+            /**
+             * Visibility
+             * @description Visibility level of the block
+             * @default internal
+             */
+            visibility: ("internal" | "public" | "restricted") | null;
+            /**
+             * Tags
+             * @description Optional tags for filtering and metadata
+             */
+            tags?: string[];
+            /**
+             * Metadata
+             * @description Type-specific metadata for the block
+             */
+            metadata?: {
+                [key: string]: unknown;
+            };
+            /**
+             * Source File
+             * @description Optional source file or markdown name
+             */
+            source_file?: string | null;
+            /** @description Optional confidence scores for the block */
+            confidence?: components["schemas"]["ConfidenceScore"] | null;
+            /**
+             * Created By
+             * @description Optional identifier for creator (agent name or user ID)
+             * @default agent
+             */
+            created_by: string | null;
+            /**
+             * Links
+             * @description Optional list of links to other blocks
+             */
+            links?: components["schemas"]["BlockLink"][] | null;
         };
         /**
          * ErrorResponse
@@ -423,6 +486,48 @@ export interface operations {
                 };
             };
             /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    create_block_api_blocks_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateMemoryBlockInput"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MemoryBlock"];
+                };
+            };
+            /** @description Validation Error (invalid input data or metadata) */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal server error (failed to save or fetch) */
             500: {
                 headers: {
                     [name: string]: unknown;

@@ -55,6 +55,7 @@ export const healthCheckHealthzGet = async ( options?: RequestInit): Promise<hea
 /**
  * Returns the JSON schema for the given block type and version.
 If version is 'latest', resolves to the latest version for the type.
+Uses application/schema+json media type.
  * @summary Get JSON schema for a block type and version
  */
 export type getSchemaSchemasBlockTypeVersionGetResponse200 = {

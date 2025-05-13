@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { fetchBlocks, type BlocksResponse } from '@/utils/blocks';
 import MemoryBlockRenderer from '@/components/MemoryBlockRenderer';
-import type { MemoryBlock } from '@/api/models';
+import type { MemoryBlock } from '@/data/models';
 
 export default function BlocksPage() {
     const [blocks, setBlocks] = useState<BlocksResponse | null>(null);

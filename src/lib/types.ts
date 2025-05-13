@@ -1,4 +1,4 @@
-import type { MemoryBlock } from '@/api/models';
+import type { MemoryBlock } from '@/data/models';
 
 /**
  * Props accepted by the main BlockRenderer component and individual block renderers.
