@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useFilteredBlocks, type SortOption } from '@/hooks/useFilteredBlocks';
 import MemoryBlockListItem from '@/components/MemoryBlockListItem';
@@ -56,7 +56,36 @@ function MemoryBlockSkeleton() {
   );
 }
 
-export default function ExplorePage() {
+// Loading component when data is being fetched
+function ExploreLoading() {
+  return (
+    <div className="container mx-auto px-4 py-8 max-w-7xl">
+      <h1 className="text-3xl md:text-4xl font-serif font-bold mb-6">Explore Memory Blocks</h1>
+
+      <div className="flex flex-col md:flex-row gap-4 mb-8">
+        <div className="relative flex-grow">
+          <div className="h-10 bg-muted rounded w-full"></div>
+        </div>
+        <div className="flex flex-col md:flex-row items-center gap-4">
+          <div className="h-10 bg-muted rounded w-[200px]"></div>
+          <div className="h-10 bg-muted rounded w-[200px]"></div>
+        </div>
+      </div>
+
+      <div className="flex items-center justify-center my-8">
+        <Loader2 className="h-8 w-8 text-primary animate-spin" />
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <MemoryBlockSkeleton key={i} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// Main content component using hooks
+function ExploreContent() {
   const searchParams = useSearchParams();
   const searchFromUrl = searchParams.get('search') || '';
 
@@ -203,5 +232,14 @@ export default function ExplorePage() {
         </>
       )}
     </div>
+  );
+}
+
+// Main page component with suspense
+export default function ExplorePage() {
+  return (
+    <Suspense fallback={<ExploreLoading />}>
+      <ExploreContent />
+    </Suspense>
   );
 }
