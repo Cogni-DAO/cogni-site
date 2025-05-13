@@ -5,7 +5,6 @@
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import KnowledgeRelatedNodes from '@/components/KnowledgeRelatedNodes'
 import { Button } from '@/components/ui/button'
 import { ArrowRight, BookOpen, Users, Star } from 'lucide-react'
 import Chat from '@/components/chat'

@@ -1,18 +1,28 @@
-import React, { useEffect } from 'react';
-import { useRouter } from 'next/router';
+'use client';
+
+import React, { useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import '@xyflow/react/dist/style.css';
 import GraphHeader from '@/components/graph/GraphHeader';
 import GraphVisualization from '@/components/graph/GraphVisualization';
 import { useKnowledgeGraph } from '@/hooks/useKnowledgeGraph';
 
-const GraphPage = () => {
-  const router = useRouter();
-  const slugFromQuery = router.query.slug;
-  const blockIdFromQuery = router.query.blockId;
+// Loading fallback component
+const GraphLoading = () => (
+  <div className="flex flex-col h-[calc(100vh-4rem)] items-center justify-center">
+    <div className="text-lg">Loading graph...</div>
+  </div>
+);
 
-  // Ensure slug and blockId are strings or undefined, not string[]
-  const slug = Array.isArray(slugFromQuery) ? slugFromQuery[0] : slugFromQuery;
-  const blockId = Array.isArray(blockIdFromQuery) ? blockIdFromQuery[0] : blockIdFromQuery;
+// Wrapped in its own component to use hooks
+const GraphContent = () => {
+  const searchParams = useSearchParams();
+  const slugFromQuery = searchParams.get('slug');
+  const blockIdFromQuery = searchParams.get('blockId');
+
+  // No need to handle arrays since searchParams.get always returns a string or null
+  const slug = slugFromQuery || undefined;
+  const blockId = blockIdFromQuery || undefined;
 
   const {
     nodes,
@@ -40,6 +50,14 @@ const GraphPage = () => {
         />
       </div>
     </div>
+  );
+};
+
+const GraphPage = () => {
+  return (
+    <Suspense fallback={<GraphLoading />}>
+      <GraphContent />
+    </Suspense>
   );
 };
 

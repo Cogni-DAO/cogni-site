@@ -1,5 +1,7 @@
+'use client';
+
 import React, { useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { useParams, useRouter } from 'next/navigation';
 import { getKnowledgeNodeBySlug, getRelatedKnowledgeNodes } from '@/data/knowledgeNodes';
 import KnowledgeBlock from '@/components/KnowledgeBlock';
 import KnowledgeRelatedNodes from '@/components/KnowledgeRelatedNodes';
@@ -8,9 +10,9 @@ import { ChevronLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const NodePage = () => {
+  const params = useParams();
   const router = useRouter();
-  const slugFromQuery = router.query.slug;
-  const slug = Array.isArray(slugFromQuery) ? slugFromQuery[0] : slugFromQuery;
+  const slug = params.slug as string;
 
   const node = slug ? getKnowledgeNodeBySlug(slug) : null;
   const relatedNodes = node ? getRelatedKnowledgeNodes(node.relatedNodes) : [];
