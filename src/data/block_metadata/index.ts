@@ -4,6 +4,7 @@ import type { TaskMetadata } from './task';
 import type { DocMetadata } from './doc';
 import type { KnowledgeMetadata } from './knowledge';
 import type { LogMetadata } from './log';
+import type { InteractionMetadata } from './interaction';
 
 /**
  * Type map to help with narrowing metadata types based on block type
@@ -14,6 +15,7 @@ export interface BlockMetadataByType {
   doc: DocMetadata;
   knowledge: KnowledgeMetadata;
   log: LogMetadata;
+  interaction: InteractionMetadata;
 }
 
 /**

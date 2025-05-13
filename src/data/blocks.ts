@@ -126,9 +126,9 @@ export const sampleKnowledgeBlock: MemoryBlock = {
   },
   links: [
     {
-      relation: "related",
+      relation: "related_to",
       to_id: "doc-001",
-      metadata: {}
+      link_metadata: {}
     }
   ]
 };
@@ -155,14 +155,14 @@ export const sampleProjectBlock: MemoryBlock = {
   },
   links: [
     {
-      relation: "related",
+      relation: "related_to",
       to_id: "knowledge-001",
-      metadata: {}
+      link_metadata: {}
     },
     {
-      relation: "documents",
+      relation: "mentions",
       to_id: "doc-001",
-      metadata: {}
+      link_metadata: {}
     }
   ]
 };
@@ -190,14 +190,14 @@ export const sampleDocBlock: MemoryBlock = {
   },
   links: [
     {
-      relation: "referenced by",
+      relation: "mentions",
       to_id: "knowledge-001",
-      metadata: {}
+      link_metadata: {}
     },
     {
-      relation: "part of",
+      relation: "child_of",
       to_id: "project-001",
-      metadata: {}
+      link_metadata: {}
     }
   ]
 };
