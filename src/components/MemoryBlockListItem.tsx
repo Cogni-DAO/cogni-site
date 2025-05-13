@@ -5,6 +5,7 @@ import { ArrowRight } from 'lucide-react';
 import type { MemoryBlock } from '@/data/models/memoryBlock';
 import { MemoryBlockType } from '@/data/models/memoryBlockType';
 import { narrowMetadata } from '@/data/block_metadata';
+import { getBlockConfidencePercentage } from '@/utils/blockUtils';
 
 interface MemoryBlockListItemProps {
     block: MemoryBlock;
@@ -20,7 +21,6 @@ const MemoryBlockListItem: React.FC<MemoryBlockListItemProps> = ({ block }) => {
     // Extract title from metadata or text
     let title = '';
     let description = '';
-    let verificationPercentage = 0;
 
     // Extract title based on block type
     if (block.metadata) {
@@ -28,8 +28,6 @@ const MemoryBlockListItem: React.FC<MemoryBlockListItemProps> = ({ block }) => {
             case MemoryBlockType.knowledge:
                 const knowledgeMeta = narrowMetadata(MemoryBlockType.knowledge, block.metadata);
                 title = knowledgeMeta.domain || knowledgeMeta.validity || '';
-                verificationPercentage = knowledgeMeta.confidence_level ?
-                    (knowledgeMeta.confidence_level <= 1 ? knowledgeMeta.confidence_level * 100 : knowledgeMeta.confidence_level) : 0;
                 break;
 
             case MemoryBlockType.project:
@@ -61,15 +59,8 @@ const MemoryBlockListItem: React.FC<MemoryBlockListItemProps> = ({ block }) => {
         description = block.text || '';
     }
 
-    // Try to get verification percentage from confidence if not already set
-    if (verificationPercentage === 0 && block.confidence?.human) {
-        verificationPercentage = Math.round(block.confidence.human * 100);
-    }
-
-    // Default verification percentage
-    if (verificationPercentage === 0) {
-        verificationPercentage = 50;
-    }
+    // Get confidence percentage from the utility function
+    const confidencePercentage = getBlockConfidencePercentage(block);
 
     return (
         <Link
@@ -81,12 +72,12 @@ const MemoryBlockListItem: React.FC<MemoryBlockListItemProps> = ({ block }) => {
                     {title}
                 </h3>
                 <div className="flex items-center space-x-1 text-xs">
-                    <span className="text-muted-foreground">Verified:</span>
-                    <span className="font-medium">{Math.round(verificationPercentage)}%</span>
+                    <span className="text-muted-foreground">Confidence:</span>
+                    <span className="font-medium">{Math.round(confidencePercentage)}%</span>
                 </div>
             </div>
 
-            <Progress value={verificationPercentage} className="h-1 mb-3" />
+            <Progress value={confidencePercentage} className="h-1 mb-3" />
 
             <p className="text-sm text-muted-foreground line-clamp-2">
                 {description}

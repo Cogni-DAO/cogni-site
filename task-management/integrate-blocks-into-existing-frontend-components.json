@@ -68,12 +68,18 @@
             "id": "refactor-existing-renderers",
             "summary": "Refactor Existing Renderers to Use BaseBlockRenderer",
             "details": "Update existing renderers (KnowledgeRenderer, ProjectRenderer) to use the BaseBlockRenderer.\n- Implement DocRenderer, TaskRenderer, and LogRenderer using the base component\n- Ensure each renderer maintains type-specific customizations while reusing the base layout\n- Update the BlockRenderer dispatcher to use the appropriate renderer for each type\n- Use adapter functions to transform MemoryBlock data into the format needed by each renderer",
-            "status": "in-progress"
+            "status": "completed"
         },
         {
             "id": "create-content-format-renderers",
             "summary": "Create Format Renderers for Different Content Types",
             "details": "Create a separate utility for rendering content in different formats (markdown, plain text, etc.).\n- Extract format rendering logic from specific block renderers\n- Create a central `FormatRenderer` component that handles different content formats\n- Implement support for markdown formatting with proper handling of headers, lists, code blocks, and emphasis\n- Create a clean API for block renderers to use when displaying formatted content",
+            "status": "completed"
+        },
+        {
+            "id": "standardize-confidence-display",
+            "summary": "Standardize Confidence Display and Terminology",
+            "details": "Create a consistent approach to displaying block confidence/verification metrics.\n- Create a shared utility function for calculating confidence percentages (`getBlockConfidencePercentage`)\n- Update all components to use consistent terminology ('confidence' instead of 'verification')\n- Ensure confidence data is sourced from the canonical location (`block.confidence.human`)\n- Display confidence metrics consistently across all block types and views\n- Apply DRY principles to remove redundant confidence calculation logic",
             "status": "completed"
         },
         {

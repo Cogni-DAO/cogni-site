@@ -13,17 +13,18 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import type { MemoryBlock } from '@/data/models/memoryBlock';
 import type { ReactNode } from 'react';
+import { getBlockConfidencePercentage } from '@/utils/blockUtils';
 
-// Props for the verification percentage component
-interface VerificationStatusProps {
+// Props for the confidence percentage component
+interface ConfidenceStatusProps {
     percentage: number;
     label?: string;
 }
 
-// Component for displaying verification percentage
-export const VerificationStatus: React.FC<VerificationStatusProps> = ({
+// Component for displaying confidence percentage
+export const ConfidenceStatus: React.FC<ConfidenceStatusProps> = ({
     percentage,
-    label = "Human Verified"
+    label = "Confidence"
 }) => (
     <div className="flex items-center space-x-1 text-xs">
         <span className="text-muted-foreground">{label}:</span>
@@ -145,7 +146,7 @@ interface BaseBlockRendererProps {
     renderContent?: (block: MemoryBlock) => ReactNode;
     renderTitle?: (block: MemoryBlock) => ReactNode;
     renderLinks?: (links: { title: string; slug: string }[]) => ReactNode;
-    getVerificationPercentage?: (block: MemoryBlock) => number;
+    getConfidencePercentage?: (block: MemoryBlock) => number;
     transformLinks?: (block: MemoryBlock) => { title: string; slug: string }[];
     onPositiveFeedback?: () => void;
     onNegativeFeedback?: () => void;
@@ -164,7 +165,7 @@ const BaseBlockRenderer: React.FC<BaseBlockRendererProps> = ({
     renderContent,
     renderTitle,
     renderLinks,
-    getVerificationPercentage,
+    getConfidencePercentage,
     transformLinks,
     // Event handlers with defaults
     onPositiveFeedback = () => { },
@@ -177,16 +178,7 @@ const BaseBlockRenderer: React.FC<BaseBlockRendererProps> = ({
     const contentRef = useRef<HTMLDivElement>(null);
     const { toast } = useToast();
 
-    // Default functions for rendering and data transformation
-    const defaultGetVerificationPercentage = (block: MemoryBlock): number => {
-        // Try to get from confidence field
-        if (block.confidence?.human !== null && block.confidence?.human !== undefined) {
-            return Math.round((block.confidence.human || 0) * 100);
-        }
-        // Default value
-        return 50;
-    };
-
+    // Use the utility function for confidence percentage calculation
     const defaultTransformLinks = (block: MemoryBlock): { title: string; slug: string }[] => {
         if (!block.links || block.links.length === 0) {
             return [];
@@ -224,9 +216,9 @@ const BaseBlockRenderer: React.FC<BaseBlockRendererProps> = ({
     );
 
     // Use provided functions or defaults
-    const finalGetVerificationPercentage = getVerificationPercentage || defaultGetVerificationPercentage;
+    const finalGetConfidencePercentage = getConfidencePercentage || getBlockConfidencePercentage;
     const finalTransformLinks = transformLinks || defaultTransformLinks;
-    const verificationPercentage = finalGetVerificationPercentage(block);
+    const confidencePercentage = finalGetConfidencePercentage(block);
     const links = finalTransformLinks(block);
 
     // Handle text selection for comments
@@ -296,11 +288,11 @@ const BaseBlockRenderer: React.FC<BaseBlockRendererProps> = ({
             {/* Block Header */}
             <div className="flex items-start justify-between mb-2">
                 {titleSlot || renderTitle?.(block) || defaultRenderTitle(block)}
-                {headerRightSlot || <VerificationStatus percentage={verificationPercentage} />}
+                {headerRightSlot || <ConfidenceStatus percentage={confidencePercentage} />}
             </div>
 
             {/* Progress Bar */}
-            <Progress value={verificationPercentage} className="h-1 mb-3" />
+            <Progress value={confidencePercentage} className="h-1 mb-3" />
 
             {/* Block Content */}
             <div className="prose prose-sm max-w-none">

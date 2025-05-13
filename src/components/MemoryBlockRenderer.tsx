@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { ThumbsUp, ThumbsDown, MessageSquare, Network } from 'lucide-react';
 import { Button } from './ui/button';
+import { Progress } from './ui/progress';
 import {
   Dialog,
   DialogContent,
@@ -11,6 +12,7 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import type { BlockRendererProps } from '@/lib/types';
+import { getBlockConfidencePercentage } from '@/utils/blockUtils';
 
 interface FloatingCommentButtonProps {
   onComment: () => void;
@@ -104,6 +106,9 @@ const MemoryBlockRenderer: React.FC<BlockRendererProps> = ({
     // Implement viewGraphView function
   };
 
+  // Calculate confidence percentage using the shared utility
+  const confidencePercentage = getBlockConfidencePercentage(data);
+
   let titleContent: React.ReactNode = data.text;
   let mainContent: React.ReactNode = <div ref={contentRef}>{data.text}</div>;
   let headerSuffix: React.ReactNode | null = null;
@@ -142,8 +147,13 @@ const MemoryBlockRenderer: React.FC<BlockRendererProps> = ({
     <div id={blockId} className="content-block animate-fade-in">
       <div className="flex items-start justify-between mb-2">
         <h3 className="text-lg font-serif font-semibold">{titleContent}</h3>
-        {headerSuffix}
+        <div className="flex items-center space-x-1 text-xs">
+          <span className="text-muted-foreground">Confidence:</span>
+          <span className="font-medium">{Math.round(confidencePercentage)}%</span>
+        </div>
       </div>
+
+      <Progress value={confidencePercentage} className="h-1 mb-3" />
 
       <div className="prose prose-sm max-w-none">
         {mainContent}
