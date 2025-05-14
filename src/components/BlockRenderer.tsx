@@ -4,8 +4,8 @@ import { MemoryBlockType } from '@/data/models/memoryBlockType';
 
 // Import renderers
 import KnowledgeRenderer from './block_renderers/KnowledgeRenderer';
-import { ProjectRenderer } from './block_renderers/ProjectRenderer';
-import { UnknownBlockRenderer } from './block_renderers/UnknownBlockRenderer';
+import ProjectRenderer from './block_renderers/ProjectRenderer';
+import UnknownBlockRenderer from './block_renderers/UnknownBlockRenderer';
 import DocRenderer from './block_renderers/DocRenderer';
 import TaskRenderer from './block_renderers/TaskRenderer';
 

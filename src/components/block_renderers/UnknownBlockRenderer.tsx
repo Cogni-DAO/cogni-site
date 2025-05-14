@@ -1,7 +1,7 @@
 import React from 'react';
 import type { BlockRendererProps } from '@/lib/types';
 
-export const UnknownBlockRenderer: React.FC<BlockRendererProps> = ({ blockType, blockVersion, data }) => {
+const UnknownBlockRenderer: React.FC<BlockRendererProps> = ({ blockType, blockVersion, data }) => {
     return (
         <div
             className="block-renderer unknown-block content-block border border-dashed border-red-400 bg-red-50 text-red-700"
@@ -23,4 +23,6 @@ export const UnknownBlockRenderer: React.FC<BlockRendererProps> = ({ blockType, 
             </details>
         </div>
     );
-}; 
+};
+
+export default UnknownBlockRenderer; 
