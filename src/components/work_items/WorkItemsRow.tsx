@@ -10,7 +10,8 @@ import {
     MoreHorizontal,
     User,
     Tag,
-    FileCode
+    FileCode,
+    Sidebar
 } from 'lucide-react';
 import {
     TableCell,
@@ -33,9 +34,10 @@ import { PriorityBadge } from '../ui/badges/PriorityBadge';
 
 interface WorkItemsRowProps {
     block: MemoryBlock;
+    onOpenInSidePanel?: (blockId: string) => void;
 }
 
-export function WorkItemsRow({ block }: WorkItemsRowProps) {
+export function WorkItemsRow({ block, onOpenInSidePanel }: WorkItemsRowProps) {
     const meta = narrowWorkItemMeta(block);
 
     if (!meta) {
@@ -102,16 +104,32 @@ export function WorkItemsRow({ block }: WorkItemsRowProps) {
         }
     };
 
+    // Handle opening in side panel
+    const handleOpenInSidePanel = () => {
+        if (onOpenInSidePanel) {
+            onOpenInSidePanel(block.id);
+        }
+    };
+
     return (
         <TableRow key={block.id}>
             <TableCell>
                 <div className="flex flex-col">
-                    <Link
-                        href={`/blocks/${block.id}`}
-                        className="font-medium text-blue-600 hover:underline"
-                    >
-                        {title || 'Untitled'}
-                    </Link>
+                    {onOpenInSidePanel ? (
+                        <button
+                            onClick={handleOpenInSidePanel}
+                            className="text-left font-medium text-blue-600 hover:underline cursor-pointer"
+                        >
+                            {title || 'Untitled'}
+                        </button>
+                    ) : (
+                        <Link
+                            href={`/blocks/${block.id}`}
+                            className="font-medium text-blue-600 hover:underline"
+                        >
+                            {title || 'Untitled'}
+                        </Link>
+                    )}
                     <p className="text-sm text-muted-foreground line-clamp-1">
                         {description?.substring(0, 100) || 'No description available'}
                     </p>
@@ -170,16 +188,27 @@ export function WorkItemsRow({ block }: WorkItemsRowProps) {
 
             <TableCell className="text-right">
                 <div className="flex justify-end items-center gap-2">
-                    <Button
-                        size="sm"
-                        variant="outline"
-                        asChild
-                    >
-                        <Link href={`/blocks/${block.id}`}>
-                            <ExternalLink className="h-4 w-4 mr-1" />
-                            View
-                        </Link>
-                    </Button>
+                    {onOpenInSidePanel ? (
+                        <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={handleOpenInSidePanel}
+                        >
+                            <Sidebar className="h-4 w-4 mr-1" />
+                            Details
+                        </Button>
+                    ) : (
+                        <Button
+                            size="sm"
+                            variant="outline"
+                            asChild
+                        >
+                            <Link href={`/blocks/${block.id}`}>
+                                <ExternalLink className="h-4 w-4 mr-1" />
+                                View
+                            </Link>
+                        </Button>
+                    )}
 
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>

@@ -14,9 +14,10 @@ import { WorkItemsRow } from './WorkItemsRow';
 
 interface WorkItemsTableProps {
     blocks: MemoryBlock[];
+    onOpenInSidePanel?: (blockId: string) => void;
 }
 
-export function WorkItemsTable({ blocks }: WorkItemsTableProps) {
+export function WorkItemsTable({ blocks, onOpenInSidePanel }: WorkItemsTableProps) {
     React.useEffect(() => {
         console.log('WorkItemsTable received blocks:', blocks);
     }, [blocks]);
@@ -45,7 +46,11 @@ export function WorkItemsTable({ blocks }: WorkItemsTableProps) {
                         </TableRow>
                     ) : (
                         blocks.map((block) => (
-                            <WorkItemsRow key={block.id} block={block} />
+                            <WorkItemsRow
+                                key={block.id}
+                                block={block}
+                                onOpenInSidePanel={onOpenInSidePanel}
+                            />
                         ))
                     )}
                 </TableBody>

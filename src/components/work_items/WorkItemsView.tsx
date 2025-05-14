@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { WorkItemsTable } from './WorkItemsTable';
-import { WorkItemsFilter } from './WorkItemsFilter';
-import { useWorkItemBlocks } from '@/hooks/useWorkItemBlocks';
+import React, { useState } from 'react';
+import { useWorkItemBlocks } from '@/hooks';
 import { MemoryBlockType } from '@/data/models/memoryBlockType';
 import { narrowWorkItemMeta } from '@/utils/workItemUtils';
 import { isWorkItemType } from '@/utils/workItemUtils';
+import { WorkItemsFilter } from './WorkItemsFilter';
+import { WorkItemsTable } from './WorkItemsTable';
+import { WorkItemSidePanel } from './WorkItemSidePanel';
 
 // Sort options
 type SortOption = 'none' | 'priority_high' | 'priority_low';
@@ -14,15 +15,11 @@ type SortOption = 'none' | 'priority_high' | 'priority_low';
 export default function WorkItemsView() {
     // Fetch all WorkItem blocks
     const { blocks, isLoading, isError } = useWorkItemBlocks();
+    const [selectedWorkItemId, setSelectedWorkItemId] = useState<string | null>(null);
 
     // Debug: Log blocks data when it changes
-    useEffect(() => {
-        console.log('All WorkItem blocks:', blocks);
-
-        // Log block types present
-        if (blocks) {
-            console.log('Block types present:', [...new Set(blocks.map(block => block.type))]);
-        }
+    React.useEffect(() => {
+        console.log('WorkItemsView received blocks:', blocks);
     }, [blocks]);
 
     // Filter state
@@ -31,6 +28,15 @@ export default function WorkItemsView() {
     const [ownerFilter, setOwnerFilter] = useState<string | null>(null);
     const [typeFilters, setTypeFilters] = useState<MemoryBlockType[]>([]);
     const [sortBy, setSortBy] = useState<SortOption>('none');
+
+    // Handle side panel open/close
+    const handleOpenInSidePanel = (blockId: string) => {
+        setSelectedWorkItemId(blockId);
+    };
+
+    const handleCloseSidePanel = () => {
+        setSelectedWorkItemId(null);
+    };
 
     // Handle type filter changes
     const handleTypeFilterChange = (type: MemoryBlockType, isActive: boolean) => {
@@ -208,7 +214,7 @@ export default function WorkItemsView() {
                 <div className="bg-destructive/10 p-4 rounded-md text-destructive text-center my-8">
                     Error loading work items. Please try again later.
                 </div>
-            ) : sortedBlocks.length === 0 ? (
+            ) : filteredBlocks?.length === 0 ? (
                 <div className="text-center p-8 bg-muted rounded-md my-8">
                     <h3 className="text-lg font-medium">No work items found</h3>
                     <p className="text-muted-foreground mt-1">
@@ -218,8 +224,17 @@ export default function WorkItemsView() {
                     </p>
                 </div>
             ) : (
-                <WorkItemsTable blocks={sortedBlocks} />
+                <WorkItemsTable
+                    blocks={sortedBlocks}
+                    onOpenInSidePanel={handleOpenInSidePanel}
+                />
             )}
+
+            {/* Side panel for displaying work item details */}
+            <WorkItemSidePanel
+                blockId={selectedWorkItemId}
+                onClose={handleCloseSidePanel}
+            />
         </div>
     );
 } 
