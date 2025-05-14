@@ -4,8 +4,8 @@ import type { MemoryBlock } from '@/data/models/memoryBlock';
 import { MemoryBlockType } from '@/data/models/memoryBlockType';
 import { narrowMetadata } from '@/data/block_metadata';
 import { ProjectMetadata } from '@/data/block_metadata/project';
-import ExecutableRenderer from '@/components/blocks/ExecutableRenderer';
-import { ExecutableMeta } from '@/types/executableMeta';
+import { WorkItemRenderer } from '@/components/blocks/WorkItemRenderer';
+import { WorkItemMeta } from '@/types/workItemMeta';
 import { Progress } from '@/components/ui/progress';
 
 interface ProjectRendererProps {
@@ -24,9 +24,9 @@ const ProjectRenderer: React.FC<ProjectRendererProps> = ({ block }) => {
     }
 
     // Cast metadata to the combined type
-    const meta = projectMeta as ExecutableMeta & ProjectMetadata;
+    const meta = projectMeta as WorkItemMeta & ProjectMetadata;
 
-    // Project-specific extras to render within the ExecutableRenderer
+    // Project-specific extras to render within the WorkItemRenderer
     const projectExtras = (
         <>
             {/* Project-specific fields */}
@@ -74,13 +74,13 @@ const ProjectRenderer: React.FC<ProjectRendererProps> = ({ block }) => {
     );
 
     return (
-        <ExecutableRenderer
+        <WorkItemRenderer
             block={block}
             meta={meta}
             title={projectMeta.name}
         >
             {projectExtras}
-        </ExecutableRenderer>
+        </WorkItemRenderer>
     );
 };
 

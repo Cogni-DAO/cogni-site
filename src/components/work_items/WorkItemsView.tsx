@@ -1,23 +1,23 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { ExecutablesTable } from './ExecutablesTable';
-import { ExecutablesFilter } from './ExecutablesFilter';
-import { useExecutableBlocks } from '@/hooks/useExecutableBlocks';
+import { WorkItemsTable } from './WorkItemsTable';
+import { WorkItemsFilter } from './WorkItemsFilter';
+import { useWorkItemBlocks } from '@/hooks/useWorkItemBlocks';
 import { MemoryBlockType } from '@/data/models/memoryBlockType';
-import { narrowExecutableMeta } from '@/utils/executableUtils';
-import { isExecutableType } from '@/utils/executableUtils';
+import { narrowWorkItemMeta } from '@/utils/workItemUtils';
+import { isWorkItemType } from '@/utils/workItemUtils';
 
 // Sort options
 type SortOption = 'none' | 'priority_high' | 'priority_low';
 
-export default function ExecutablesView() {
-    // Fetch all executable blocks
-    const { blocks, isLoading, isError } = useExecutableBlocks();
+export default function WorkItemsView() {
+    // Fetch all WorkItem blocks
+    const { blocks, isLoading, isError } = useWorkItemBlocks();
 
     // Debug: Log blocks data when it changes
     useEffect(() => {
-        console.log('All executable blocks:', blocks);
+        console.log('All WorkItem blocks:', blocks);
 
         // Log block types present
         if (blocks) {
@@ -45,16 +45,16 @@ export default function ExecutablesView() {
     const filteredBlocks = React.useMemo(() => {
         if (!blocks) return [];
 
-        // Filter to specified executable types or all executable types if none selected
+        // Filter to specified WorkItem types or all WorkItem types if none selected
         const typeFilteredBlocks = blocks.filter(block => {
             if (typeFilters.length === 0) {
-                return isExecutableType(block.type);
+                return isWorkItemType(block.type);
             }
             return typeFilters.includes(block.type);
         });
 
         return typeFilteredBlocks.filter(block => {
-            const execMeta = narrowExecutableMeta(block);
+            const execMeta = narrowWorkItemMeta(block);
             if (!execMeta) {
                 return false;
             }
@@ -63,15 +63,15 @@ export default function ExecutablesView() {
             let owner = null;
             switch (block.type) {
                 case MemoryBlockType.task:
-                    owner = narrowExecutableMeta(block)?.reviewer || null;
+                    owner = narrowWorkItemMeta(block)?.reviewer || null;
                     break;
                 case MemoryBlockType.project:
                 case MemoryBlockType.epic:
-                    const typedMeta = narrowExecutableMeta(block);
+                    const typedMeta = narrowWorkItemMeta(block);
                     owner = typedMeta?.reviewer || null;
                     break;
                 case MemoryBlockType.bug:
-                    owner = narrowExecutableMeta(block)?.reviewer || null;
+                    owner = narrowWorkItemMeta(block)?.reviewer || null;
                     break;
             }
 
@@ -126,8 +126,8 @@ export default function ExecutablesView() {
         if (sortBy === 'none') return filteredBlocks;
 
         return [...filteredBlocks].sort((a, b) => {
-            const metaA = narrowExecutableMeta(a);
-            const metaB = narrowExecutableMeta(b);
+            const metaA = narrowWorkItemMeta(a);
+            const metaB = narrowWorkItemMeta(b);
 
             if (!metaA || !metaB) return 0;
 
@@ -163,7 +163,7 @@ export default function ExecutablesView() {
 
         const owners = new Set<string>();
         blocks.forEach(block => {
-            const execMeta = narrowExecutableMeta(block);
+            const execMeta = narrowWorkItemMeta(block);
             if (execMeta?.reviewer) owners.add(execMeta.reviewer);
         });
 
@@ -176,7 +176,7 @@ export default function ExecutablesView() {
 
         const statuses = new Set<string>();
         blocks.forEach(block => {
-            const execMeta = narrowExecutableMeta(block);
+            const execMeta = narrowWorkItemMeta(block);
             if (execMeta?.status) statuses.add(execMeta.status);
         });
 
@@ -185,7 +185,7 @@ export default function ExecutablesView() {
 
     return (
         <div className="space-y-4">
-            <ExecutablesFilter
+            <WorkItemsFilter
                 searchQuery={searchQuery}
                 onSearchChange={setSearchQuery}
                 statusFilter={statusFilter}
@@ -218,7 +218,7 @@ export default function ExecutablesView() {
                     </p>
                 </div>
             ) : (
-                <ExecutablesTable blocks={sortedBlocks} />
+                <WorkItemsTable blocks={sortedBlocks} />
             )}
         </div>
     );

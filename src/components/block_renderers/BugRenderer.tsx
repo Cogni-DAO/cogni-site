@@ -4,8 +4,8 @@ import type { MemoryBlock } from '@/data/models/memoryBlock';
 import { MemoryBlockType } from '@/data/models/memoryBlockType';
 import { narrowMetadata } from '@/data/block_metadata';
 import { BugMetadata } from '@/data/block_metadata/bug';
-import ExecutableRenderer from '@/components/blocks/ExecutableRenderer';
-import { ExecutableMeta } from '@/types/executableMeta';
+import WorkItemRenderer from '@/components/blocks/WorkItemRenderer';
+import { WorkItemMeta } from '@/types/WorkItemMeta';
 import { Badge } from '@/components/ui/badge';
 import FormatRenderer from '@/utils/formatRenderers';
 
@@ -25,9 +25,9 @@ const BugRenderer: React.FC<BugRendererProps> = ({ block }) => {
     }
 
     // Cast metadata to the combined type
-    const meta = bugMeta as ExecutableMeta & BugMetadata;
+    const meta = bugMeta as WorkItemMeta & BugMetadata;
 
-    // Bug-specific extras to render within the ExecutableRenderer
+    // Bug-specific extras to render within the WorkItemRenderer
     const bugExtras = (
         <>
             {/* Bug-specific fields */}
@@ -138,13 +138,13 @@ const BugRenderer: React.FC<BugRendererProps> = ({ block }) => {
     );
 
     return (
-        <ExecutableRenderer
+        <WorkItemRenderer
             block={block}
             meta={meta}
             title={bugMeta.title}
         >
             {bugExtras}
-        </ExecutableRenderer>
+        </WorkItemRenderer>
     );
 };
 

@@ -9,7 +9,7 @@ export type ExecutionPhase =
 
 export type PriorityLiteral = 'P0' | 'P1' | 'P2' | 'P3' | 'P4' | 'P5';
 
-export interface ExecutableMeta {
+export interface WorkItemMeta {
     /* planning */
     tool_hints?: string[];
     action_items?: unknown[];
@@ -18,11 +18,17 @@ export interface ExecutableMeta {
     blocked_by?: string[]; // UUID strings
     priority?: PriorityLiteral | string;
 
+    /* dates */
+    start_date?: string;
+    due_date?: string;
+    target_date?: string;
+
     /* workflow */
     status: ExecutorStatus;
     execution_phase?: ExecutionPhase;
     priority_score?: number;
     reviewer?: string;
+    progress_percent?: number;
 
     /* agent */
     execution_timeout_minutes?: number;

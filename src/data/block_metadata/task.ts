@@ -12,7 +12,7 @@ Tasks can have the following relationships via BlockLinks:
 - is_blocked_by: Points to another task that is blocking this one
 - has_bug: Points to a bug that is related to this task
 
-Tasks inherit from ExecutableMetadata and support agent execution with:
+Tasks inherit from WorkItemMetadata and support agent execution with:
 - Planning fields (tool_hints, action_items, acceptance_criteria, expected_artifacts)
 - Agent framework fields (execution_timeout_minutes, cost_budget_usd, role_hint)
 - Completion fields (deliverables, validation_report)
@@ -65,7 +65,7 @@ Tasks can have the following relationships via BlockLinks:
 - is_blocked_by: Points to another task that is blocking this one
 - has_bug: Points to a bug that is related to this task
 
-Tasks inherit from ExecutableMetadata and support agent execution with:
+Tasks inherit from WorkItemMetadata and support agent execution with:
 - Planning fields (tool_hints, action_items, acceptance_criteria, expected_artifacts)
 - Agent framework fields (execution_timeout_minutes, cost_budget_usd, role_hint)
 - Completion fields (deliverables, validation_report)

@@ -1,6 +1,6 @@
 import { formatDistanceToNow } from 'date-fns';
 import { MemoryBlock } from '@/data/models/memoryBlock';
-import { getExecutableDescription, getExecutableOwner, getExecutableTitle } from '@/utils/executableUtils';
+import { getWorkItemDescription, getWorkItemOwner, getWorkItemTitle } from '@/utils/workItemUtils';
 
 /**
  * Format date for display with both absolute and relative time
@@ -30,24 +30,24 @@ export function formatDate(dateString?: string | null): string {
 }
 
 /**
- * Get formatted title for any executable block
+ * Get formatted title for any WorkItem block
  */
 export function renderTitle(block: MemoryBlock): string {
-    return getExecutableTitle(block);
+    return getWorkItemTitle(block);
 }
 
 /**
- * Get formatted description for any executable block
+ * Get formatted description for any WorkItem block
  */
 export function renderDescription(block: MemoryBlock): string {
-    return getExecutableDescription(block);
+    return getWorkItemDescription(block);
 }
 
 /**
- * Get owner/assignee for any executable block
+ * Get owner/assignee for any WorkItem block
  */
 export function renderOwner(block: MemoryBlock): string | null {
-    return getExecutableOwner(block);
+    return getWorkItemOwner(block);
 }
 
 /**

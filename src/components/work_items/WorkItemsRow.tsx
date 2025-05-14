@@ -26,20 +26,20 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { MemoryBlock } from '@/data/models/memoryBlock';
 import { formatBlockType } from './columns';
-import { narrowExecutableMeta } from '@/utils/executableUtils';
-import { getExecutableDescription, getExecutableOwner, getExecutableTitle } from '@/utils/executableUtils';
+import { narrowWorkItemMeta } from '@/utils/workItemUtils';
+import { getWorkItemDescription, getWorkItemOwner, getWorkItemTitle } from '@/utils/workItemUtils';
 import { StatusBadge } from '../ui/badges/StatusBadge';
 import { PriorityBadge } from '../ui/badges/PriorityBadge';
 
-interface ExecutablesRowProps {
+interface WorkItemsRowProps {
     block: MemoryBlock;
 }
 
-export function ExecutablesRow({ block }: ExecutablesRowProps) {
-    const meta = narrowExecutableMeta(block);
+export function WorkItemsRow({ block }: WorkItemsRowProps) {
+    const meta = narrowWorkItemMeta(block);
 
     if (!meta) {
-        console.warn(`Block ${block.id} is missing metadata or is not executable`);
+        console.warn(`Block ${block.id} is missing metadata or is not WorkItem`);
         return (
             <TableRow key={block.id}>
                 <TableCell colSpan={8} className="text-amber-600">
@@ -55,9 +55,9 @@ export function ExecutablesRow({ block }: ExecutablesRowProps) {
     }
 
     // Extract content from appropriate metadata fields based on block type
-    const title = getExecutableTitle(block);
-    const description = getExecutableDescription(block);
-    const owner = getExecutableOwner(block);
+    const title = getWorkItemTitle(block);
+    const description = getWorkItemDescription(block);
+    const owner = getWorkItemOwner(block);
 
     // Format dates
     const formatDate = (dateString?: string | null) => {

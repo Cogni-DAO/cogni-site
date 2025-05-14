@@ -6,7 +6,7 @@ import { z } from 'zod';
 A Bug represents an issue, defect, or unexpected behavior in software
 that needs to be addressed.
 
-Bugs inherit from ExecutableMetadata and support agent execution with:
+Bugs inherit from WorkItemMetadata and support agent execution with:
 - Planning fields (tool_hints, action_items, acceptance_criteria, expected_artifacts)
 - Agent framework fields (execution_timeout_minutes, cost_budget_usd, role_hint)
 - Completion fields (deliverables, validation_report)
@@ -61,7 +61,7 @@ export const BugMetadataSchema = z.object({
 A Bug represents an issue, defect, or unexpected behavior in software
 that needs to be addressed.
 
-Bugs inherit from ExecutableMetadata and support agent execution with:
+Bugs inherit from WorkItemMetadata and support agent execution with:
 - Planning fields (tool_hints, action_items, acceptance_criteria, expected_artifacts)
 - Agent framework fields (execution_timeout_minutes, cost_budget_usd, role_hint)
 - Completion fields (deliverables, validation_report)

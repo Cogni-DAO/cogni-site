@@ -11,7 +11,7 @@ Projects can have the following relationships via BlockLinks:
 - epic_contains: Points to an epic that is related to this project (if project contains epics)
 - has_bug: Points to a bug that is related to this project
 
-Projects inherit from ExecutableMetadata and support agent execution with:
+Projects inherit from WorkItemMetadata and support agent execution with:
 - Planning fields (tool_hints, action_items, acceptance_criteria, expected_artifacts)
 - Agent framework fields (execution_timeout_minutes, cost_budget_usd, role_hint)
 - Completion fields (deliverables, validation_report)
@@ -64,7 +64,7 @@ Projects can have the following relationships via BlockLinks:
 - epic_contains: Points to an epic that is related to this project (if project contains epics)
 - has_bug: Points to a bug that is related to this project
 
-Projects inherit from ExecutableMetadata and support agent execution with:
+Projects inherit from WorkItemMetadata and support agent execution with:
 - Planning fields (tool_hints, action_items, acceptance_criteria, expected_artifacts)
 - Agent framework fields (execution_timeout_minutes, cost_budget_usd, role_hint)
 - Completion fields (deliverables, validation_report)

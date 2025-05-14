@@ -3,16 +3,16 @@ import { isWorkItemType } from '@/utils/workItemUtils';
 import type { MemoryBlock } from '@/data/models/memoryBlock';
 
 /**
- * Hook for fetching only WorkItem block types (task, project, epic, bug)
+ * Hook for fetching only work item block types (task, project, epic, bug)
  */
 export function useWorkItemBlocks() {
     const { blocks, isLoading, isError, mutate } = useBlocks();
 
-    // Filter blocks to only WorkItem types
-    const WorkItemBlocks = blocks ? blocks.filter(block => isWorkItemType(block.type)) : [];
+    // Filter blocks to only work item types
+    const workItemBlocks = blocks ? blocks.filter(block => isWorkItemType(block.type)) : [];
 
     return {
-        blocks: WorkItemBlocks as MemoryBlock[],
+        blocks: workItemBlocks as MemoryBlock[],
         isLoading,
         isError,
         mutate

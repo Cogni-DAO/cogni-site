@@ -1,7 +1,7 @@
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import { ExecutorStatus } from '@/types/executableMeta';
+import { ExecutorStatus } from '@/types/workItemMeta';
 
 // Status badge colors with improved contrast
 const statusColors: Record<string, string> = {

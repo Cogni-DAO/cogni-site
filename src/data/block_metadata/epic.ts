@@ -7,7 +7,7 @@ An Epic represents a large body of work that can be broken down into multiple pr
 tasks, or stories. It typically represents a significant business initiative or a major
 feature set.
 
-Epics inherit from ExecutableMetadata and support agent execution with:
+Epics inherit from WorkItemMetadata and support agent execution with:
 - Planning fields (tool_hints, action_items, acceptance_criteria, expected_artifacts)
 - Agent framework fields (execution_timeout_minutes, cost_budget_usd, role_hint)
 - Completion fields (deliverables, validation_report)
@@ -55,7 +55,7 @@ An Epic represents a large body of work that can be broken down into multiple pr
 tasks, or stories. It typically represents a significant business initiative or a major
 feature set.
 
-Epics inherit from ExecutableMetadata and support agent execution with:
+Epics inherit from WorkItemMetadata and support agent execution with:
 - Planning fields (tool_hints, action_items, acceptance_criteria, expected_artifacts)
 - Agent framework fields (execution_timeout_minutes, cost_budget_usd, role_hint)
 - Completion fields (deliverables, validation_report)

@@ -1,12 +1,12 @@
 import { MemoryBlock } from '@/data/models/memoryBlock';
 import { MemoryBlockType } from '@/data/models/memoryBlockType';
-import { ExecutableMeta } from '@/types/executableMeta';
+import { WorkItemMeta } from '@/types/workItemMeta';
 import { narrowMetadata } from '@/data/block_metadata';
 
 /**
- * Determines if a block type is an executable type
+ * Determines if a block type is an WorkItem type
  */
-export function isExecutableType(type: MemoryBlockType): boolean {
+export function isWorkItemType(type: MemoryBlockType): boolean {
     return [
         MemoryBlockType.task,
         MemoryBlockType.project,
@@ -16,24 +16,24 @@ export function isExecutableType(type: MemoryBlockType): boolean {
 }
 
 /**
- * Extracts ExecutableMeta fields from any block metadata
+ * Extracts WorkItemMeta fields from any block metadata
  */
-export function narrowExecutableMeta(block: MemoryBlock): ExecutableMeta | null {
-    if (!block.metadata || !isExecutableType(block.type)) {
+export function narrowWorkItemMeta(block: MemoryBlock): WorkItemMeta | null {
+    if (!block.metadata || !isWorkItemType(block.type)) {
         return null;
     }
 
     // First narrow to the specific type
     const typedMetadata = narrowMetadata(block.type, block.metadata);
 
-    // Then cast to ExecutableMeta (safe because all executable types inherit from ExecutableMeta)
-    return typedMetadata as unknown as ExecutableMeta;
+    // Then cast to WorkItemMeta (safe because all WorkItem types inherit from WorkItemMeta)
+    return typedMetadata as unknown as WorkItemMeta;
 }
 
 /**
- * Gets the display title for an executable block
+ * Gets the display title for an WorkItem block
  */
-export function getExecutableTitle(block: MemoryBlock): string {
+export function getWorkItemTitle(block: MemoryBlock): string {
     if (!block.metadata) {
         return block.text?.substring(0, 50) || 'Untitled';
     }
@@ -53,9 +53,9 @@ export function getExecutableTitle(block: MemoryBlock): string {
 }
 
 /**
- * Gets the owner/assignee for an executable block
+ * Gets the owner/assignee for an WorkItem block
  */
-export function getExecutableOwner(block: MemoryBlock): string | null {
+export function getWorkItemOwner(block: MemoryBlock): string | null {
     if (!block.metadata) {
         return null;
     }
@@ -74,9 +74,9 @@ export function getExecutableOwner(block: MemoryBlock): string | null {
 }
 
 /**
- * Gets the description for an executable block
+ * Gets the description for an WorkItem block
  */
-export function getExecutableDescription(block: MemoryBlock): string {
+export function getWorkItemDescription(block: MemoryBlock): string {
     if (!block.metadata) {
         return block.text?.substring(0, 100) || 'No description available';
     }

@@ -15,7 +15,7 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { MemoryBlockType } from '@/data/models/memoryBlockType';
 
-interface ExecutablesFilterProps {
+interface WorkItemsFilterProps {
     searchQuery: string;
     onSearchChange: (query: string) => void;
     statusFilter: string | null;
@@ -30,7 +30,7 @@ interface ExecutablesFilterProps {
     onSortChange?: (sortOption: string) => void;
 }
 
-export function ExecutablesFilter({
+export function WorkItemsFilter({
     searchQuery,
     onSearchChange,
     statusFilter,
@@ -43,7 +43,7 @@ export function ExecutablesFilter({
     owners,
     sortBy = 'none',
     onSortChange = () => { },
-}: ExecutablesFilterProps) {
+}: WorkItemsFilterProps) {
     // Clear all filters
     const clearFilters = () => {
         onSearchChange('');

@@ -4,8 +4,8 @@ import type { MemoryBlock } from '@/data/models/memoryBlock';
 import { MemoryBlockType } from '@/data/models/memoryBlockType';
 import { narrowMetadata } from '@/data/block_metadata';
 import { TaskMetadata } from '@/data/block_metadata/task';
-import ExecutableRenderer from '@/components/blocks/ExecutableRenderer';
-import { ExecutableMeta } from '@/types/executableMeta';
+import WorkItemRenderer from '@/components/blocks/WorkItemRenderer';
+import { WorkItemMeta } from '@/types/WorkItemMeta';
 import FormatRenderer from '@/utils/formatRenderers';
 
 interface TaskRendererProps {
@@ -24,9 +24,9 @@ const TaskRenderer: React.FC<TaskRendererProps> = ({ block }) => {
     }
 
     // Cast metadata to the combined type
-    const meta = taskMeta as ExecutableMeta & TaskMetadata;
+    const meta = taskMeta as WorkItemMeta & TaskMetadata;
 
-    // Task-specific extras to render within the ExecutableRenderer
+    // Task-specific extras to render within the WorkItemRenderer
     const taskExtras = (
         <>
             {/* Task-specific fields like estimates, dates, and assignee */}
@@ -92,13 +92,13 @@ const TaskRenderer: React.FC<TaskRendererProps> = ({ block }) => {
     );
 
     return (
-        <ExecutableRenderer
+        <WorkItemRenderer
             block={block}
             meta={meta}
             title={taskMeta.title}
         >
             {taskExtras}
-        </ExecutableRenderer>
+        </WorkItemRenderer>
     );
 };
 

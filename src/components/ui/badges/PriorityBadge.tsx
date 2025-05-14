@@ -1,7 +1,7 @@
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import { PriorityLiteral } from '@/types/executableMeta';
+import { PriorityLiteral } from '@/types/workItemMeta';
 
 // Get priority badge color based on value
 export const getPriorityColor = (priority: string | null): string => {

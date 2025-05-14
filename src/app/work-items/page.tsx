@@ -1,5 +1,5 @@
 import React from 'react';
-import ExecutablesView from '@/components/executables/ExecutablesView';
+import WorkItemsView from '@/components/work_items/WorkItemsView';
 
 export const metadata = {
     title: 'Work Items | Cogni',
@@ -16,7 +16,7 @@ export default function WorkItemsPage() {
                 </p>
             </div>
 
-            <ExecutablesView />
+            <WorkItemsView />
         </div>
     );
 } 

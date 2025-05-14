@@ -14,13 +14,13 @@ import {
     CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { formatDistanceToNow } from 'date-fns';
-import { ExecutableMeta, PriorityLiteral } from '@/types/executableMeta';
+import { WorkItemMeta, PriorityLiteral } from '@/types/workItemMeta';
 import FormatRenderer from '@/utils/formatRenderers';
 import { getBlockConfidencePercentage } from '@/utils/blockUtils';
 
-interface ExecutableRendererProps {
+interface WorkItemRendererProps {
     block: MemoryBlock;
-    meta: ExecutableMeta;
+    meta: WorkItemMeta;
     children?: React.ReactNode;
     title?: string;
 }
@@ -131,7 +131,7 @@ const MetadataSection = ({
     );
 };
 
-export const ExecutableRenderer: React.FC<ExecutableRendererProps> = ({
+export const WorkItemRenderer: React.FC<WorkItemRendererProps> = ({
     block,
     meta,
     children,
@@ -592,4 +592,4 @@ export const ExecutableRenderer: React.FC<ExecutableRendererProps> = ({
     );
 };
 
-export default ExecutableRenderer; 
+export default WorkItemRenderer; 

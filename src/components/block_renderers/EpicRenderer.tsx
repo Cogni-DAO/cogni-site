@@ -4,8 +4,8 @@ import type { MemoryBlock } from '@/data/models/memoryBlock';
 import { MemoryBlockType } from '@/data/models/memoryBlockType';
 import { narrowMetadata } from '@/data/block_metadata';
 import { EpicMetadata } from '@/data/block_metadata/epic';
-import ExecutableRenderer from '@/components/blocks/ExecutableRenderer';
-import { ExecutableMeta } from '@/types/executableMeta';
+import WorkItemRenderer from '@/components/blocks/WorkItemRenderer';
+import { WorkItemMeta } from '@/types/WorkItemMeta';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 
@@ -25,9 +25,9 @@ const EpicRenderer: React.FC<EpicRendererProps> = ({ block }) => {
     }
 
     // Cast metadata to the combined type
-    const meta = epicMeta as ExecutableMeta & EpicMetadata;
+    const meta = epicMeta as WorkItemMeta & EpicMetadata;
 
-    // Epic-specific extras to render within the ExecutableRenderer
+    // Epic-specific extras to render within the WorkItemRenderer
     const epicExtras = (
         <>
             {/* Epic-specific fields */}
@@ -92,13 +92,13 @@ const EpicRenderer: React.FC<EpicRendererProps> = ({ block }) => {
     );
 
     return (
-        <ExecutableRenderer
+        <WorkItemRenderer
             block={block}
             meta={meta}
             title={epicMeta.name}
         >
             {epicExtras}
-        </ExecutableRenderer>
+        </WorkItemRenderer>
     );
 };
 

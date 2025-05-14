@@ -10,15 +10,15 @@ import {
     TableRow
 } from '@/components/ui/table';
 import type { MemoryBlock } from '@/data/models/memoryBlock';
-import { ExecutablesRow } from './ExecutablesRow';
+import { WorkItemsRow } from './WorkItemsRow';
 
-interface ExecutablesTableProps {
+interface WorkItemsTableProps {
     blocks: MemoryBlock[];
 }
 
-export function ExecutablesTable({ blocks }: ExecutablesTableProps) {
+export function WorkItemsTable({ blocks }: WorkItemsTableProps) {
     React.useEffect(() => {
-        console.log('ExecutablesTable received blocks:', blocks);
+        console.log('WorkItemsTable received blocks:', blocks);
     }, [blocks]);
 
     return (
@@ -45,7 +45,7 @@ export function ExecutablesTable({ blocks }: ExecutablesTableProps) {
                         </TableRow>
                     ) : (
                         blocks.map((block) => (
-                            <ExecutablesRow key={block.id} block={block} />
+                            <WorkItemsRow key={block.id} block={block} />
                         ))
                     )}
                 </TableBody>
