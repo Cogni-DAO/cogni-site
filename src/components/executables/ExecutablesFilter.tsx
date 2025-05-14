@@ -11,32 +11,39 @@ import {
 } from '@/components/ui/select';
 import { Search, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
+import { MemoryBlockType } from '@/data/models/memoryBlockType';
 
-interface ProjectsFilterProps {
+interface ExecutablesFilterProps {
     searchQuery: string;
     onSearchChange: (query: string) => void;
     statusFilter: string | null;
     onStatusChange: (status: string | null) => void;
     ownerFilter: string | null;
     onOwnerChange: (owner: string | null) => void;
+    typeFilters: MemoryBlockType[];
+    onTypeFilterChange: (type: MemoryBlockType, isActive: boolean) => void;
     statuses: string[];
     owners: string[];
     sortBy?: string;
     onSortChange?: (sortOption: string) => void;
 }
 
-export function ProjectsFilter({
+export function ExecutablesFilter({
     searchQuery,
     onSearchChange,
     statusFilter,
     onStatusChange,
     ownerFilter,
     onOwnerChange,
+    typeFilters,
+    onTypeFilterChange,
     statuses,
     owners,
     sortBy = 'none',
     onSortChange = () => { },
-}: ProjectsFilterProps) {
+}: ExecutablesFilterProps) {
     // Clear all filters
     const clearFilters = () => {
         onSearchChange('');
@@ -53,8 +60,41 @@ export function ProjectsFilter({
             .join(' ');
     };
 
+    // Format block type for display
+    const formatType = (type: string) => {
+        return type.charAt(0).toUpperCase() + type.slice(1);
+    };
+
+    // Check if type is selected
+    const isTypeSelected = (type: MemoryBlockType) => {
+        return typeFilters.includes(type);
+    };
+
+    // Toggle type filter
+    const toggleTypeFilter = (type: MemoryBlockType) => {
+        onTypeFilterChange(type, !isTypeSelected(type));
+    };
+
+    // Get type badge color
+    const getTypeBadgeColor = (type: MemoryBlockType, isSelected: boolean) => {
+        if (!isSelected) return 'bg-muted hover:bg-muted/80 cursor-pointer';
+
+        switch (type) {
+            case MemoryBlockType.task:
+                return 'bg-blue-200 text-blue-900 hover:bg-blue-300 cursor-pointer';
+            case MemoryBlockType.project:
+                return 'bg-green-200 text-green-900 hover:bg-green-300 cursor-pointer';
+            case MemoryBlockType.epic:
+                return 'bg-purple-200 text-purple-900 hover:bg-purple-300 cursor-pointer';
+            case MemoryBlockType.bug:
+                return 'bg-red-200 text-red-900 hover:bg-red-300 cursor-pointer';
+            default:
+                return 'bg-muted hover:bg-muted/80 cursor-pointer';
+        }
+    };
+
     // Check if any filters are applied
-    const hasFilters = searchQuery || statusFilter || ownerFilter || sortBy !== 'none';
+    const hasFilters = searchQuery || statusFilter || ownerFilter || sortBy !== 'none' || typeFilters.length > 0;
 
     return (
         <div className="bg-card rounded-md border p-4">
@@ -62,7 +102,7 @@ export function ProjectsFilter({
                 <div className="relative flex-1">
                     <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                     <Input
-                        placeholder="Search projects..."
+                        placeholder="Search work items..."
                         value={searchQuery}
                         onChange={(e) => onSearchChange(e.target.value)}
                         className="pl-8"
@@ -130,6 +170,19 @@ export function ProjectsFilter({
                 )}
             </div>
 
+            {/* Type filter badges */}
+            <div className="flex flex-wrap gap-2 mt-3">
+                {[MemoryBlockType.task, MemoryBlockType.project, MemoryBlockType.epic, MemoryBlockType.bug].map((type) => (
+                    <Badge
+                        key={type}
+                        className={cn("transition-colors", getTypeBadgeColor(type, isTypeSelected(type)))}
+                        onClick={() => toggleTypeFilter(type)}
+                    >
+                        {formatType(type)}
+                    </Badge>
+                ))}
+            </div>
+
             {hasFilters && (
                 <div className="mt-3 text-sm text-muted-foreground">
                     <span className="font-medium">
@@ -148,6 +201,11 @@ export function ProjectsFilter({
                     {ownerFilter && (
                         <span className="mr-3">
                             Owner: {ownerFilter}
+                        </span>
+                    )}
+                    {typeFilters.length > 0 && (
+                        <span className="mr-3">
+                            Types: {typeFilters.map(formatType).join(', ')}
                         </span>
                     )}
                     {sortBy !== 'none' && (
