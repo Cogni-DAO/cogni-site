@@ -7,6 +7,7 @@ import KnowledgeRenderer from './block_renderers/KnowledgeRenderer';
 import { ProjectRenderer } from './block_renderers/ProjectRenderer';
 import { UnknownBlockRenderer } from './block_renderers/UnknownBlockRenderer';
 import DocRenderer from './block_renderers/DocRenderer';
+import TaskRenderer from './block_renderers/TaskRenderer';
 
 // Placeholder for renderers not yet created
 const PlaceholderRenderer: React.FC<BlockRendererProps> = ({ blockType, data, blockVersion }) => (
@@ -40,8 +41,7 @@ export const BlockRenderer: React.FC<BlockRendererProps> = (props) => {
             return <ProjectRenderer block={data} blockId={blockId} />;
 
         case MemoryBlockType.task:
-            // Use the PlaceholderRenderer until TaskRenderer is implemented
-            return <PlaceholderRenderer {...props} />;
+            return <TaskRenderer block={data} blockId={blockId} />;
 
         case MemoryBlockType.doc:
             return <DocRenderer block={data} />;

@@ -38,7 +38,7 @@ const MemoryBlockListItem: React.FC<MemoryBlockListItemProps> = ({ block }) => {
 
             case MemoryBlockType.task:
                 const taskMeta = narrowMetadata(MemoryBlockType.task, block.metadata);
-                title = taskMeta.name || '';
+                title = taskMeta.title || '';
                 description = taskMeta.description || '';
                 break;
 
