@@ -31,25 +31,17 @@ export function narrowWorkItemMeta(block: MemoryBlock): WorkItemMeta | null {
 }
 
 /**
- * Gets the display title for an WorkItem block
+ * Gets the display title for an WorkItem block.
+ * Assumes `block.metadata.title` is the standardized and reliable source.
  */
 export function getWorkItemTitle(block: MemoryBlock): string {
-    if (!block.metadata) {
-        return block.text?.substring(0, 50) || 'Untitled';
+    // Prefer the standardized metadata.title
+    if (block.metadata && typeof (block.metadata as any).title === 'string' && (block.metadata as any).title.trim() !== '') {
+        return (block.metadata as any).title;
     }
-
-    switch (block.type) {
-        case MemoryBlockType.task:
-            return narrowMetadata(MemoryBlockType.task, block.metadata).title || 'Untitled Task';
-        case MemoryBlockType.project:
-            return narrowMetadata(MemoryBlockType.project, block.metadata).name || 'Untitled Project';
-        case MemoryBlockType.epic:
-            return narrowMetadata(MemoryBlockType.epic, block.metadata).name || 'Untitled Epic';
-        case MemoryBlockType.bug:
-            return narrowMetadata(MemoryBlockType.bug, block.metadata).title || 'Untitled Bug';
-        default:
-            return block.text?.substring(0, 50) || 'Untitled';
-    }
+    // If metadata.title is missing, empty, or not a string, provide a generic fallback.
+    // This case should ideally not happen if backend ensures title is always populated.
+    return `Untitled ${block.type || 'Work Item'}`;
 }
 
 /**

@@ -206,9 +206,13 @@ export const WorkItemRenderer: React.FC<WorkItemRendererProps> = ({
         };
     }, [meta]);
 
-    // Render the title
+    // Render the title. Prioritize the override prop, then the standardized metadata.title.
     const renderItemTitle = () => {
-        return <h3 className="text-lg font-serif font-semibold">{title || block.text?.substring(0, 50) || 'Untitled Item'}</h3>;
+        const displayTitle =
+            title || // 1. Explicit override prop
+            ((block.metadata as any)?.title && (block.metadata as any)?.title.trim() !== '' ? (block.metadata as any).title : null) || // 2. Standardized metadata.title (if not empty)
+            `Untitled ${block.type || 'Work Item'}`; // 3. Generic fallback
+        return <h3 className="text-lg font-serif font-semibold">{displayTitle}</h3>;
     };
 
     // Render status badge

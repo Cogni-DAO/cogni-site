@@ -3,8 +3,6 @@ import Link from 'next/link';
 import { Progress } from './ui/progress';
 import { ArrowRight } from 'lucide-react';
 import type { MemoryBlock } from '@/data/models/memoryBlock';
-import { MemoryBlockType } from '@/data/models/memoryBlockType';
-import { narrowMetadata } from '@/data/block_metadata';
 import { getBlockConfidencePercentage } from '@/utils/blockUtils';
 
 interface MemoryBlockListItemProps {
@@ -18,46 +16,10 @@ interface MemoryBlockListItemProps {
 const MemoryBlockListItem: React.FC<MemoryBlockListItemProps> = ({ block }) => {
     const blockId = block.id || 'unknown';
 
-    // Extract title from metadata or text
-    let title = '';
-    let description = '';
-
-    // Extract title based on block type
-    if (block.metadata) {
-        switch (block.type) {
-            case MemoryBlockType.knowledge:
-                const knowledgeMeta = narrowMetadata(MemoryBlockType.knowledge, block.metadata);
-                title = knowledgeMeta.domain || knowledgeMeta.validity || '';
-                break;
-
-            case MemoryBlockType.project:
-                const projectMeta = narrowMetadata(MemoryBlockType.project, block.metadata);
-                title = projectMeta.name || '';
-                description = projectMeta.description || '';
-                break;
-
-            case MemoryBlockType.task:
-                const taskMeta = narrowMetadata(MemoryBlockType.task, block.metadata);
-                title = taskMeta.title || '';
-                description = taskMeta.description || '';
-                break;
-
-            case MemoryBlockType.doc:
-                const docMeta = narrowMetadata(MemoryBlockType.doc, block.metadata);
-                title = docMeta.title || '';
-                break;
-        }
-    }
-
-    // Fallback title from text
-    if (!title) {
-        title = block.text?.substring(0, 50) || `Untitled ${block.type}`;
-    }
-
-    // Fallback description from text
-    if (!description) {
-        description = block.text || '';
-    }
+    // Assume block.metadata.title will always be present and correct
+    const title = (block.metadata as any)?.title || `Untitled ${block.type || 'item'}`;
+    // Description can still fallback to block.text if metadata.description is not present
+    const description = (block.metadata as any)?.description || block.text || '';
 
     // Get confidence percentage from the utility function
     const confidencePercentage = getBlockConfidencePercentage(block);

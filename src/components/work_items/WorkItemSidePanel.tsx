@@ -133,6 +133,8 @@ export function WorkItemSidePanel({ blockId, onClose }: WorkItemSidePanelProps) 
     // Don't attempt to fetch if no blockId
     const isOpen = !!blockId;
 
+    const itemTitle = block?.metadata ? (block.metadata as any)?.title || 'Work Item Details' : 'Work Item Details';
+
     // Handle resize
     const handleResize = (newWidth: number) => {
         console.log('Resizing to width:', newWidth);
@@ -228,7 +230,7 @@ export function WorkItemSidePanel({ blockId, onClose }: WorkItemSidePanelProps) 
                     <div className="p-6 flex flex-col h-full">
                         <SheetHeader className="mb-4">
                             <div className="flex items-center justify-between">
-                                <SheetTitle>Work Item Details</SheetTitle>
+                                <SheetTitle>{isLoading ? 'Loading...' : itemTitle}</SheetTitle>
                                 <div className="flex items-center space-x-2">
                                     {/* Fullscreen button (linking to the full page) */}
                                     {blockId && (
