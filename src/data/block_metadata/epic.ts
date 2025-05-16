@@ -7,7 +7,7 @@ An Epic represents a large body of work that can be broken down into multiple pr
 tasks, or stories. It typically represents a significant business initiative or a major
 feature set.
 
-Epics inherit from WorkItemMetadata and support agent execution with:
+Epics inherit from ExecutableMetadata and support agent execution with:
 - Planning fields (tool_hints, action_items, acceptance_criteria, expected_artifacts)
 - Agent framework fields (execution_timeout_minutes, cost_budget_usd, role_hint)
 - Completion fields (deliverables, validation_report)
@@ -23,6 +23,9 @@ export const EpicMetadataSchema = z.object({
   x_tool_id: z.union([z.string(), z.null()]).optional(),
   x_parent_block_id: z.union([z.string(), z.null()]).optional(),
   x_session_id: z.union([z.string(), z.null()]).optional(),
+  title: z.string(),
+  description: z.union([z.string(), z.null()]).optional(),
+  owner: z.union([z.string(), z.null()]).optional(),
   status: z.enum(['backlog', 'ready', 'in_progress', 'review', 'merged', 'validated', 'released', 'done', 'archived']).optional(),
   tool_hints: z.array(z.unknown()).optional(),
   action_items: z.array(z.unknown()).optional(),
@@ -37,9 +40,6 @@ export const EpicMetadataSchema = z.object({
   execution_phase: z.union([z.string(), z.null()]).optional(),
   deliverables: z.array(z.unknown()).optional(),
   validation_report: z.union([z.unknown(), z.null()]).optional(),
-  owner: z.string(),
-  name: z.string(),
-  description: z.string(),
   start_date: z.union([z.string(), z.null()]).optional(),
   target_date: z.union([z.string(), z.null()]).optional(),
   priority: z.union([z.string(), z.null()]).optional(),
@@ -55,7 +55,7 @@ An Epic represents a large body of work that can be broken down into multiple pr
 tasks, or stories. It typically represents a significant business initiative or a major
 feature set.
 
-Epics inherit from WorkItemMetadata and support agent execution with:
+Epics inherit from ExecutableMetadata and support agent execution with:
 - Planning fields (tool_hints, action_items, acceptance_criteria, expected_artifacts)
 - Agent framework fields (execution_timeout_minutes, cost_budget_usd, role_hint)
 - Completion fields (deliverables, validation_report)
@@ -72,6 +72,9 @@ export interface EpicMetadata {
   x_tool_id?: string | null;
   x_parent_block_id?: string | null;
   x_session_id?: string | null;
+  title: string;
+  description?: string | null;
+  owner?: string | null;
   status?: 'backlog' | 'ready' | 'in_progress' | 'review' | 'merged' | 'validated' | 'released' | 'done' | 'archived';
   tool_hints?: unknown[];
   action_items?: unknown[];
@@ -86,9 +89,6 @@ export interface EpicMetadata {
   execution_phase?: string | null;
   deliverables?: unknown[];
   validation_report?: unknown | null;
-  owner: string;
-  name: string;
-  description: string;
   start_date?: string | null;
   target_date?: string | null;
   priority?: string | null;

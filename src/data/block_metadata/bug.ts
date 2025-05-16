@@ -6,7 +6,7 @@ import { z } from 'zod';
 A Bug represents an issue, defect, or unexpected behavior in software
 that needs to be addressed.
 
-Bugs inherit from WorkItemMetadata and support agent execution with:
+Bugs inherit from ExecutableMetadata and support agent execution with:
 - Planning fields (tool_hints, action_items, acceptance_criteria, expected_artifacts)
 - Agent framework fields (execution_timeout_minutes, cost_budget_usd, role_hint)
 - Completion fields (deliverables, validation_report)
@@ -22,6 +22,9 @@ export const BugMetadataSchema = z.object({
   x_tool_id: z.union([z.string(), z.null()]).optional(),
   x_parent_block_id: z.union([z.string(), z.null()]).optional(),
   x_session_id: z.union([z.string(), z.null()]).optional(),
+  title: z.string(),
+  description: z.union([z.string(), z.null()]).optional(),
+  owner: z.union([z.string(), z.null()]).optional(),
   status: z.enum(['backlog', 'ready', 'in_progress', 'review', 'merged', 'validated', 'released', 'done', 'archived']).optional(),
   tool_hints: z.array(z.unknown()).optional(),
   action_items: z.array(z.unknown()).optional(),
@@ -36,9 +39,6 @@ export const BugMetadataSchema = z.object({
   execution_phase: z.union([z.string(), z.null()]).optional(),
   deliverables: z.array(z.unknown()).optional(),
   validation_report: z.union([z.unknown(), z.null()]).optional(),
-  reporter: z.string(),
-  title: z.string(),
-  description: z.string(),
   assignee: z.union([z.string(), z.null()]).optional(),
   priority: z.union([z.string(), z.null()]).optional(),
   severity: z.union([z.string(), z.null()]).optional(),
@@ -61,7 +61,7 @@ export const BugMetadataSchema = z.object({
 A Bug represents an issue, defect, or unexpected behavior in software
 that needs to be addressed.
 
-Bugs inherit from WorkItemMetadata and support agent execution with:
+Bugs inherit from ExecutableMetadata and support agent execution with:
 - Planning fields (tool_hints, action_items, acceptance_criteria, expected_artifacts)
 - Agent framework fields (execution_timeout_minutes, cost_budget_usd, role_hint)
 - Completion fields (deliverables, validation_report)
@@ -78,6 +78,9 @@ export interface BugMetadata {
   x_tool_id?: string | null;
   x_parent_block_id?: string | null;
   x_session_id?: string | null;
+  title: string;
+  description?: string | null;
+  owner?: string | null;
   status?: 'backlog' | 'ready' | 'in_progress' | 'review' | 'merged' | 'validated' | 'released' | 'done' | 'archived';
   tool_hints?: unknown[];
   action_items?: unknown[];
@@ -92,9 +95,6 @@ export interface BugMetadata {
   execution_phase?: string | null;
   deliverables?: unknown[];
   validation_report?: unknown | null;
-  reporter: string;
-  title: string;
-  description: string;
   assignee?: string | null;
   priority?: string | null;
   severity?: string | null;

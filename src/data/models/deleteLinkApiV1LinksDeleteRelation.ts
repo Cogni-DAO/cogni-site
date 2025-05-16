@@ -6,14 +6,11 @@
  * OpenAPI spec version: 0.1.0
  */
 
-/**
- * The type of relationship between the blocks
- */
-export type BlockLinkRelation = typeof BlockLinkRelation[keyof typeof BlockLinkRelation];
+export type DeleteLinkApiV1LinksDeleteRelation = typeof DeleteLinkApiV1LinksDeleteRelation[keyof typeof DeleteLinkApiV1LinksDeleteRelation];
 
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const BlockLinkRelation = {
+export const DeleteLinkApiV1LinksDeleteRelation = {
   related_to: 'related_to',
   mentions: 'mentions',
   child_of: 'child_of',

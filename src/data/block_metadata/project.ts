@@ -11,7 +11,7 @@ Projects can have the following relationships via BlockLinks:
 - epic_contains: Points to an epic that is related to this project (if project contains epics)
 - has_bug: Points to a bug that is related to this project
 
-Projects inherit from WorkItemMetadata and support agent execution with:
+Projects inherit from ExecutableMetadata and support agent execution with:
 - Planning fields (tool_hints, action_items, acceptance_criteria, expected_artifacts)
 - Agent framework fields (execution_timeout_minutes, cost_budget_usd, role_hint)
 - Completion fields (deliverables, validation_report)
@@ -22,6 +22,9 @@ export const ProjectMetadataSchema = z.object({
   x_tool_id: z.union([z.string(), z.null()]).optional(),
   x_parent_block_id: z.union([z.string(), z.null()]).optional(),
   x_session_id: z.union([z.string(), z.null()]).optional(),
+  title: z.string(),
+  description: z.union([z.string(), z.null()]).optional(),
+  owner: z.union([z.string(), z.null()]).optional(),
   status: z.enum(['backlog', 'ready', 'in_progress', 'review', 'merged', 'validated', 'released', 'done', 'archived']).optional(),
   tool_hints: z.array(z.unknown()).optional(),
   action_items: z.array(z.unknown()).optional(),
@@ -36,9 +39,6 @@ export const ProjectMetadataSchema = z.object({
   execution_phase: z.union([z.string(), z.null()]).optional(),
   deliverables: z.array(z.unknown()).optional(),
   validation_report: z.union([z.unknown(), z.null()]).optional(),
-  owner: z.string(),
-  name: z.string(),
-  description: z.string(),
   priority: z.union([z.string(), z.null()]).optional(),
   start_date: z.union([z.string(), z.null()]).optional(),
   target_date: z.union([z.string(), z.null()]).optional(),
@@ -64,7 +64,7 @@ Projects can have the following relationships via BlockLinks:
 - epic_contains: Points to an epic that is related to this project (if project contains epics)
 - has_bug: Points to a bug that is related to this project
 
-Projects inherit from WorkItemMetadata and support agent execution with:
+Projects inherit from ExecutableMetadata and support agent execution with:
 - Planning fields (tool_hints, action_items, acceptance_criteria, expected_artifacts)
 - Agent framework fields (execution_timeout_minutes, cost_budget_usd, role_hint)
 - Completion fields (deliverables, validation_report)
@@ -76,6 +76,9 @@ export interface ProjectMetadata {
   x_tool_id?: string | null;
   x_parent_block_id?: string | null;
   x_session_id?: string | null;
+  title: string;
+  description?: string | null;
+  owner?: string | null;
   status?: 'backlog' | 'ready' | 'in_progress' | 'review' | 'merged' | 'validated' | 'released' | 'done' | 'archived';
   tool_hints?: unknown[];
   action_items?: unknown[];
@@ -90,9 +93,6 @@ export interface ProjectMetadata {
   execution_phase?: string | null;
   deliverables?: unknown[];
   validation_report?: unknown | null;
-  owner: string;
-  name: string;
-  description: string;
   priority?: string | null;
   start_date?: string | null;
   target_date?: string | null;

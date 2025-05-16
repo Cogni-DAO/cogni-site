@@ -12,7 +12,7 @@ Tasks can have the following relationships via BlockLinks:
 - is_blocked_by: Points to another task that is blocking this one
 - has_bug: Points to a bug that is related to this task
 
-Tasks inherit from WorkItemMetadata and support agent execution with:
+Tasks inherit from ExecutableMetadata and support agent execution with:
 - Planning fields (tool_hints, action_items, acceptance_criteria, expected_artifacts)
 - Agent framework fields (execution_timeout_minutes, cost_budget_usd, role_hint)
 - Completion fields (deliverables, validation_report)
@@ -23,6 +23,9 @@ export const TaskMetadataSchema = z.object({
   x_tool_id: z.union([z.string(), z.null()]).optional(),
   x_parent_block_id: z.union([z.string(), z.null()]).optional(),
   x_session_id: z.union([z.string(), z.null()]).optional(),
+  title: z.string(),
+  description: z.union([z.string(), z.null()]).optional(),
+  owner: z.union([z.string(), z.null()]).optional(),
   status: z.enum(['backlog', 'ready', 'in_progress', 'review', 'merged', 'validated', 'released', 'done', 'archived']).optional(),
   tool_hints: z.array(z.unknown()).optional(),
   action_items: z.array(z.unknown()).optional(),
@@ -37,9 +40,6 @@ export const TaskMetadataSchema = z.object({
   execution_phase: z.union([z.string(), z.null()]).optional(),
   deliverables: z.array(z.unknown()).optional(),
   validation_report: z.union([z.unknown(), z.null()]).optional(),
-  assignee: z.union([z.string(), z.null()]).optional(),
-  title: z.string(),
-  description: z.string(),
   priority: z.union([z.string(), z.null()]).optional(),
   story_points: z.union([z.number(), z.null()]).optional(),
   estimate_hours: z.union([z.number(), z.null()]).optional(),
@@ -65,7 +65,7 @@ Tasks can have the following relationships via BlockLinks:
 - is_blocked_by: Points to another task that is blocking this one
 - has_bug: Points to a bug that is related to this task
 
-Tasks inherit from WorkItemMetadata and support agent execution with:
+Tasks inherit from ExecutableMetadata and support agent execution with:
 - Planning fields (tool_hints, action_items, acceptance_criteria, expected_artifacts)
 - Agent framework fields (execution_timeout_minutes, cost_budget_usd, role_hint)
 - Completion fields (deliverables, validation_report)
@@ -77,6 +77,9 @@ export interface TaskMetadata {
   x_tool_id?: string | null;
   x_parent_block_id?: string | null;
   x_session_id?: string | null;
+  title: string;
+  description?: string | null;
+  owner?: string | null;
   status?: 'backlog' | 'ready' | 'in_progress' | 'review' | 'merged' | 'validated' | 'released' | 'done' | 'archived';
   tool_hints?: unknown[];
   action_items?: unknown[];
@@ -91,9 +94,6 @@ export interface TaskMetadata {
   execution_phase?: string | null;
   deliverables?: unknown[];
   validation_report?: unknown | null;
-  assignee?: string | null;
-  title: string;
-  description: string;
   priority?: string | null;
   story_points?: number | null;
   estimate_hours?: number | null;

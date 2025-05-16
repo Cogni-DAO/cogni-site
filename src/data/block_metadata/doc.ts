@@ -11,6 +11,8 @@ export const DocMetadataSchema = z.object({
   x_parent_block_id: z.union([z.string(), z.null()]).optional(),
   x_session_id: z.union([z.string(), z.null()]).optional(),
   title: z.string(),
+  description: z.union([z.string(), z.null()]).optional(),
+  owner: z.union([z.string(), z.null()]).optional(),
   audience: z.union([z.string(), z.null()]).optional(),
   section: z.union([z.string(), z.null()]).optional(),
   version: z.union([z.string(), z.null()]).optional(),
@@ -31,6 +33,8 @@ export interface DocMetadata {
   x_parent_block_id?: string | null;
   x_session_id?: string | null;
   title: string;
+  description?: string | null;
+  owner?: string | null;
   audience?: string | null;
   section?: string | null;
   version?: string | null;
