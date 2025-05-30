@@ -6,26 +6,32 @@ export async function GET(
 ) {
     try {
         const { blockId } = params;
+        const { searchParams } = new URL(request.url);
 
-        // For now, return mock data to test the frontend
-        // TODO: Replace with actual Cogni memory system integration
-        const mockLinks = [
-            {
-                from_id: blockId,
-                to_id: "1dad8719-1e5b-41b4-a83a-205eca2a614b",
-                relation: "depends_on",
-                priority: 1,
-                created_at: "2025-05-29T18:06:27.569822",
-                created_by: "system",
-                link_metadata: {
-                    reason: "CreateBlockLink tool requires LinkManager integration to be completed first"
-                }
-            }
-        ];
+        // Construct backend URL
+        const backendUrl = new URL(`http://localhost:8000/api/v1/links/from/${blockId}`);
 
-        return NextResponse.json(mockLinks);
+        // Forward query parameters
+        searchParams.forEach((value, key) => {
+            backendUrl.searchParams.append(key, value);
+        });
+
+        // Proxy request to backend
+        const response = await fetch(backendUrl.toString(), {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`Backend responded with ${response.status}`);
+        }
+
+        const data = await response.json();
+        return NextResponse.json(data);
     } catch (error) {
-        console.error('Error fetching links from block:', error);
+        console.error('Error proxying links from block:', error);
         return NextResponse.json(
             { error: 'Failed to fetch links' },
             { status: 500 }

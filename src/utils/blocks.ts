@@ -33,14 +33,14 @@ export function validateBlock(data: unknown): data is MemoryBlock {
 }
 
 // Fixed API URL pointing to your actual backend API
-const API_URL = 'http://localhost:8000';
+const API_URL = 'http://localhost:8000/api/v1';
 
 /**
  * Fetches memory blocks from the API with validation
  * @returns Promise resolving to a validated array of memory blocks
  */
 export async function fetchBlocks(): Promise<BlocksResponse> {
-    const response = await fetch(`${API_URL}/api/blocks`);
+    const response = await fetch(`${API_URL}/blocks`);
 
     if (!response.ok) {
         throw new Error(`Failed to fetch blocks: ${response.status} ${response.statusText}`);
@@ -62,7 +62,7 @@ export async function fetchBlocks(): Promise<BlocksResponse> {
  * @returns Promise resolving to a validated memory block
  */
 export async function fetchBlockById(id: string): Promise<MemoryBlock> {
-    const response = await fetch(`${API_URL}/api/blocks/${id}`);
+    const response = await fetch(`${API_URL}/blocks/${id}`);
 
     if (!response.ok) {
         throw new Error(`Failed to fetch block: ${response.status} ${response.statusText}`);
@@ -90,7 +90,7 @@ export async function createBlock(block: Partial<MemoryBlock>): Promise<MemoryBl
         throw new Error('Invalid memory block');
     }
 
-    const response = await fetch(`${API_URL}/api/blocks`, {
+    const response = await fetch(`${API_URL}/blocks`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
