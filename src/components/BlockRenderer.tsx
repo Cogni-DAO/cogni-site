@@ -8,6 +8,8 @@ import ProjectRenderer from './block_renderers/ProjectRenderer';
 import UnknownBlockRenderer from './block_renderers/UnknownBlockRenderer';
 import DocRenderer from './block_renderers/DocRenderer';
 import TaskRenderer from './block_renderers/TaskRenderer';
+import BugRenderer from './block_renderers/BugRenderer';
+import EpicRenderer from './block_renderers/EpicRenderer';
 
 // Placeholder for renderers not yet created
 const PlaceholderRenderer: React.FC<BlockRendererProps> = ({ blockType, data, blockVersion }) => (
@@ -45,6 +47,12 @@ export const BlockRenderer: React.FC<BlockRendererProps> = (props) => {
 
         case MemoryBlockType.doc:
             return <DocRenderer block={data} />;
+
+        case MemoryBlockType.bug:
+            return <BugRenderer block={data} />;
+
+        case MemoryBlockType.epic:
+            return <EpicRenderer block={data} />;
 
         case MemoryBlockType.log:
             // Use the PlaceholderRenderer until LogRenderer is implemented
