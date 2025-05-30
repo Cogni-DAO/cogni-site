@@ -17,6 +17,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { WorkItemMeta, PriorityLiteral } from '@/types/workItemMeta';
 import FormatRenderer from '@/utils/formatRenderers';
 import { getBlockConfidencePercentage } from '@/utils/blockUtils';
+import { WorkItemDependencies } from '@/components/work_items/WorkItemDependencies';
 
 interface WorkItemRendererProps {
     block: MemoryBlock;
@@ -549,6 +550,13 @@ export const WorkItemRenderer: React.FC<WorkItemRendererProps> = ({
                                 format="markdown"
                             />
                         </div>
+                    </div>
+                )}
+
+                {/* Dependencies & Relationships */}
+                {block.id && (
+                    <div className="mb-4">
+                        <WorkItemDependencies blockId={block.id} />
                     </div>
                 )}
 

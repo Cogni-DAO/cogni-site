@@ -37,22 +37,22 @@ function fetchData(url: string, maxRedirects: number = 5): Promise<string> {
                     return;
                 }
 
-                if (res.statusCode !== 200) {
-                    reject(new Error(`Failed to fetch: ${res.statusCode}`));
-                    return;
-                }
+            if (res.statusCode !== 200) {
+                reject(new Error(`Failed to fetch: ${res.statusCode}`));
+                return;
+            }
 
-                let data = '';
-                res.on('data', (chunk) => {
-                    data += chunk;
-                });
-
-                res.on('end', () => {
-                    resolve(data);
-                });
-            }).on('error', (err) => {
-                reject(err);
+            let data = '';
+            res.on('data', (chunk) => {
+                data += chunk;
             });
+
+            res.on('end', () => {
+                resolve(data);
+            });
+        }).on('error', (err) => {
+            reject(err);
+        });
         };
 
         makeRequest(url, maxRedirects);
