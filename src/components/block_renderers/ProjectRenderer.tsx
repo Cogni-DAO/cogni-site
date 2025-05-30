@@ -77,7 +77,7 @@ const ProjectRenderer: React.FC<ProjectRendererProps> = ({ block }) => {
         <WorkItemRenderer
             block={block}
             meta={meta}
-            title={projectMeta.name}
+            title={projectMeta.title}
         >
             {projectExtras}
         </WorkItemRenderer>

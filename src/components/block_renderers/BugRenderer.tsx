@@ -1,11 +1,11 @@
 import React, { useMemo } from 'react';
-import { AlertTriangle, Calendar, Tag, UserRound, Bug } from 'lucide-react';
+import { AlertTriangle, Calendar, UserRound, Bug } from 'lucide-react';
 import type { MemoryBlock } from '@/data/models/memoryBlock';
 import { MemoryBlockType } from '@/data/models/memoryBlockType';
 import { narrowMetadata } from '@/data/block_metadata';
 import { BugMetadata } from '@/data/block_metadata/bug';
 import WorkItemRenderer from '@/components/blocks/WorkItemRenderer';
-import { WorkItemMeta } from '@/types/WorkItemMeta';
+import { WorkItemMeta } from '@/types/workItemMeta';
 import { Badge } from '@/components/ui/badge';
 import FormatRenderer from '@/utils/formatRenderers';
 
@@ -31,7 +31,7 @@ const BugRenderer: React.FC<BugRendererProps> = ({ block }) => {
     const bugExtras = (
         <>
             {/* Bug-specific fields */}
-            {(bugMeta.reporter || bugMeta.assignee || bugMeta.severity ||
+            {(bugMeta.owner || bugMeta.assignee || bugMeta.severity ||
                 bugMeta.version_found || bugMeta.version_fixed || bugMeta.due_date ||
                 bugMeta.expected_behavior || bugMeta.actual_behavior || bugMeta.environment ||
                 bugMeta.logs_link || bugMeta.steps_to_reproduce) && (
@@ -42,7 +42,7 @@ const BugRenderer: React.FC<BugRendererProps> = ({ block }) => {
                             <div className="flex items-center gap-2">
                                 <UserRound className="h-4 w-4 text-muted-foreground" />
                                 <span className="text-sm">
-                                    Reporter: {bugMeta.reporter}
+                                    Reporter: {bugMeta.owner}
                                     {bugMeta.assignee && <span> · Assignee: {bugMeta.assignee}</span>}
                                 </span>
                             </div>

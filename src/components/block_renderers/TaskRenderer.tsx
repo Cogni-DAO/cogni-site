@@ -5,7 +5,7 @@ import { MemoryBlockType } from '@/data/models/memoryBlockType';
 import { narrowMetadata } from '@/data/block_metadata';
 import { TaskMetadata } from '@/data/block_metadata/task';
 import WorkItemRenderer from '@/components/blocks/WorkItemRenderer';
-import { WorkItemMeta } from '@/types/WorkItemMeta';
+import { WorkItemMeta } from '@/types/workItemMeta';
 import FormatRenderer from '@/utils/formatRenderers';
 
 interface TaskRendererProps {
@@ -31,7 +31,7 @@ const TaskRenderer: React.FC<TaskRendererProps> = ({ block }) => {
         <>
             {/* Task-specific fields like estimates, dates, and assignee */}
             {(taskMeta.estimate_hours || taskMeta.story_points || taskMeta.start_date ||
-                taskMeta.due_date || taskMeta.assignee || taskMeta.implementation_details) && (
+                taskMeta.due_date || taskMeta.owner || taskMeta.implementation_details) && (
                     <div className="border rounded-md mb-4 p-3">
                         <h4 className="text-sm font-medium mb-2">Task-specific Details</h4>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
@@ -60,11 +60,11 @@ const TaskRenderer: React.FC<TaskRendererProps> = ({ block }) => {
                             )}
 
                             {/* Assignment */}
-                            {taskMeta.assignee && (
+                            {taskMeta.owner && (
                                 <div className="flex items-center gap-2">
                                     <UserRound className="h-4 w-4 text-muted-foreground" />
                                     <span className="text-sm">
-                                        Assigned to: {taskMeta.assignee}
+                                        Assigned to: {taskMeta.owner}
                                     </span>
                                 </div>
                             )}

@@ -31,17 +31,17 @@ const PlaceholderRenderer: React.FC<BlockRendererProps> = ({ blockType, data, bl
 );
 
 export const BlockRenderer: React.FC<BlockRendererProps> = (props) => {
-    const { blockType, blockId, data } = props;
+    const { blockType, data } = props;
 
     switch (blockType) {
         case MemoryBlockType.knowledge:
             return <KnowledgeRenderer block={data} />;
 
         case MemoryBlockType.project:
-            return <ProjectRenderer block={data} blockId={blockId} />;
+            return <ProjectRenderer block={data} />;
 
         case MemoryBlockType.task:
-            return <TaskRenderer block={data} blockId={blockId} />;
+            return <TaskRenderer block={data} />;
 
         case MemoryBlockType.doc:
             return <DocRenderer block={data} />;

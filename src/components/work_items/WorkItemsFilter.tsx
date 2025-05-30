@@ -190,7 +190,7 @@ export function WorkItemsFilter({
                     </span>{' '}
                     {searchQuery && (
                         <span className="mr-3">
-                            Search: "{searchQuery}"
+                            Search: &quot;{searchQuery}&quot;
                         </span>
                     )}
                     {statusFilter && (

@@ -1,10 +1,10 @@
 import useSWR from 'swr';
 import {
     getLinksFromApiV1LinksFromBlockIdGet,
-    getLinksToApiV1LinksToBlockIdGet,
-    type GetLinksFromApiV1LinksFromBlockIdGetParams,
-    type GetLinksToApiV1LinksToBlockIdGetParams
+    getLinksToApiV1LinksToBlockIdGet
 } from '@/data/v1-links';
+import type { GetLinksFromApiV1LinksFromBlockIdGetParams } from '@/data/models/getLinksFromApiV1LinksFromBlockIdGetParams';
+import type { GetLinksToApiV1LinksToBlockIdGetParams } from '@/data/models/getLinksToApiV1LinksToBlockIdGetParams';
 import type { BlockLink } from '@/data/models/blockLink';
 
 /**

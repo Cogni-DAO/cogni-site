@@ -7,12 +7,13 @@ import { narrowMetadata } from '@/data/block_metadata';
  * Determines if a block type is an WorkItem type
  */
 export function isWorkItemType(type: MemoryBlockType): boolean {
-    return [
+    const workItemTypes: MemoryBlockType[] = [
         MemoryBlockType.task,
         MemoryBlockType.project,
         MemoryBlockType.epic,
         MemoryBlockType.bug
-    ].includes(type);
+    ];
+    return workItemTypes.includes(type);
 }
 
 /**
@@ -20,6 +21,14 @@ export function isWorkItemType(type: MemoryBlockType): boolean {
  */
 export function narrowWorkItemMeta(block: MemoryBlock): WorkItemMeta | null {
     if (!block.metadata || !isWorkItemType(block.type)) {
+        return null;
+    }
+
+    // Type guard to ensure block.type is a valid key for BlockMetadataByType
+    if (block.type !== MemoryBlockType.task &&
+        block.type !== MemoryBlockType.project &&
+        block.type !== MemoryBlockType.epic &&
+        block.type !== MemoryBlockType.bug) {
         return null;
     }
 
@@ -36,8 +45,8 @@ export function narrowWorkItemMeta(block: MemoryBlock): WorkItemMeta | null {
  */
 export function getWorkItemTitle(block: MemoryBlock): string {
     // Prefer the standardized metadata.title
-    if (block.metadata && typeof (block.metadata as any).title === 'string' && (block.metadata as any).title.trim() !== '') {
-        return (block.metadata as any).title;
+    if (block.metadata && typeof (block.metadata.title) === 'string' && (block.metadata.title as string).trim() !== '') {
+        return (block.metadata.title as string);
     }
     // If metadata.title is missing, empty, or not a string, provide a generic fallback.
     // This case should ideally not happen if backend ensures title is always populated.
@@ -54,7 +63,7 @@ export function getWorkItemOwner(block: MemoryBlock): string | null {
 
     switch (block.type) {
         case MemoryBlockType.task:
-            return narrowMetadata(MemoryBlockType.task, block.metadata).assignee || null;
+            return narrowMetadata(MemoryBlockType.task, block.metadata).owner || null;
         case MemoryBlockType.project:
         case MemoryBlockType.epic:
             return narrowMetadata(block.type, block.metadata).owner || null;

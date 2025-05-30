@@ -1,9 +1,8 @@
 'use client';
 
-import React, { useEffect, CSSProperties, useState, useRef } from 'react';
-import { ExternalLink, X, GripVertical } from 'lucide-react';
+import React, { useEffect, useState, useRef } from 'react';
+import { ExternalLink, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { MemoryBlock } from '@/data/models/memoryBlock';
 import { WorkItemRenderer } from '@/components/blocks/WorkItemRenderer';
 import { narrowWorkItemMeta } from '@/utils/workItemUtils';
 import { useToast } from '@/hooks/use-toast';
@@ -133,7 +132,7 @@ export function WorkItemSidePanel({ blockId, onClose }: WorkItemSidePanelProps) 
     // Don't attempt to fetch if no blockId
     const isOpen = !!blockId;
 
-    const itemTitle = block?.metadata ? (block.metadata as any)?.title || 'Work Item Details' : 'Work Item Details';
+    const itemTitle = block?.metadata ? (block.metadata.title as string) || 'Work Item Details' : 'Work Item Details';
 
     // Handle resize
     const handleResize = (newWidth: number) => {

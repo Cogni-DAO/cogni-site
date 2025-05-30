@@ -5,7 +5,7 @@ import { MemoryBlockType } from '@/data/models/memoryBlockType';
 import { narrowMetadata } from '@/data/block_metadata';
 import { EpicMetadata } from '@/data/block_metadata/epic';
 import WorkItemRenderer from '@/components/blocks/WorkItemRenderer';
-import { WorkItemMeta } from '@/types/WorkItemMeta';
+import { WorkItemMeta } from '@/types/workItemMeta';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 
@@ -95,7 +95,7 @@ const EpicRenderer: React.FC<EpicRendererProps> = ({ block }) => {
         <WorkItemRenderer
             block={block}
             meta={meta}
-            title={epicMeta.name}
+            title={epicMeta.title}
         >
             {epicExtras}
         </WorkItemRenderer>

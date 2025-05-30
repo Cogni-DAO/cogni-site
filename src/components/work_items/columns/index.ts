@@ -24,7 +24,7 @@ export function formatDate(dateString?: string | null): string {
         const relativeTime = formatDistanceToNow(date, { addSuffix: true });
 
         return `${formattedDate} (${relativeTime})`;
-    } catch (e) {
+    } catch (_) { // eslint-disable-line @typescript-eslint/no-unused-vars
         return '—';
     }
 }

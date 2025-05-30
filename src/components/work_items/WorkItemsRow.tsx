@@ -9,8 +9,6 @@ import {
     ExternalLink,
     MoreHorizontal,
     User,
-    Tag,
-    FileCode,
     Sidebar
 } from 'lucide-react';
 import {
@@ -72,7 +70,7 @@ export function WorkItemsRow({ block, onOpenInSidePanel }: WorkItemsRowProps) {
                 day: 'numeric',
                 year: 'numeric',
             });
-        } catch (e) {
+        } catch (_) { // eslint-disable-line @typescript-eslint/no-unused-vars
             return '—';
         }
     };

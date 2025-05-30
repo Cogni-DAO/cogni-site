@@ -89,17 +89,17 @@ export default function WorkItemsView() {
 
                 switch (block.type) {
                     case MemoryBlockType.task:
-                        title = block.metadata?.title || '';
-                        description = block.metadata?.description || '';
+                        title = (block.metadata?.title as string) || '';
+                        description = (block.metadata?.description as string) || '';
                         break;
                     case MemoryBlockType.project:
                     case MemoryBlockType.epic:
-                        title = block.metadata?.name || '';
-                        description = block.metadata?.description || '';
+                        title = (block.metadata?.title as string) || '';
+                        description = (block.metadata?.description as string) || '';
                         break;
                     case MemoryBlockType.bug:
-                        title = block.metadata?.title || '';
-                        description = block.metadata?.description || '';
+                        title = (block.metadata?.title as string) || '';
+                        description = (block.metadata?.description as string) || '';
                         break;
                     default:
                         title = block.text || '';

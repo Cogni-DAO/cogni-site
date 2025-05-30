@@ -99,7 +99,7 @@ export function WorkItemDependencies({ blockId }: WorkItemDependenciesProps) {
                             {dependents.map((link, index) => (
                                 <LinkedWorkItem
                                     key={`req-${index}`}
-                                    blockId={link.from_id || ''}
+                                    blockId={link.to_id || ''}
                                 />
                             ))}
                         </div>

@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import {
-    CalendarClock, Clock, BarChart4, UserRound, CheckSquare, Layers,
-    Tag, AlertCircle, Users, Wallet, Gauge, Wrench, BrainCircuit,
+    Clock, BarChart4, UserRound, CheckSquare, Layers,
+    AlertCircle, Users, Wallet, Gauge, Wrench,
     CheckCircle2, ChevronDown, ChevronUp, Database
 } from 'lucide-react';
 import BaseBlockRenderer from '../block_renderers/BaseBlockRenderer';
@@ -13,8 +13,7 @@ import {
     CollapsibleContent,
     CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { formatDistanceToNow } from 'date-fns';
-import { WorkItemMeta, PriorityLiteral } from '@/types/workItemMeta';
+import { WorkItemMeta } from '@/types/workItemMeta';
 import FormatRenderer from '@/utils/formatRenderers';
 import { getBlockConfidencePercentage } from '@/utils/blockUtils';
 import { WorkItemDependencies } from '@/components/work_items/WorkItemDependencies';
@@ -84,7 +83,7 @@ const renderValue = (value: unknown): React.ReactNode => {
                     {JSON.stringify(value, null, 2)}
                 </pre>
             );
-        } catch (e) {
+        } catch (_) { // eslint-disable-line @typescript-eslint/no-unused-vars
             return `[Object: ${Object.prototype.toString.call(value)}]`;
         }
     }
@@ -138,38 +137,6 @@ export const WorkItemRenderer: React.FC<WorkItemRendererProps> = ({
     children,
     title
 }) => {
-    // Format a date string to a friendly format with timezone info
-    const formatDate = (dateString: string | null | undefined): React.ReactNode => {
-        if (!dateString) return null;
-
-        try {
-            const date = new Date(dateString);
-
-            if (isNaN(date.getTime())) {
-                console.error(`Invalid date: ${dateString}`);
-                return dateString; // Return raw string as fallback
-            }
-
-            const formattedDate = date.toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric'
-            });
-
-            // Add relative time
-            const relativeTime = formatDistanceToNow(date, { addSuffix: true });
-
-            return (
-                <span title={date.toLocaleString(undefined, { timeZoneName: 'short' })}>
-                    {formattedDate} <span className="text-muted-foreground text-xs">({relativeTime})</span>
-                </span>
-            );
-        } catch (e) {
-            console.error(`Error formatting date ${dateString}:`, e);
-            return dateString; // Return raw string as fallback
-        }
-    };
-
     // Compute boolean flags for presence of various metadata
     const metadataFlags = useMemo(() => {
         if (!meta) return {
@@ -211,7 +178,7 @@ export const WorkItemRenderer: React.FC<WorkItemRendererProps> = ({
     const renderItemTitle = () => {
         const displayTitle =
             title || // 1. Explicit override prop
-            ((block.metadata as any)?.title && (block.metadata as any)?.title.trim() !== '' ? (block.metadata as any).title : null) || // 2. Standardized metadata.title (if not empty)
+            ((block.metadata?.title as string) && (block.metadata.title as string).trim() !== '' ? (block.metadata.title as string) : null) || // 2. Standardized metadata.title (if not empty)
             `Untitled ${block.type || 'Work Item'}`; // 3. Generic fallback
         return <h3 className="text-lg font-serif font-semibold">{displayTitle}</h3>;
     };

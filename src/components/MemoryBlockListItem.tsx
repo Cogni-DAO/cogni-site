@@ -17,9 +17,9 @@ const MemoryBlockListItem: React.FC<MemoryBlockListItemProps> = ({ block }) => {
     const blockId = block.id || 'unknown';
 
     // Assume block.metadata.title will always be present and correct
-    const title = (block.metadata as any)?.title || `Untitled ${block.type || 'item'}`;
+    const title = (block.metadata?.title as string) || `Untitled ${block.type || 'item'}`;
     // Description can still fallback to block.text if metadata.description is not present
-    const description = (block.metadata as any)?.description || block.text || '';
+    const description = (block.metadata?.description as string) || block.text || '';
 
     // Get confidence percentage from the utility function
     const confidencePercentage = getBlockConfidencePercentage(block);
