@@ -1,0 +1,98 @@
+import type { BlockLink } from '@/data/models/blockLink';
+
+// Type for the response from the /links endpoint
+export type LinksResponse = BlockLink[];
+
+/**
+ * Validates an array of block links against the schema
+ * @param data - The data to validate
+ * @returns Type predicate indicating if the data matches the LinksResponse schema
+ */
+export function validateLinks(data: unknown): data is LinksResponse {
+    // Basic array check, specific item validation will be handled by Zod via Orval
+    return Array.isArray(data);
+}
+
+/**
+ * Validates a single block link against the schema
+ * @param data - The data to validate
+ * @returns Type predicate indicating if the data matches the BlockLink schema
+ */
+export function validateLink(data: unknown): data is BlockLink {
+    // Basic check for required properties
+    return Boolean(
+        data &&
+        typeof data === 'object' &&
+        'from_id' in data &&
+        'to_id' in data &&
+        'relation' in data
+    );
+}
+
+// Fixed API URL pointing to your actual backend API
+const API_URL = 'http://localhost:8000/api/v1';
+
+/**
+ * Fetches all block links from the API with validation
+ * @returns Promise resolving to a validated array of block links
+ */
+export async function fetchLinks(): Promise<LinksResponse> {
+    const response = await fetch(`${API_URL}/links`);
+
+    if (!response.ok) {
+        throw new Error(`Failed to fetch links: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+
+    // Validate the response data
+    if (!validateLinks(data)) {
+        throw new Error('Invalid links response from API');
+    }
+
+    return data;
+}
+
+/**
+ * Fetches links from a specific block
+ * @param blockId - The ID of the block to fetch links from
+ * @returns Promise resolving to a validated array of block links
+ */
+export async function fetchLinksFrom(blockId: string): Promise<LinksResponse> {
+    const response = await fetch(`${API_URL}/links/from/${blockId}`);
+
+    if (!response.ok) {
+        throw new Error(`Failed to fetch links from block: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+
+    // Validate the response data
+    if (!validateLinks(data)) {
+        throw new Error('Invalid links response from API');
+    }
+
+    return data;
+}
+
+/**
+ * Fetches links to a specific block
+ * @param blockId - The ID of the block to fetch links to
+ * @returns Promise resolving to a validated array of block links
+ */
+export async function fetchLinksTo(blockId: string): Promise<LinksResponse> {
+    const response = await fetch(`${API_URL}/links/to/${blockId}`);
+
+    if (!response.ok) {
+        throw new Error(`Failed to fetch links to block: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+
+    // Validate the response data
+    if (!validateLinks(data)) {
+        throw new Error('Invalid links response from API');
+    }
+
+    return data;
+} 
