@@ -226,6 +226,11 @@ export interface components {
              */
             to_id: string;
             /**
+             * From Id
+             * @description ID of the source block in the link
+             */
+            from_id: string;
+            /**
              * Relation
              * @description The type of relationship between the blocks
              * @enum {string}
@@ -359,11 +364,6 @@ export interface components {
              * @default agent
              */
             created_by: string | null;
-            /**
-             * Links
-             * @description Optional list of links to other blocks
-             */
-            links?: components["schemas"]["BlockLink"][] | null;
         };
         /**
          * ErrorResponse
@@ -447,6 +447,17 @@ export interface components {
              */
             block_version?: number | null;
             /**
+             * Parent Id
+             * @description ID of the parent block in the hierarchy (foreign key to memory_blocks.id)
+             */
+            parent_id?: string | null;
+            /**
+             * Has Children
+             * @description Whether this block has child blocks (denormalized for fast lookups)
+             * @default false
+             */
+            has_children: boolean;
+            /**
              * Tags
              * @description Optional tags for filtering, theming, or metadata
              */
@@ -458,11 +469,6 @@ export interface components {
             metadata?: {
                 [key: string]: unknown;
             };
-            /**
-             * Links
-             * @description Directed outgoing edges connecting this block to others
-             */
-            links?: components["schemas"]["BlockLink"][];
             /**
              * Source File
              * @description Optional source markdown or file name

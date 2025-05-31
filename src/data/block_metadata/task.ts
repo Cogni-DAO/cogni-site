@@ -27,6 +27,7 @@ export const TaskMetadataSchema = z.object({
   description: z.union([z.string(), z.null()]).optional(),
   owner: z.union([z.string(), z.null()]).optional(),
   status: z.enum(['backlog', 'ready', 'in_progress', 'review', 'merged', 'validated', 'released', 'done', 'archived']).optional(),
+  assignee: z.union([z.string(), z.null()]).optional(),
   tool_hints: z.array(z.unknown()).optional(),
   action_items: z.array(z.unknown()).optional(),
   acceptance_criteria: z.array(z.unknown()).optional(),
@@ -49,7 +50,6 @@ export const TaskMetadataSchema = z.object({
   confidence_score: z.union([z.unknown(), z.null()]).optional(),
   phase: z.union([z.string(), z.null()]).optional(),
   implementation_details: z.union([z.unknown(), z.null()]).optional(),
-  completed: z.boolean().optional(),
   current_status: z.union([z.string(), z.null()]).optional()
 });
 
@@ -81,6 +81,7 @@ export interface TaskMetadata {
   description?: string | null;
   owner?: string | null;
   status?: 'backlog' | 'ready' | 'in_progress' | 'review' | 'merged' | 'validated' | 'released' | 'done' | 'archived';
+  assignee?: string | null;
   tool_hints?: unknown[];
   action_items?: unknown[];
   acceptance_criteria?: unknown[];
@@ -103,6 +104,5 @@ export interface TaskMetadata {
   confidence_score?: unknown | null;
   phase?: string | null;
   implementation_details?: unknown | null;
-  completed?: boolean;
   current_status?: string | null;
 }

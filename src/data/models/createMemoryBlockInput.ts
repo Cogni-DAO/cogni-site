@@ -11,7 +11,6 @@ import type { CreateMemoryBlockInputMetadata } from './createMemoryBlockInputMet
 import type { CreateMemoryBlockInputSourceFile } from './createMemoryBlockInputSourceFile';
 import type { CreateMemoryBlockInputConfidence } from './createMemoryBlockInputConfidence';
 import type { CreateMemoryBlockInputCreatedBy } from './createMemoryBlockInputCreatedBy';
-import type { CreateMemoryBlockInputLinks } from './createMemoryBlockInputLinks';
 
 /**
  * Input model for creating a new memory block.
@@ -38,6 +37,4 @@ export interface CreateMemoryBlockInput {
   confidence?: CreateMemoryBlockInputConfidence;
   /** Optional identifier for creator (agent name or user ID) */
   created_by?: CreateMemoryBlockInputCreatedBy;
-  /** Optional list of links to other blocks */
-  links?: CreateMemoryBlockInputLinks;
 }

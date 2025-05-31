@@ -26,6 +26,7 @@ export const ProjectMetadataSchema = z.object({
   description: z.union([z.string(), z.null()]).optional(),
   owner: z.union([z.string(), z.null()]).optional(),
   status: z.enum(['backlog', 'ready', 'in_progress', 'review', 'merged', 'validated', 'released', 'done', 'archived']).optional(),
+  assignee: z.union([z.string(), z.null()]).optional(),
   tool_hints: z.array(z.unknown()).optional(),
   action_items: z.array(z.unknown()).optional(),
   acceptance_criteria: z.array(z.unknown()).optional(),
@@ -48,7 +49,6 @@ export const ProjectMetadataSchema = z.object({
   phase: z.union([z.string(), z.null()]).optional(),
   implementation_flow: z.union([z.unknown(), z.null()]).optional(),
   success_criteria: z.union([z.unknown(), z.null()]).optional(),
-  completed: z.boolean().optional(),
   design_decisions: z.union([z.unknown(), z.null()]).optional(),
   references: z.union([z.unknown(), z.null()]).optional()
 });
@@ -80,6 +80,7 @@ export interface ProjectMetadata {
   description?: string | null;
   owner?: string | null;
   status?: 'backlog' | 'ready' | 'in_progress' | 'review' | 'merged' | 'validated' | 'released' | 'done' | 'archived';
+  assignee?: string | null;
   tool_hints?: unknown[];
   action_items?: unknown[];
   acceptance_criteria?: unknown[];
@@ -102,7 +103,6 @@ export interface ProjectMetadata {
   phase?: string | null;
   implementation_flow?: unknown | null;
   success_criteria?: unknown | null;
-  completed?: boolean;
   design_decisions?: unknown | null;
   references?: unknown | null;
 }

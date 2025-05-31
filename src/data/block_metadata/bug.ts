@@ -26,6 +26,7 @@ export const BugMetadataSchema = z.object({
   description: z.union([z.string(), z.null()]).optional(),
   owner: z.union([z.string(), z.null()]).optional(),
   status: z.enum(['backlog', 'ready', 'in_progress', 'review', 'merged', 'validated', 'released', 'done', 'archived']).optional(),
+  assignee: z.union([z.string(), z.null()]).optional(),
   tool_hints: z.array(z.unknown()).optional(),
   action_items: z.array(z.unknown()).optional(),
   acceptance_criteria: z.array(z.unknown()).optional(),
@@ -39,7 +40,6 @@ export const BugMetadataSchema = z.object({
   execution_phase: z.union([z.string(), z.null()]).optional(),
   deliverables: z.array(z.unknown()).optional(),
   validation_report: z.union([z.unknown(), z.null()]).optional(),
-  assignee: z.union([z.string(), z.null()]).optional(),
   priority: z.union([z.string(), z.null()]).optional(),
   severity: z.union([z.string(), z.null()]).optional(),
   version_found: z.union([z.string(), z.null()]).optional(),
@@ -82,6 +82,7 @@ export interface BugMetadata {
   description?: string | null;
   owner?: string | null;
   status?: 'backlog' | 'ready' | 'in_progress' | 'review' | 'merged' | 'validated' | 'released' | 'done' | 'archived';
+  assignee?: string | null;
   tool_hints?: unknown[];
   action_items?: unknown[];
   acceptance_criteria?: unknown[];
@@ -95,7 +96,6 @@ export interface BugMetadata {
   execution_phase?: string | null;
   deliverables?: unknown[];
   validation_report?: unknown | null;
-  assignee?: string | null;
   priority?: string | null;
   severity?: string | null;
   version_found?: string | null;

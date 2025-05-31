@@ -48,6 +48,7 @@ export * from './memoryBlockConfidence';
 export * from './memoryBlockCreatedBy';
 export * from './memoryBlockEmbedding';
 export * from './memoryBlockMetadata';
+export * from './memoryBlockParentId';
 export * from './memoryBlockSchemaVersion';
 export * from './memoryBlockSourceFile';
 export * from './memoryBlockSourceUri';

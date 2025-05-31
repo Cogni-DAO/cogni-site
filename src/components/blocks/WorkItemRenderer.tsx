@@ -539,26 +539,6 @@ export const WorkItemRenderer: React.FC<WorkItemRendererProps> = ({
         );
     };
 
-    // Transform related links to add context about relationships
-    const transformLinks = useMemo(() => {
-        return (block: MemoryBlock) => {
-            if (!block.links || block.links.length === 0) {
-                return [];
-            }
-
-            // Create more descriptive link titles based on the relation type
-            return block.links.map(link => {
-                // Get relation type and format it for display
-                const relation = link.relation?.replace('_', ' ') || 'related to';
-
-                return {
-                    title: `${relation}: ${link.to_id}`,
-                    slug: link.to_id
-                };
-            });
-        };
-    }, []);
-
     return (
         <BaseBlockRenderer
             block={block}
@@ -566,7 +546,6 @@ export const WorkItemRenderer: React.FC<WorkItemRendererProps> = ({
             headerRightSlot={renderHeaderRight()}
             contentSlot={renderContent()}
             getConfidencePercentage={getBlockConfidencePercentage}
-            transformLinks={transformLinks}
         />
     );
 };

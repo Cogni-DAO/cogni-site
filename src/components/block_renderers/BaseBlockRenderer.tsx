@@ -179,15 +179,9 @@ const BaseBlockRenderer: React.FC<BaseBlockRendererProps> = ({
     const { toast } = useToast();
 
     // Use the utility function for confidence percentage calculation
-    const defaultTransformLinks = (block: MemoryBlock): { title: string; slug: string }[] => {
-        if (!block.links || block.links.length === 0) {
-            return [];
-        }
-
-        return block.links.map(link => ({
-            title: `${link.relation}: ${link.to_id}`,
-            slug: link.to_id
-        }));
+    const defaultTransformLinks = (): { title: string; slug: string }[] => {
+        // Links are now fetched separately via API endpoints, not included in block data
+        return [];
     };
 
     const defaultRenderTitle = (block: MemoryBlock): ReactNode => {
@@ -217,9 +211,8 @@ const BaseBlockRenderer: React.FC<BaseBlockRendererProps> = ({
 
     // Use provided functions or defaults
     const finalGetConfidencePercentage = getConfidencePercentage || getBlockConfidencePercentage;
-    const finalTransformLinks = transformLinks || defaultTransformLinks;
     const confidencePercentage = finalGetConfidencePercentage(block);
-    const links = finalTransformLinks(block);
+    const links = transformLinks ? transformLinks(block) : defaultTransformLinks();
 
     // Handle text selection for comments
     React.useEffect(() => {

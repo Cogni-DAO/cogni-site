@@ -10,8 +10,8 @@ import type { MemoryBlockSchemaVersion } from './memoryBlockSchemaVersion';
 import type { MemoryBlockState } from './memoryBlockState';
 import type { MemoryBlockVisibility } from './memoryBlockVisibility';
 import type { MemoryBlockBlockVersion } from './memoryBlockBlockVersion';
+import type { MemoryBlockParentId } from './memoryBlockParentId';
 import type { MemoryBlockMetadata } from './memoryBlockMetadata';
-import type { BlockLink } from './blockLink';
 import type { MemoryBlockSourceFile } from './memoryBlockSourceFile';
 import type { MemoryBlockSourceUri } from './memoryBlockSourceUri';
 import type { MemoryBlockConfidence } from './memoryBlockConfidence';
@@ -38,6 +38,10 @@ export interface MemoryBlock {
   visibility?: MemoryBlockVisibility;
   /** Version number of this block */
   block_version?: MemoryBlockBlockVersion;
+  /** ID of the parent block in the hierarchy (foreign key to memory_blocks.id) */
+  parent_id?: MemoryBlockParentId;
+  /** Whether this block has child blocks (denormalized for fast lookups) */
+  has_children?: boolean;
   /**
    * Optional tags for filtering, theming, or metadata
    * @maxItems 20
@@ -45,8 +49,6 @@ export interface MemoryBlock {
   tags?: string[];
   /** Custom metadata based on block type */
   metadata?: MemoryBlockMetadata;
-  /** Directed outgoing edges connecting this block to others */
-  links?: BlockLink[];
   /** Optional source markdown or file name */
   source_file?: MemoryBlockSourceFile;
   /** Optional source link or Logseq block URI */
