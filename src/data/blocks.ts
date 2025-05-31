@@ -123,14 +123,7 @@ export const sampleKnowledgeBlock: MemoryBlock = {
   confidence: {
     human: 0.92,
     ai: 0.85
-  },
-  links: [
-    {
-      relation: "related_to",
-      to_id: "doc-001",
-      link_metadata: {}
-    }
-  ]
+  }
 };
 
 // Sample Project Block
@@ -152,19 +145,7 @@ export const sampleProjectBlock: MemoryBlock = {
   confidence: {
     human: 0.85,
     ai: 0.70
-  },
-  links: [
-    {
-      relation: "related_to",
-      to_id: "knowledge-001",
-      link_metadata: {}
-    },
-    {
-      relation: "mentions",
-      to_id: "doc-001",
-      link_metadata: {}
-    }
-  ]
+  }
 };
 
 // Sample Doc Block
@@ -187,19 +168,7 @@ export const sampleDocBlock: MemoryBlock = {
   confidence: {
     human: 0.75,
     ai: 0.80
-  },
-  links: [
-    {
-      relation: "mentions",
-      to_id: "knowledge-001",
-      link_metadata: {}
-    },
-    {
-      relation: "child_of",
-      to_id: "project-001",
-      link_metadata: {}
-    }
-  ]
+  }
 };
 
 // Collection of all sample blocks

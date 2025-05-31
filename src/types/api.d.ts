@@ -24,7 +24,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/chat/": {
+    "/api/v1/chat": {
         parameters: {
             query?: never;
             header?: never;
@@ -34,14 +34,14 @@ export interface paths {
         get?: never;
         put?: never;
         /** Stream Chat */
-        post: operations["stream_chat_chat__post"];
+        post: operations["stream_chat_api_v1_chat_post"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/api/blocks": {
+    "/api/v1/blocks": {
         parameters: {
             query?: never;
             header?: never;
@@ -50,22 +50,42 @@ export interface paths {
         };
         /**
          * Get all memory blocks
-         * @description Retrieves all memory blocks currently stored in the system from the main branch.
+         * @description Retrieves memory blocks currently stored in the system. Can be filtered by block type.
          */
-        get: operations["get_all_blocks_api_blocks_get"];
+        get: operations["get_all_blocks_api_v1_blocks_get"];
         put?: never;
         /**
          * Create a new memory block
          * @description Adds a new memory block to the system using the core creation tool.
          */
-        post: operations["create_block_api_blocks_post"];
+        post: operations["create_block_api_v1_blocks_post"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/schemas/{block_type}/{version}": {
+    "/api/v1/blocks/{block_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a specific memory block by ID
+         * @description Retrieves a specific memory block by its unique identifier.
+         */
+        get: operations["get_block_api_v1_blocks__block_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/schemas/{block_type}/{version}": {
         parameters: {
             query?: never;
             header?: never;
@@ -78,7 +98,7 @@ export interface paths {
          *     If version is 'latest', resolves to the latest version for the type.
          *     Uses application/schema+json media type.
          */
-        get: operations["get_schema_schemas__block_type___version__get"];
+        get: operations["get_schema_api_v1_schemas__block_type___version__get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -87,7 +107,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/schemas/index.json": {
+    "/api/v1/schemas/index.json": {
         parameters: {
             query?: never;
             header?: never;
@@ -98,10 +118,94 @@ export interface paths {
          * Get index of all available block schemas
          * @description Returns a list of all available block schemas with their type, version, and URL.
          */
-        get: operations["get_schema_index_schemas_index_json_get"];
+        get: operations["get_schema_index_api_v1_schemas_index_json_get"];
         put?: never;
         post?: never;
         delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/links": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create a new link between blocks
+         * @description Creates a directed link between two memory blocks with a specified relation type.
+         */
+        post: operations["create_link_api_v1_links_post"];
+        /**
+         * Delete a link between blocks
+         * @description Removes a specific link between two memory blocks.
+         */
+        delete: operations["delete_link_api_v1_links_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/links/from/{block_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get links from a block
+         * @description Retrieves all links originating from a specific block, with optional filtering.
+         */
+        get: operations["get_links_from_api_v1_links_from__block_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/links/to/{block_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get links to a block
+         * @description Retrieves all links pointing to a specific block, with optional filtering.
+         */
+        get: operations["get_links_to_api_v1_links_to__block_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/links/block/{block_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Delete all links for a block
+         * @description Removes all links involving a specific block (as source or target).
+         */
+        delete: operations["delete_links_for_block_api_v1_links_block__block_id__delete"];
         options?: never;
         head?: never;
         patch?: never;
@@ -122,11 +226,16 @@ export interface components {
              */
             to_id: string;
             /**
+             * From Id
+             * @description ID of the source block in the link
+             */
+            from_id: string;
+            /**
              * Relation
              * @description The type of relationship between the blocks
              * @enum {string}
              */
-            relation: "related_to" | "subtask_of" | "depends_on" | "child_of" | "mentions";
+            relation: "related_to" | "mentions" | "child_of" | "parent_of" | "duplicate_of" | "part_of" | "contains" | "requires" | "provides" | "owned_by" | "owns" | "subtask_of" | "depends_on" | "blocks" | "is_blocked_by" | "belongs_to_epic" | "epic_contains" | "bug_affects" | "has_bug" | "derived_from" | "supersedes" | "references" | "source_of" | "cited_by";
             /**
              * Priority
              * @description Priority of the link (higher numbers = higher priority)
@@ -255,11 +364,6 @@ export interface components {
              * @default agent
              */
             created_by: string | null;
-            /**
-             * Links
-             * @description Optional list of links to other blocks
-             */
-            links?: components["schemas"]["BlockLink"][] | null;
         };
         /**
          * ErrorResponse
@@ -316,7 +420,7 @@ export interface components {
              * @description Block type used to determine structure and relationships
              * @enum {string}
              */
-            type: "knowledge" | "task" | "project" | "doc" | "interaction" | "log";
+            type: "knowledge" | "task" | "project" | "doc" | "interaction" | "log" | "epic" | "bug";
             /**
              * Schema Version
              * @description Version of the schema this block adheres to (links to node_schemas table)
@@ -343,6 +447,17 @@ export interface components {
              */
             block_version?: number | null;
             /**
+             * Parent Id
+             * @description ID of the parent block in the hierarchy (foreign key to memory_blocks.id)
+             */
+            parent_id?: string | null;
+            /**
+             * Has Children
+             * @description Whether this block has child blocks (denormalized for fast lookups)
+             * @default false
+             */
+            has_children: boolean;
+            /**
              * Tags
              * @description Optional tags for filtering, theming, or metadata
              */
@@ -354,11 +469,6 @@ export interface components {
             metadata?: {
                 [key: string]: unknown;
             };
-            /**
-             * Links
-             * @description Directed outgoing edges connecting this block to others
-             */
-            links?: components["schemas"]["BlockLink"][];
             /**
              * Source File
              * @description Optional source markdown or file name
@@ -432,7 +542,7 @@ export interface operations {
             };
         };
     };
-    stream_chat_chat__post: {
+    stream_chat_api_v1_chat_post: {
         parameters: {
             query?: never;
             header: {
@@ -467,9 +577,12 @@ export interface operations {
             };
         };
     };
-    get_all_blocks_api_blocks_get: {
+    get_all_blocks_api_v1_blocks_get: {
         parameters: {
-            query?: never;
+            query?: {
+                type?: string;
+                case_insensitive?: boolean;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -485,6 +598,15 @@ export interface operations {
                     "application/json": components["schemas"]["MemoryBlock"][];
                 };
             };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
             /** @description Internal server error */
             500: {
                 headers: {
@@ -496,7 +618,7 @@ export interface operations {
             };
         };
     };
-    create_block_api_blocks_post: {
+    create_block_api_v1_blocks_post: {
         parameters: {
             query?: never;
             header?: never;
@@ -538,7 +660,56 @@ export interface operations {
             };
         };
     };
-    get_schema_schemas__block_type___version__get: {
+    get_block_api_v1_blocks__block_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                block_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MemoryBlock"];
+                };
+            };
+            /** @description Memory block not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_schema_api_v1_schemas__block_type___version__get: {
         parameters: {
             query?: never;
             header?: never;
@@ -570,7 +741,7 @@ export interface operations {
             };
         };
     };
-    get_schema_index_schemas_index_json_get: {
+    get_schema_index_api_v1_schemas_index_json_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -586,6 +757,297 @@ export interface operations {
                 };
                 content: {
                     "application/json": unknown;
+                };
+            };
+        };
+    };
+    create_link_api_v1_links_post: {
+        parameters: {
+            query: {
+                from_id: string;
+                to_id: string;
+                relation: "related_to" | "mentions" | "child_of" | "parent_of" | "duplicate_of" | "part_of" | "contains" | "requires" | "provides" | "owned_by" | "owns" | "subtask_of" | "depends_on" | "blocks" | "is_blocked_by" | "belongs_to_epic" | "epic_contains" | "bug_affects" | "has_bug" | "derived_from" | "supersedes" | "references" | "source_of" | "cited_by";
+                priority?: number;
+                created_by?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    [key: string]: unknown;
+                } | null;
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BlockLink"];
+                };
+            };
+            /** @description Bad Request - Invalid parameters or validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conflict - Concurrency issue or link already exists */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    delete_link_api_v1_links_delete: {
+        parameters: {
+            query: {
+                from_id: string;
+                to_id: string;
+                relation: "related_to" | "mentions" | "child_of" | "parent_of" | "duplicate_of" | "part_of" | "contains" | "requires" | "provides" | "owned_by" | "owns" | "subtask_of" | "depends_on" | "blocks" | "is_blocked_by" | "belongs_to_epic" | "epic_contains" | "bug_affects" | "has_bug" | "derived_from" | "supersedes" | "references" | "source_of" | "cited_by";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Bad Request - Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not Found - Link does not exist */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_links_from_api_v1_links_from__block_id__get: {
+        parameters: {
+            query?: {
+                relation?: ("related_to" | "mentions" | "child_of" | "parent_of" | "duplicate_of" | "part_of" | "contains" | "requires" | "provides" | "owned_by" | "owns" | "subtask_of" | "depends_on" | "blocks" | "is_blocked_by" | "belongs_to_epic" | "epic_contains" | "bug_affects" | "has_bug" | "derived_from" | "supersedes" | "references" | "source_of" | "cited_by") | null;
+                depth?: number | null;
+                direction?: string | null;
+                limit?: number;
+                cursor?: string | null;
+            };
+            header?: never;
+            path: {
+                block_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BlockLink"][];
+                };
+            };
+            /** @description Bad Request - Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_links_to_api_v1_links_to__block_id__get: {
+        parameters: {
+            query?: {
+                relation?: ("related_to" | "mentions" | "child_of" | "parent_of" | "duplicate_of" | "part_of" | "contains" | "requires" | "provides" | "owned_by" | "owns" | "subtask_of" | "depends_on" | "blocks" | "is_blocked_by" | "belongs_to_epic" | "epic_contains" | "bug_affects" | "has_bug" | "derived_from" | "supersedes" | "references" | "source_of" | "cited_by") | null;
+                depth?: number | null;
+                direction?: string | null;
+                limit?: number;
+                cursor?: string | null;
+            };
+            header?: never;
+            path: {
+                block_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BlockLink"][];
+                };
+            };
+            /** @description Bad Request - Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    delete_links_for_block_api_v1_links_block__block_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                block_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Bad Request - Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
         };

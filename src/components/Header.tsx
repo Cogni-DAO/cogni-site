@@ -45,8 +45,8 @@ const Header = () => {
 
         <nav className="flex items-center space-x-4">
           <Link href="/explore" className="text-sm font-medium hover:text-knowledge">Explore</Link>
-          <Link href="/recent" className="text-sm font-medium hover:text-knowledge">Recent</Link>
-          <Link href="/contribute" className="text-sm font-medium hover:text-knowledge">Contribute</Link>
+          <Link href="/work-items" className="text-sm font-medium hover:text-knowledge">Work Items</Link>
+          <Link href="/graph" className="text-sm font-medium hover:text-knowledge">Graph</Link>
           <ThemeToggle />
         </nav>
       </div>

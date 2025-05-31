@@ -16,6 +16,8 @@ import type { BlockLinkCreatedBy } from './blockLinkCreatedBy';
 export interface BlockLink {
   /** ID of the target block in the link */
   to_id: string;
+  /** ID of the source block in the link */
+  from_id: string;
   /** The type of relationship between the blocks */
   relation: BlockLinkRelation;
   /** Priority of the link (higher numbers = higher priority) */

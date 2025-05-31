@@ -4,9 +4,12 @@ import { MemoryBlockType } from '@/data/models/memoryBlockType';
 
 // Import renderers
 import KnowledgeRenderer from './block_renderers/KnowledgeRenderer';
-import { ProjectRenderer } from './block_renderers/ProjectRenderer';
-import { UnknownBlockRenderer } from './block_renderers/UnknownBlockRenderer';
+import ProjectRenderer from './block_renderers/ProjectRenderer';
+import UnknownBlockRenderer from './block_renderers/UnknownBlockRenderer';
 import DocRenderer from './block_renderers/DocRenderer';
+import TaskRenderer from './block_renderers/TaskRenderer';
+import BugRenderer from './block_renderers/BugRenderer';
+import EpicRenderer from './block_renderers/EpicRenderer';
 
 // Placeholder for renderers not yet created
 const PlaceholderRenderer: React.FC<BlockRendererProps> = ({ blockType, data, blockVersion }) => (
@@ -30,21 +33,26 @@ const PlaceholderRenderer: React.FC<BlockRendererProps> = ({ blockType, data, bl
 );
 
 export const BlockRenderer: React.FC<BlockRendererProps> = (props) => {
-    const { blockType, blockId, data } = props;
+    const { blockType, data } = props;
 
     switch (blockType) {
         case MemoryBlockType.knowledge:
             return <KnowledgeRenderer block={data} />;
 
         case MemoryBlockType.project:
-            return <ProjectRenderer block={data} blockId={blockId} />;
+            return <ProjectRenderer block={data} />;
 
         case MemoryBlockType.task:
-            // Use the PlaceholderRenderer until TaskRenderer is implemented
-            return <PlaceholderRenderer {...props} />;
+            return <TaskRenderer block={data} />;
 
         case MemoryBlockType.doc:
             return <DocRenderer block={data} />;
+
+        case MemoryBlockType.bug:
+            return <BugRenderer block={data} />;
+
+        case MemoryBlockType.epic:
+            return <EpicRenderer block={data} />;
 
         case MemoryBlockType.log:
             // Use the PlaceholderRenderer until LogRenderer is implemented

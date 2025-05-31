@@ -20,4 +20,6 @@ export const MemoryBlockType = {
   doc: 'doc',
   interaction: 'interaction',
   log: 'log',
+  epic: 'epic',
+  bug: 'bug',
 } as const;
