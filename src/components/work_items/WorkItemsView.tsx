@@ -27,7 +27,7 @@ export default function WorkItemsView() {
     const [statusFilter, setStatusFilter] = useState<string | null>(null);
     const [ownerFilter, setOwnerFilter] = useState<string | null>(null);
     const [typeFilters, setTypeFilters] = useState<MemoryBlockType[]>([]);
-    const [sortBy, setSortBy] = useState<SortOption>('none');
+    const [sortBy, setSortBy] = useState<SortOption>('priority_high');
 
     // Handle side panel open/close
     const handleOpenInSidePanel = (blockId: string) => {
