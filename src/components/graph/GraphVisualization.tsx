@@ -90,13 +90,33 @@ const GraphVisualization = ({
   const cyRef = useRef<any>(null);
   const [selectedLayout, setSelectedLayout] = useState<keyof typeof LAYOUT_PRESETS>('concentric');
 
+  // Helper function to create concise node labels (1-2 words)
+  const createNodeLabel = (block: MemoryBlock): string => {
+    // First try to use title if it exists and is short
+    if (block.metadata?.title && typeof block.metadata.title === 'string') {
+      const words = block.metadata.title.trim().split(/\s+/);
+      if (words.length <= 2) return block.metadata.title;
+      // Take first 2 words if title is longer
+      return words.slice(0, 2).join(' ');
+    }
+
+    // Fall back to first 1-2 words from text content
+    if (block.text && typeof block.text === 'string') {
+      const words = block.text.trim().split(/\s+/);
+      return words.slice(0, 2).join(' ');
+    }
+
+    // Final fallback to block type
+    return block.type.charAt(0).toUpperCase() + block.type.slice(1);
+  };
+
   // Convert blocks to Cytoscape nodes
   const nodes = blocks
     .filter(block => block.id && typeof block.id === 'string') // Filter out blocks without valid IDs
     .map(block => ({
       data: {
         id: block.id,
-        label: block.metadata?.title || block.text?.substring(0, 30) || block.type,
+        label: createNodeLabel(block),
         type: block.type,
         // Add additional data for styling
         originalType: block.type,
@@ -153,12 +173,12 @@ const GraphVisualization = ({
         'text-valign': 'center',
         'text-halign': 'center',
         'color': '#000',
-        'font-size': '14px',
+        'font-size': '32px',
         'font-weight': 'bold',
         'text-outline-width': 2,
         'text-outline-color': '#fff',
-        'width': 80,
-        'height': 80,
+        'width': 240,
+        'height': 240,
         'border-width': 3,
         'border-color': '#333',
         'transition-property': 'background-color, border-color, width, height',
@@ -232,14 +252,14 @@ const GraphVisualization = ({
     {
       selector: 'edge',
       style: {
-        'width': 2,
+        'width': 8,
         'line-color': '#ccc',
         'target-arrow-color': '#ccc',
         'target-arrow-shape': 'triangle',
         'curve-style': 'bezier',
         'arrow-scale': 1.2,
         'label': 'data(relation)',
-        'font-size': '10px',
+        'font-size': '20px',
         'text-rotation': 'autorotate',
         'text-margin-y': -10,
         'color': '#666',
