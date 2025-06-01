@@ -10,6 +10,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
+import { WorkItemSidePanel } from '@/components/work_items/WorkItemSidePanel';
 
 interface GraphVisualizationProps {
   blocks: MemoryBlock[];
@@ -88,7 +89,14 @@ const GraphVisualization = ({
   centerId
 }: GraphVisualizationProps) => {
   const cyRef = useRef<any>(null);
+  const selectedNodeRef = useRef<string | null>(null);
   const [selectedLayout, setSelectedLayout] = useState<keyof typeof LAYOUT_PRESETS>('concentric');
+  const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
+
+  // Keep ref in sync with state
+  React.useEffect(() => {
+    selectedNodeRef.current = selectedNodeId;
+  }, [selectedNodeId]);
 
   // Helper function to create concise node labels (1-2 words)
   const createNodeLabel = (block: MemoryBlock): string => {
@@ -339,12 +347,20 @@ const GraphVisualization = ({
       // Add interactivity
       cy.on('tap', 'node', (evt: any) => {
         const node = evt.target;
+        const nodeId = node.data('id');
+
+        // Only update sidepanel if selecting a different node
+        if (nodeId !== selectedNodeRef.current) {
+          setSelectedNodeId(nodeId);
+        }
+
+        // Always highlight the clicked node's neighborhood
         highlightNeighborhood(node);
       });
 
-      // Clear highlight on background tap
+      // Clear highlight on background tap only if no sidepanel is open
       cy.on('tap', (evt: any) => {
-        if (evt.target === cy) {
+        if (evt.target === cy && !selectedNodeRef.current) {
           clearHighlight();
         }
       });
@@ -407,6 +423,12 @@ const GraphVisualization = ({
     }
   };
 
+  // Handle closing the sidepanel
+  const handleCloseSidePanel = () => {
+    setSelectedNodeId(null);
+    clearHighlight();
+  };
+
   return (
     <div style={{ width: '100%' }}>
       {/* Layout Selector */}
@@ -441,6 +463,12 @@ const GraphVisualization = ({
           cy={handleCy}
         />
       </div>
+
+      {/* Work Item Side Panel */}
+      <WorkItemSidePanel
+        blockId={selectedNodeId}
+        onClose={handleCloseSidePanel}
+      />
     </div>
   );
 };
