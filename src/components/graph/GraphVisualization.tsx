@@ -1,7 +1,15 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import CytoscapeComponent from 'react-cytoscapejs';
 import type { MemoryBlock } from '@/utils/blocks';
 import type { BlockLink } from '@/data/models/blockLink';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
 
 interface GraphVisualizationProps {
   blocks: MemoryBlock[];
@@ -9,12 +17,78 @@ interface GraphVisualizationProps {
   centerId?: string;
 }
 
+// Layout presets for user selection
+const LAYOUT_PRESETS = {
+  concentric: {
+    name: 'concentric',
+    displayName: 'Hierarchical (Concentric)',
+    animate: true,
+    animationDuration: 1000,
+    fit: true,
+    padding: 50,
+    concentric: function (node: any) {
+      const typeOrder: { [key: string]: number } = {
+        'project': 5,
+        'epic': 4,
+        'task': 3,
+        'bug': 2
+      };
+      return typeOrder[node.data('type')] || 1;
+    },
+    levelWidth: function (nodes: any) {
+      return 3;
+    },
+    minNodeSpacing: 80,
+    avoidOverlap: true
+  },
+  cose: {
+    name: 'cose',
+    displayName: 'Force-Directed (Interactive)',
+    animate: true,
+    animationDuration: 1000,
+    fit: true,
+    padding: 50,
+    nodeRepulsion: 400000,
+    nodeOverlap: 10,
+    idealEdgeLength: 100,
+    edgeElasticity: 100,
+    nestingFactor: 5,
+    gravity: 80,
+    numIter: 1000,
+    randomize: false
+  },
+  grid: {
+    name: 'grid',
+    displayName: 'Grid (Organized)',
+    animate: true,
+    animationDuration: 1000,
+    fit: true,
+    padding: 50,
+    rows: undefined,
+    cols: undefined,
+    spacingFactor: 1.2,
+    avoidOverlap: true
+  },
+  circle: {
+    name: 'circle',
+    displayName: 'Circle (Simple)',
+    animate: true,
+    animationDuration: 1000,
+    fit: true,
+    padding: 50,
+    radius: undefined,
+    spacingFactor: 1.5,
+    avoidOverlap: true
+  }
+};
+
 const GraphVisualization = ({
   blocks,
   links,
   centerId
 }: GraphVisualizationProps) => {
   const cyRef = useRef<any>(null);
+  const [selectedLayout, setSelectedLayout] = useState<keyof typeof LAYOUT_PRESETS>('concentric');
 
   // Convert blocks to Cytoscape nodes
   const nodes = blocks
@@ -60,7 +134,7 @@ const GraphVisualization = ({
   // If no elements, show a message instead of rendering Cytoscape
   if (elements.length === 0) {
     return (
-      <div style={{ width: '100%', height: '600px', border: '1px solid #ccc' }}>
+      <div style={{ width: '100%', height: '900px', border: '1px solid #ccc' }}>
         <div className="flex items-center justify-center h-full text-muted-foreground">
           No blocks or links to display
         </div>
@@ -79,13 +153,13 @@ const GraphVisualization = ({
         'text-valign': 'center',
         'text-halign': 'center',
         'color': '#000',
-        'font-size': '12px',
+        'font-size': '14px',
         'font-weight': 'bold',
         'text-outline-width': 2,
         'text-outline-color': '#fff',
-        'width': 60,
-        'height': 60,
-        'border-width': 2,
+        'width': 80,
+        'height': 80,
+        'border-width': 3,
         'border-color': '#333',
         'transition-property': 'background-color, border-color, width, height',
         'transition-duration': '0.3s'
@@ -228,28 +302,7 @@ const GraphVisualization = ({
   ];
 
   // Force-directed layout with good defaults (using built-in cose instead of fcose)
-  const layout = {
-    name: 'concentric', // Concentric circles layout - good for hierarchical data
-    animate: true,
-    animationDuration: 1000,
-    fit: true,
-    padding: 30,
-    concentric: function (node: any) {
-      // Arrange by node type priority: projects > epics > tasks > bugs > others
-      const typeOrder: { [key: string]: number } = {
-        'project': 5,
-        'epic': 4,
-        'task': 3,
-        'bug': 2
-      };
-      return typeOrder[node.data('type')] || 1;
-    },
-    levelWidth: function (nodes: any) {
-      return 2; // Number of nodes per level
-    },
-    minNodeSpacing: 50,
-    avoidOverlap: true
-  };
+  const layout = LAYOUT_PRESETS[selectedLayout];
 
   // Handle Cytoscape instance ready
   const handleCy = (cy: any) => {
@@ -324,15 +377,50 @@ const GraphVisualization = ({
     cy.elements().removeClass('highlighted faded');
   };
 
+  // Handle layout change
+  const handleLayoutChange = (newLayout: keyof typeof LAYOUT_PRESETS) => {
+    setSelectedLayout(newLayout);
+    if (cyRef.current) {
+      const layoutOptions = LAYOUT_PRESETS[newLayout];
+      const layout = cyRef.current.layout(layoutOptions);
+      layout.run();
+    }
+  };
+
   return (
-    <div style={{ width: '100%', height: '600px', border: '1px solid #ccc' }}>
-      <CytoscapeComponent
-        elements={elements}
-        style={{ width: '100%', height: '100%' }}
-        stylesheet={stylesheet}
-        layout={layout}
-        cy={handleCy}
-      />
+    <div style={{ width: '100%' }}>
+      {/* Layout Selector */}
+      <div className="flex items-center gap-3 mb-4">
+        <Label>
+          Layout:
+        </Label>
+        <Select
+          value={selectedLayout}
+          onValueChange={(value) => handleLayoutChange(value as keyof typeof LAYOUT_PRESETS)}
+        >
+          <SelectTrigger className="w-[200px]">
+            <SelectValue placeholder="Select layout" />
+          </SelectTrigger>
+          <SelectContent>
+            {Object.entries(LAYOUT_PRESETS).map(([key, preset]) => (
+              <SelectItem key={key} value={key}>
+                {preset.displayName}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Graph Container */}
+      <div style={{ width: '100%', height: '900px', border: '1px solid #ccc' }}>
+        <CytoscapeComponent
+          elements={elements}
+          style={{ width: '100%', height: '100%' }}
+          stylesheet={stylesheet}
+          layout={layout}
+          cy={handleCy}
+        />
+      </div>
     </div>
   );
 };
