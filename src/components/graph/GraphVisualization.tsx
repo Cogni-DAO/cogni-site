@@ -454,7 +454,7 @@ const GraphVisualization = ({
       </div>
 
       {/* Graph Container */}
-      <div style={{ width: '100%', height: '900px', border: '1px solid #ccc' }}>
+      <div style={{ width: '100%', height: '900px', border: '1px solid #ccc', position: 'relative' }}>
         <CytoscapeComponent
           elements={elements}
           style={{ width: '100%', height: '100%' }}
@@ -462,6 +462,37 @@ const GraphVisualization = ({
           layout={layout}
           cy={handleCy}
         />
+
+        {/* Legend */}
+        <div className="absolute top-2 left-2 bg-background/90 backdrop-blur-sm border border-border rounded-lg p-2 text-xs shadow-sm">
+          <div className="font-semibold mb-1">Block Types</div>
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-2 rounded-sm" style={{ backgroundColor: '#3498db' }}></div>
+              <span>Task</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#2ecc71', clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' }}></div>
+              <span>Project</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3" style={{ backgroundColor: '#9b59b6', clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)' }}></div>
+              <span>Epic</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3" style={{ backgroundColor: '#e74c3c', clipPath: 'polygon(50% 0%, 100% 100%, 0% 100%)' }}></div>
+              <span>Bug</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-2 rounded-full" style={{ backgroundColor: '#f39c12' }}></div>
+              <span>Knowledge</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-2" style={{ backgroundColor: '#95a5a6' }}></div>
+              <span>Doc</span>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Work Item Side Panel */}
