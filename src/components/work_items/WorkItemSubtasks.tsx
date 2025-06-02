@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 import { useBlockLinks } from '@/hooks/useBlockLinks';
-import { LinkedWorkItem } from './LinkedWorkItem';
+import { useBlocksByIds } from '@/hooks/useBlocks';
+import { LinkedWorkItem, LinkedWorkItemOptimized } from './LinkedWorkItem';
 
 interface WorkItemSubtasksProps {
     blockId: string;
@@ -13,10 +14,32 @@ export function WorkItemSubtasks({ blockId }: WorkItemSubtasksProps) {
     const [showSubtasks, setShowSubtasks] = useState(false);
     const [showParentTasks, setShowParentTasks] = useState(false);
 
-    const { linksFrom, linksTo, isLoading, isError } = useBlockLinks(blockId, {
+    const { linksFrom, linksTo, isLoading: linksLoading, isError } = useBlockLinks(blockId, {
         from: { relation: 'subtask_of' },
         to: { relation: 'subtask_of' }
     });
+
+    // Extract all block IDs that we need to fetch
+    const blockIds = useMemo(() => {
+        const ids: string[] = [];
+
+        // Parent task IDs (what this is a subtask of)
+        linksFrom?.forEach(link => {
+            if (link.to_id) ids.push(link.to_id);
+        });
+
+        // Subtask IDs (what has this as a parent)
+        linksTo?.forEach(link => {
+            if (link.from_id) ids.push(link.from_id);
+        });
+
+        return ids;
+    }, [linksFrom, linksTo]);
+
+    // Bulk fetch all related blocks
+    const { blocksMap, isLoading: blocksLoading } = useBlocksByIds(blockIds);
+
+    const isLoading = linksLoading || blocksLoading;
 
     if (isLoading) {
         return (
@@ -66,12 +89,22 @@ export function WorkItemSubtasks({ blockId }: WorkItemSubtasksProps) {
 
                     {showParentTasks && (
                         <div className="ml-5 mt-1 space-y-1">
-                            {parentTasks.map((link, index) => (
-                                <LinkedWorkItem
-                                    key={`parent-${index}`}
-                                    blockId={link.to_id || ''}
-                                />
-                            ))}
+                            {parentTasks.map((link, index) => {
+                                const blockId = link.to_id || '';
+                                const block = blocksMap?.get(blockId);
+
+                                return block ? (
+                                    <LinkedWorkItemOptimized
+                                        key={`parent-${index}`}
+                                        block={block}
+                                    />
+                                ) : (
+                                    <LinkedWorkItem
+                                        key={`parent-${index}`}
+                                        blockId={blockId}
+                                    />
+                                );
+                            })}
                         </div>
                     )}
                 </div>
@@ -96,12 +129,22 @@ export function WorkItemSubtasks({ blockId }: WorkItemSubtasksProps) {
 
                     {showSubtasks && (
                         <div className="ml-5 mt-1 space-y-1">
-                            {subtasks.map((link, index) => (
-                                <LinkedWorkItem
-                                    key={`subtask-${index}`}
-                                    blockId={link.from_id || ''}
-                                />
-                            ))}
+                            {subtasks.map((link, index) => {
+                                const blockId = link.from_id || '';
+                                const block = blocksMap?.get(blockId);
+
+                                return block ? (
+                                    <LinkedWorkItemOptimized
+                                        key={`subtask-${index}`}
+                                        block={block}
+                                    />
+                                ) : (
+                                    <LinkedWorkItem
+                                        key={`subtask-${index}`}
+                                        blockId={blockId}
+                                    />
+                                );
+                            })}
                         </div>
                     )}
                 </div>

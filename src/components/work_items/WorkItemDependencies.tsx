@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 import { useBlockLinks } from '@/hooks/useBlockLinks';
-import { LinkedWorkItem } from './LinkedWorkItem';
+import { useBlocksByIds } from '@/hooks/useBlocks';
+import { LinkedWorkItem, LinkedWorkItemOptimized } from './LinkedWorkItem';
 
 interface WorkItemDependenciesProps {
     blockId: string;
@@ -13,10 +14,32 @@ export function WorkItemDependencies({ blockId }: WorkItemDependenciesProps) {
     const [showDependencies, setShowDependencies] = useState(false);
     const [showDependents, setShowDependents] = useState(false);
 
-    const { linksFrom, linksTo, isLoading, isError } = useBlockLinks(blockId, {
+    const { linksFrom, linksTo, isLoading: linksLoading, isError } = useBlockLinks(blockId, {
         from: { relation: 'depends_on' },
         to: { relation: 'depends_on' }
     });
+
+    // Extract all block IDs that we need to fetch
+    const blockIds = useMemo(() => {
+        const ids: string[] = [];
+
+        // Dependency IDs (what this depends on)
+        linksFrom?.forEach(link => {
+            if (link.to_id) ids.push(link.to_id);
+        });
+
+        // Dependent IDs (what depends on this)
+        linksTo?.forEach(link => {
+            if (link.from_id) ids.push(link.from_id);
+        });
+
+        return ids;
+    }, [linksFrom, linksTo]);
+
+    // Bulk fetch all related blocks
+    const { blocksMap, isLoading: blocksLoading } = useBlocksByIds(blockIds);
+
+    const isLoading = linksLoading || blocksLoading;
 
     if (isLoading) {
         return (
@@ -66,12 +89,22 @@ export function WorkItemDependencies({ blockId }: WorkItemDependenciesProps) {
 
                     {showDependencies && (
                         <div className="ml-5 mt-1 space-y-1">
-                            {dependencies.map((link, index) => (
-                                <LinkedWorkItem
-                                    key={`dep-${index}`}
-                                    blockId={link.to_id || ''}
-                                />
-                            ))}
+                            {dependencies.map((link, index) => {
+                                const blockId = link.to_id || '';
+                                const block = blocksMap?.get(blockId);
+
+                                return block ? (
+                                    <LinkedWorkItemOptimized
+                                        key={`dep-${index}`}
+                                        block={block}
+                                    />
+                                ) : (
+                                    <LinkedWorkItem
+                                        key={`dep-${index}`}
+                                        blockId={blockId}
+                                    />
+                                );
+                            })}
                         </div>
                     )}
                 </div>
@@ -96,12 +129,22 @@ export function WorkItemDependencies({ blockId }: WorkItemDependenciesProps) {
 
                     {showDependents && (
                         <div className="ml-5 mt-1 space-y-1">
-                            {dependents.map((link, index) => (
-                                <LinkedWorkItem
-                                    key={`req-${index}`}
-                                    blockId={link.from_id || ''}
-                                />
-                            ))}
+                            {dependents.map((link, index) => {
+                                const blockId = link.from_id || '';
+                                const block = blocksMap?.get(blockId);
+
+                                return block ? (
+                                    <LinkedWorkItemOptimized
+                                        key={`req-${index}`}
+                                        block={block}
+                                    />
+                                ) : (
+                                    <LinkedWorkItem
+                                        key={`req-${index}`}
+                                        blockId={blockId}
+                                    />
+                                );
+                            })}
                         </div>
                     )}
                 </div>
