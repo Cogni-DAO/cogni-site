@@ -16,6 +16,9 @@ interface GraphVisualizationProps {
   blocks: MemoryBlock[];
   links: BlockLink[];
   centerId?: string;
+  isLoading?: boolean;
+  isError?: boolean;
+  errorMessage?: string;
 }
 
 // Layout presets for user selection
@@ -23,8 +26,7 @@ const LAYOUT_PRESETS = {
   concentric: {
     name: 'concentric',
     displayName: 'Hierarchical (Concentric)',
-    animate: true,
-    animationDuration: 1000,
+    animate: false,
     fit: true,
     padding: 50,
     concentric: function (node: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -45,8 +47,7 @@ const LAYOUT_PRESETS = {
   cose: {
     name: 'cose',
     displayName: 'Force-Directed (Interactive)',
-    animate: true,
-    animationDuration: 1000,
+    animate: false,
     fit: true,
     padding: 50,
     nodeRepulsion: 400000,
@@ -61,8 +62,7 @@ const LAYOUT_PRESETS = {
   grid: {
     name: 'grid',
     displayName: 'Grid (Organized)',
-    animate: true,
-    animationDuration: 1000,
+    animate: false,
     fit: true,
     padding: 50,
     rows: undefined,
@@ -73,8 +73,7 @@ const LAYOUT_PRESETS = {
   circle: {
     name: 'circle',
     displayName: 'Circle (Simple)',
-    animate: true,
-    animationDuration: 1000,
+    animate: false,
     fit: true,
     padding: 50,
     radius: undefined,
@@ -86,7 +85,10 @@ const LAYOUT_PRESETS = {
 const GraphVisualization = ({
   blocks,
   links,
-  centerId
+  centerId,
+  isLoading = false,
+  isError = false,
+  errorMessage = ''
 }: GraphVisualizationProps) => {
   const cyRef = useRef<any>(null); // eslint-disable-line @typescript-eslint/no-explicit-any
   const selectedNodeRef = useRef<string | null>(null);
@@ -160,11 +162,36 @@ const GraphVisualization = ({
   const elements = [...nodes, ...edges];
 
   // If no elements, show a message instead of rendering Cytoscape
-  if (elements.length === 0) {
+  if (elements.length === 0 && !isLoading && !isError) {
     return (
-      <div style={{ width: '100%', height: '900px', border: '1px solid #ccc' }}>
-        <div className="flex items-center justify-center h-full text-muted-foreground">
-          No blocks or links to display
+      <div style={{ width: '100%' }}>
+        {/* Layout Selector */}
+        <div className="flex items-center gap-3 mb-4">
+          <Label>
+            Layout:
+          </Label>
+          <Select
+            value={selectedLayout}
+            onValueChange={(value) => handleLayoutChange(value as keyof typeof LAYOUT_PRESETS)}
+          >
+            <SelectTrigger className="w-[200px]">
+              <SelectValue placeholder="Select layout" />
+            </SelectTrigger>
+            <SelectContent>
+              {Object.entries(LAYOUT_PRESETS).map(([key, preset]) => (
+                <SelectItem key={key} value={key}>
+                  {preset.displayName}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Graph Container */}
+        <div style={{ width: '100%', height: '900px', border: '1px solid #ccc' }}>
+          <div className="flex items-center justify-center h-full text-muted-foreground">
+            No blocks or links to display
+          </div>
         </div>
       </div>
     );
@@ -455,13 +482,39 @@ const GraphVisualization = ({
 
       {/* Graph Container */}
       <div style={{ width: '100%', height: '900px', border: '1px solid #ccc', position: 'relative' }}>
-        <CytoscapeComponent
-          elements={elements}
-          style={{ width: '100%', height: '100%' }}
-          stylesheet={stylesheet}
-          layout={layout}
-          cy={handleCy}
-        />
+        {isLoading && (
+          <div className="absolute inset-0 bg-background/50 backdrop-blur-sm flex items-center justify-center z-10">
+            <div className="flex flex-col items-center gap-2">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+              <span className="text-sm text-muted-foreground">Loading blocks and links...</span>
+            </div>
+          </div>
+        )}
+
+        {isError && (
+          <div className="absolute inset-0 bg-background/50 backdrop-blur-sm flex items-center justify-center z-10">
+            <div className="text-center">
+              <div className="text-red-500 font-semibold mb-2">Error loading data</div>
+              <div className="text-sm text-muted-foreground">{errorMessage}</div>
+            </div>
+          </div>
+        )}
+
+        {!isLoading && !isError && elements.length === 0 && (
+          <div className="flex items-center justify-center h-full text-muted-foreground">
+            No blocks or links to display
+          </div>
+        )}
+
+        {!isLoading && !isError && elements.length > 0 && (
+          <CytoscapeComponent
+            elements={elements}
+            style={{ width: '100%', height: '100%' }}
+            stylesheet={stylesheet}
+            layout={layout}
+            cy={handleCy}
+          />
+        )}
 
         {/* Legend */}
         <div className="absolute top-2 left-2 bg-background/90 backdrop-blur-sm border border-border rounded-lg p-2 text-xs shadow-sm">

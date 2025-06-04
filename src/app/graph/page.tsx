@@ -9,17 +9,8 @@ const GraphPage = () => {
   const { blocks, isLoading: blocksLoading, isError: blocksError } = useBlocks();
   const { links, isLoading: linksLoading, isError: linksError } = useLinks();
 
-  if (blocksLoading || linksLoading) {
-    return <div className="p-4">Loading blocks and links...</div>;
-  }
-
-  if (blocksError || linksError) {
-    return (
-      <div className="p-4 text-red-500">
-        Error: {String(blocksError || linksError)}
-      </div>
-    );
-  }
+  const isLoading = blocksLoading || linksLoading;
+  const isError = blocksError || linksError;
 
   return (
     <div className="p-4">
@@ -30,6 +21,9 @@ const GraphPage = () => {
       <GraphVisualization
         blocks={blocks || []}
         links={links || []}
+        isLoading={isLoading}
+        isError={isError}
+        errorMessage={String(blocksError || linksError || '')}
       />
     </div>
   );
