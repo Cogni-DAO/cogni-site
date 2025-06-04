@@ -166,25 +166,36 @@ const GraphVisualization = ({
     return (
       <div style={{ width: '100%' }}>
         {/* Layout Selector */}
-        <div className="flex items-center gap-3 mb-4">
-          <Label>
-            Layout:
+        <div className="flex items-center gap-3 mb-4 p-3 bg-muted/30 rounded-lg border">
+          <Label className="font-semibold text-sm">
+            Graph Layout:
           </Label>
           <Select
             value={selectedLayout}
             onValueChange={(value) => handleLayoutChange(value as keyof typeof LAYOUT_PRESETS)}
           >
-            <SelectTrigger className="w-[200px]">
-              <SelectValue placeholder="Select layout" />
+            <SelectTrigger className="w-[260px]">
+              <SelectValue placeholder="Choose how to arrange nodes" />
             </SelectTrigger>
             <SelectContent>
               {Object.entries(LAYOUT_PRESETS).map(([key, preset]) => (
                 <SelectItem key={key} value={key}>
-                  {preset.displayName}
+                  <div className="flex flex-col items-start">
+                    <div className="font-medium">{preset.displayName}</div>
+                    <div className="text-xs text-muted-foreground">
+                      {key === 'concentric' && 'Arranged by hierarchy and importance'}
+                      {key === 'cose' && 'Interactive force-directed simulation'}
+                      {key === 'grid' && 'Clean organized grid arrangement'}
+                      {key === 'circle' && 'Simple circular arrangement'}
+                    </div>
+                  </div>
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
+          <span className="text-xs text-muted-foreground">
+            Change how nodes are positioned and connected
+          </span>
         </div>
 
         {/* Graph Container */}
@@ -459,25 +470,36 @@ const GraphVisualization = ({
   return (
     <div style={{ width: '100%' }}>
       {/* Layout Selector */}
-      <div className="flex items-center gap-3 mb-4">
-        <Label>
-          Layout:
+      <div className="flex items-center gap-3 mb-4 p-3 bg-muted/30 rounded-lg border">
+        <Label className="font-semibold text-sm">
+          Graph Layout:
         </Label>
         <Select
           value={selectedLayout}
           onValueChange={(value) => handleLayoutChange(value as keyof typeof LAYOUT_PRESETS)}
         >
-          <SelectTrigger className="w-[200px]">
-            <SelectValue placeholder="Select layout" />
+          <SelectTrigger className="w-[260px]">
+            <SelectValue placeholder="Choose how to arrange nodes" />
           </SelectTrigger>
           <SelectContent>
             {Object.entries(LAYOUT_PRESETS).map(([key, preset]) => (
               <SelectItem key={key} value={key}>
-                {preset.displayName}
+                <div className="flex flex-col items-start">
+                  <div className="font-medium">{preset.displayName}</div>
+                  <div className="text-xs text-muted-foreground">
+                    {key === 'concentric' && 'Arranged by hierarchy and importance'}
+                    {key === 'cose' && 'Interactive force-directed simulation'}
+                    {key === 'grid' && 'Clean organized grid arrangement'}
+                    {key === 'circle' && 'Simple circular arrangement'}
+                  </div>
+                </div>
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
+        <span className="text-xs text-muted-foreground">
+          Change how nodes are positioned and connected
+        </span>
       </div>
 
       {/* Graph Container */}
