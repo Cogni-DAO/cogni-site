@@ -17,6 +17,7 @@ import { WorkItemMeta } from '@/types/workItemMeta';
 import FormatRenderer from '@/utils/formatRenderers';
 import { getBlockConfidencePercentage } from '@/utils/blockUtils';
 import { WorkItemDependencies } from '@/components/work_items/WorkItemDependencies';
+import { WorkItemSubtasks } from '@/components/work_items/WorkItemSubtasks';
 
 interface WorkItemRendererProps {
     block: MemoryBlock;
@@ -522,8 +523,9 @@ export const WorkItemRenderer: React.FC<WorkItemRendererProps> = ({
 
                 {/* Dependencies & Relationships */}
                 {block.id && (
-                    <div className="mb-4">
+                    <div className="mb-4 space-y-2">
                         <WorkItemDependencies blockId={block.id} />
+                        <WorkItemSubtasks blockId={block.id} />
                     </div>
                 )}
 

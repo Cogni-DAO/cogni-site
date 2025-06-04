@@ -72,7 +72,7 @@ function fetchData(url: string, maxRedirects: number = 5): Promise<string> {
 const schemaIndexPath = path.resolve(process.cwd(), 'schemas', 'index.json');
 
 // Define the fallback fetch URL (allow override via environment variable)
-const schemaIndexFetchUrl = process.env.SCHEMA_INDEX_URL || 'http://localhost:8000/api/v1/schemas/index.json';
+const schemaIndexFetchUrl = process.env.SCHEMA_INDEX_URL || `${process.env.FASTAPI_URL || 'http://localhost:8000'}/api/v1/schemas/index.json`;
 
 // Define the output directory for renderer components
 const renderersDir = path.resolve(process.cwd(), 'src', 'components', 'block_renderers');

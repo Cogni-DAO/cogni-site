@@ -32,8 +32,8 @@ export function validateBlock(data: unknown): data is MemoryBlock {
     );
 }
 
-// Fixed API URL pointing to your actual backend API
-const API_URL = 'http://localhost:8000/api/v1';
+// API URL pointing to local Next.js API routes (which proxy to backend)
+const API_URL = '/api/v1';
 
 /**
  * Fetches memory blocks from the API with validation
@@ -110,4 +110,37 @@ export async function createBlock(block: Partial<MemoryBlock>): Promise<MemoryBl
     }
 
     return data;
+}
+
+/**
+ * Fetches multiple memory blocks by their IDs in a single request
+ * @param ids - Array of block IDs to fetch
+ * @returns Promise resolving to a map of block ID to block data
+ */
+export async function fetchBlocksByIds(ids: string[]): Promise<Map<string, MemoryBlock>> {
+    if (ids.length === 0) {
+        return new Map();
+    }
+
+    // Filter out duplicates
+    const uniqueIds = Array.from(new Set(ids.filter(id => id && id.trim())));
+
+    if (uniqueIds.length === 0) {
+        return new Map();
+    }
+
+    // For now, we'll fetch all blocks and filter client-side
+    // This can be optimized with a backend endpoint that accepts multiple IDs
+    const allBlocks = await fetchBlocks();
+
+    const blockMap = new Map<string, MemoryBlock>();
+    const idsSet = new Set(uniqueIds);
+
+    allBlocks.forEach(block => {
+        if (block.id && idsSet.has(block.id)) {
+            blockMap.set(block.id, block);
+        }
+    });
+
+    return blockMap;
 } 

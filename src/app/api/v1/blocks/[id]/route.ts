@@ -2,20 +2,14 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(
     request: NextRequest,
-    { params }: { params: { blockId: string } }
+    { params }: { params: { id: string } }
 ) {
     try {
-        const { blockId } = params;
-        const { searchParams } = new URL(request.url);
+        const { id } = params;
 
         // Construct backend URL using environment variable
         const baseUrl = process.env.FASTAPI_URL || 'http://localhost:8000';
-        const backendUrl = new URL(`${baseUrl}/api/v1/links/from/${blockId}`);
-
-        // Forward query parameters
-        searchParams.forEach((value, key) => {
-            backendUrl.searchParams.append(key, value);
-        });
+        const backendUrl = new URL(`${baseUrl}/api/v1/blocks/${id}`);
 
         // Proxy request to backend
         const response = await fetch(backendUrl.toString(), {
@@ -30,11 +24,17 @@ export async function GET(
         }
 
         const data = await response.json();
-        return NextResponse.json(data);
+
+        // Return with caching headers - individual blocks can be cached longer
+        return NextResponse.json(data, {
+            headers: {
+                'Cache-Control': 'public, s-maxage=600, stale-while-revalidate=600',
+            },
+        });
     } catch (error) {
-        console.error('Error proxying links from block:', error);
+        console.error('Error proxying block request:', error);
         return NextResponse.json(
-            { error: 'Failed to fetch links' },
+            { error: 'Failed to fetch block' },
             { status: 500 }
         );
     }

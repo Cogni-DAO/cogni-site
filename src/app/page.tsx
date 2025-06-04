@@ -2,35 +2,20 @@
 
 // Update this page (the content is just a fallback if you fail to update the page)
 
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { ArrowRight, BookOpen, Users, Star } from 'lucide-react'
 import Chat from '@/components/chat'
-import { fetchBlocks } from '@/utils/blocks'
-import type { MemoryBlock } from '@/data/models/memoryBlock'
+import { useBlocks } from '@/hooks/useBlocks'
 import MemoryBlockListItem from '@/components/MemoryBlockListItem'
 
 export default function Home() {
-  const [featuredBlocks, setFeaturedBlocks] = useState<MemoryBlock[]>([])
-  const [isLoading, setIsLoading] = useState(true)
+  const { blocks, isLoading } = useBlocks()
 
-  useEffect(() => {
-    async function loadFeaturedBlocks() {
-      try {
-        const blocks = await fetchBlocks()
-        // Just take the first 6 blocks for the featured section
-        setFeaturedBlocks(blocks.slice(0, 6))
-      } catch (error) {
-        console.error('Failed to fetch featured blocks:', error)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    loadFeaturedBlocks()
-  }, [])
+  // Just take the first 6 blocks for the featured section
+  const featuredBlocks = blocks?.slice(0, 6) || []
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl">

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import { useBlock } from '@/hooks/useBlock';
 import { getWorkItemTitle, narrowWorkItemMeta } from '@/utils/workItemUtils';
+import type { MemoryBlock } from '@/utils/blocks';
 
 interface LinkedWorkItemProps {
     blockId: string;
@@ -67,6 +68,40 @@ export function LinkedWorkItem({ blockId, className = '' }: LinkedWorkItemProps)
     return (
         <Link
             href={`/blocks/${blockId}`}
+            className={`flex items-center gap-2 hover:underline ${className}`}
+        >
+            <span className="text-sm font-medium text-foreground truncate">
+                {title}
+            </span>
+            <Badge
+                variant="outline"
+                className={`text-xs ${statusColor} border-current`}
+            >
+                {statusDisplay}
+            </Badge>
+        </Link>
+    );
+}
+
+/**
+ * Optimized version that accepts block data directly to avoid individual API calls
+ */
+interface LinkedWorkItemOptimizedProps {
+    block: MemoryBlock;
+    /** Additional CSS classes */
+    className?: string;
+}
+
+export function LinkedWorkItemOptimized({ block, className = '' }: LinkedWorkItemOptimizedProps) {
+    const workItemMeta = narrowWorkItemMeta(block);
+    const status = workItemMeta?.status || 'draft';
+    const statusColor = getStatusColor(status);
+    const statusDisplay = getStatusDisplay(status);
+    const title = getWorkItemTitle(block);
+
+    return (
+        <Link
+            href={`/blocks/${block.id}`}
             className={`flex items-center gap-2 hover:underline ${className}`}
         >
             <span className="text-sm font-medium text-foreground truncate">
