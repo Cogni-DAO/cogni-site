@@ -24,7 +24,13 @@ export async function GET(
         }
 
         const data = await response.json();
-        return NextResponse.json(data);
+
+        // Return with caching headers - individual blocks can be cached longer
+        return NextResponse.json(data, {
+            headers: {
+                'Cache-Control': 'public, s-maxage=600, stale-while-revalidate=600',
+            },
+        });
     } catch (error) {
         console.error('Error proxying block request:', error);
         return NextResponse.json(

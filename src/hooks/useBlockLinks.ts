@@ -3,9 +3,24 @@ import {
     getLinksFromApiV1LinksFromBlockIdGet,
     getLinksToApiV1LinksToBlockIdGet
 } from '@/data/v1-links';
+import { fetchLinks } from '@/utils/links';
 import type { GetLinksFromApiV1LinksFromBlockIdGetParams } from '@/data/models/getLinksFromApiV1LinksFromBlockIdGetParams';
 import type { GetLinksToApiV1LinksToBlockIdGetParams } from '@/data/models/getLinksToApiV1LinksToBlockIdGetParams';
 import type { BlockLink } from '@/data/models/blockLink';
+
+/**
+ * Hook for fetching all block links
+ */
+export function useLinks() {
+    const { data, error, isLoading, mutate } = useSWR('links', fetchLinks);
+
+    return {
+        links: data as BlockLink[] | undefined,
+        isLoading,
+        isError: error,
+        mutate
+    };
+}
 
 /**
  * Hook for fetching links from a specific block (outbound links)
