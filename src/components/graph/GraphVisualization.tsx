@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import CytoscapeComponent from 'react-cytoscapejs';
 import type { MemoryBlock } from '@/utils/blocks';
 import type { BlockLink } from '@/data/models/blockLink';
@@ -27,7 +27,7 @@ const LAYOUT_PRESETS = {
     animationDuration: 1000,
     fit: true,
     padding: 50,
-    concentric: function (node: any) {
+    concentric: function (node: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
       const typeOrder: { [key: string]: number } = {
         'project': 5,
         'epic': 4,
@@ -36,7 +36,7 @@ const LAYOUT_PRESETS = {
       };
       return typeOrder[node.data('type')] || 1;
     },
-    levelWidth: function (nodes: any) {
+    levelWidth: function () { // eslint-disable-line @typescript-eslint/no-explicit-any
       return 3;
     },
     minNodeSpacing: 80,
@@ -88,7 +88,7 @@ const GraphVisualization = ({
   links,
   centerId
 }: GraphVisualizationProps) => {
-  const cyRef = useRef<any>(null);
+  const cyRef = useRef<any>(null); // eslint-disable-line @typescript-eslint/no-explicit-any
   const selectedNodeRef = useRef<string | null>(null);
   const [selectedLayout, setSelectedLayout] = useState<keyof typeof LAYOUT_PRESETS>('concentric');
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
@@ -333,7 +333,7 @@ const GraphVisualization = ({
   const layout = LAYOUT_PRESETS[selectedLayout];
 
   // Handle Cytoscape instance ready
-  const handleCy = (cy: any) => {
+  const handleCy = (cy: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
     try {
       cyRef.current = cy;
 
@@ -345,7 +345,7 @@ const GraphVisualization = ({
       });
 
       // Add interactivity
-      cy.on('tap', 'node', (evt: any) => {
+      cy.on('tap', 'node', (evt: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
         const node = evt.target;
         const nodeId = node.data('id');
 
@@ -359,14 +359,14 @@ const GraphVisualization = ({
       });
 
       // Clear highlight on background tap only if no sidepanel is open
-      cy.on('tap', (evt: any) => {
+      cy.on('tap', (evt: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
         if (evt.target === cy && !selectedNodeRef.current) {
           clearHighlight();
         }
       });
 
       // Add tooltips on hover
-      cy.on('mouseover', 'node', (evt: any) => {
+      cy.on('mouseover', 'node', (evt: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
         const node = evt.target;
         const nodeData = node.data();
 
@@ -394,7 +394,7 @@ const GraphVisualization = ({
   };
 
   // Highlight neighborhood function
-  const highlightNeighborhood = (node: any) => {
+  const highlightNeighborhood = (node: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
     const cy = cyRef.current;
     if (!cy) return;
 
