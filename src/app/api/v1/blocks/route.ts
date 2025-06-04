@@ -1,16 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(
-    request: NextRequest,
-    { params }: { params: { blockId: string } }
-) {
+export async function GET(request: NextRequest) {
     try {
-        const { blockId } = params;
         const { searchParams } = new URL(request.url);
 
         // Construct backend URL using environment variable
         const baseUrl = process.env.FASTAPI_URL || 'http://localhost:8000';
-        const backendUrl = new URL(`${baseUrl}/api/v1/links/from/${blockId}`);
+        const backendUrl = new URL(`${baseUrl}/api/v1/blocks`);
 
         // Forward query parameters
         searchParams.forEach((value, key) => {
@@ -32,9 +28,9 @@ export async function GET(
         const data = await response.json();
         return NextResponse.json(data);
     } catch (error) {
-        console.error('Error proxying links from block:', error);
+        console.error('Error proxying blocks request:', error);
         return NextResponse.json(
-            { error: 'Failed to fetch links' },
+            { error: 'Failed to fetch blocks' },
             { status: 500 }
         );
     }

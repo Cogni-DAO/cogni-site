@@ -8,8 +8,9 @@ export async function GET(
         const { blockId } = params;
         const { searchParams } = new URL(request.url);
 
-        // Construct backend URL
-        const backendUrl = new URL(`http://localhost:8000/api/v1/links/to/${blockId}`);
+        // Construct backend URL using environment variable
+        const baseUrl = process.env.FASTAPI_URL || 'http://localhost:8000';
+        const backendUrl = new URL(`${baseUrl}/api/v1/links/to/${blockId}`);
 
         // Forward query parameters
         searchParams.forEach((value, key) => {

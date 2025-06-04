@@ -29,8 +29,8 @@ export function validateLink(data: unknown): data is BlockLink {
     );
 }
 
-// Fixed API URL pointing to your actual backend API
-const API_URL = 'http://localhost:8000/api/v1';
+// API URL pointing to local Next.js API routes (which proxy to backend)
+const API_URL = '/api/v1';
 
 /**
  * Fetches all block links from the API with validation
