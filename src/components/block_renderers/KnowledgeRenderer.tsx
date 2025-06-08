@@ -4,6 +4,7 @@ import type { MemoryBlock } from '@/data/models/memoryBlock';
 import { MemoryBlockType } from '@/data/models/memoryBlockType';
 import { narrowMetadata } from '@/data/block_metadata';
 import { getBlockConfidencePercentage } from '@/utils/blockUtils';
+import FormatRenderer from '@/utils/formatRenderers';
 
 interface KnowledgeRendererProps {
   block: MemoryBlock;
@@ -22,10 +23,23 @@ const KnowledgeRenderer: React.FC<KnowledgeRendererProps> = ({ block }) => {
     );
   };
 
+  // Render the knowledge content with markdown formatting
+  const renderKnowledgeContent = (block: MemoryBlock) => {
+    if (block.type !== MemoryBlockType.knowledge) return null;
+
+    return (
+      <FormatRenderer
+        content={block.text || ''}
+        format="markdown"
+      />
+    );
+  };
+
   return (
     <BaseBlockRenderer
       block={block}
       renderTitle={renderKnowledgeTitle}
+      renderContent={renderKnowledgeContent}
       getConfidencePercentage={getBlockConfidencePercentage}
     />
   );
