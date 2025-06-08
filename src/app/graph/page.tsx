@@ -8,8 +8,8 @@ import { Button } from '@/components/ui/button';
 import { RefreshCw } from 'lucide-react';
 
 const GraphPage = () => {
-  const { blocks, isLoading: blocksLoading, isError: blocksError } = useBlocks();
-  const { links, isLoading: linksLoading, isError: linksError } = useLinks();
+  const { blocks, isLoading: blocksLoading, isError: blocksError, mutate: mutateBlocks } = useBlocks();
+  const { links, isLoading: linksLoading, isError: linksError, mutate: mutateLinks } = useLinks();
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const isLoading = blocksLoading || linksLoading;
@@ -24,8 +24,8 @@ const GraphPage = () => {
       const result = await response.json();
 
       if (result.success) {
-        // Refresh the page data by reloading
-        window.location.reload();
+        // Refresh the SWR cache to get fresh data
+        await Promise.all([mutateBlocks(), mutateLinks()]);
       } else {
         console.error('Refresh failed:', result.message);
       }
