@@ -199,9 +199,9 @@ const GraphVisualization = ({
         </div>
 
         {/* Graph Container */}
-        <div style={{ width: '100%', height: '900px', border: '1px solid #ccc' }}>
-          <div className="flex items-center justify-center h-full text-muted-foreground">
-            No blocks or links to display
+      <div style={{ width: '100%', height: '900px', border: '1px solid #ccc' }}>
+        <div className="flex items-center justify-center h-full text-muted-foreground">
+          No blocks or links to display
           </div>
         </div>
       </div>
@@ -529,13 +529,13 @@ const GraphVisualization = ({
         )}
 
         {!isLoading && !isError && elements.length > 0 && (
-          <CytoscapeComponent
-            elements={elements}
-            style={{ width: '100%', height: '100%' }}
-            stylesheet={stylesheet}
-            layout={layout}
-            cy={handleCy}
-          />
+        <CytoscapeComponent
+          elements={elements}
+          style={{ width: '100%', height: '100%' }}
+          stylesheet={stylesheet}
+          layout={layout}
+          cy={handleCy}
+        />
         )}
 
         {/* Legend */}

@@ -18,7 +18,7 @@ const KnowledgeRenderer: React.FC<KnowledgeRendererProps> = ({ block }) => {
     const knowledgeMeta = narrowMetadata(MemoryBlockType.knowledge, block.metadata);
     return (
       <h3 className="text-lg font-serif font-semibold">
-        {knowledgeMeta?.title || knowledgeMeta?.domain || knowledgeMeta?.validity || block.text?.substring(0, 50) || 'Untitled Knowledge'}
+        {knowledgeMeta?.domain || knowledgeMeta?.validity || block.text?.substring(0, 50) || 'Untitled Knowledge'}
       </h3>
     );
   };
@@ -27,13 +27,10 @@ const KnowledgeRenderer: React.FC<KnowledgeRendererProps> = ({ block }) => {
   const renderKnowledgeContent = (block: MemoryBlock) => {
     if (block.type !== MemoryBlockType.knowledge) return null;
 
-    const knowledgeMeta = narrowMetadata(MemoryBlockType.knowledge, block.metadata);
-    const format = knowledgeMeta?.format || 'markdown';
-
     return (
       <FormatRenderer
         content={block.text || ''}
-        format={format}
+        format="markdown"
       />
     );
   };
