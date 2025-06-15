@@ -7,6 +7,16 @@
  */
 
 export type GetAllBlocksApiV1BlocksGetParams = {
+/**
+ * Filter by block type (e.g., 'project', 'knowledge', 'task')
+ */
 type?: string;
+/**
+ * Case-insensitive type filtering
+ */
 case_insensitive?: boolean;
+/**
+ * Dolt branch to read from (default: 'main')
+ */
+branch?: string;
 };

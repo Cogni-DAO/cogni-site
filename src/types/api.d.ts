@@ -13,11 +13,43 @@ export interface paths {
         };
         /**
          * Health Check
-         * @description Health check endpoint for monitoring.
+         * @description Health check endpoint that validates both API and database connectivity.
+         *
+         *     Tests:
+         *     - Memory bank availability in app state
+         *     - Database connectivity via direct connection test
+         *
+         *     Returns detailed status for monitoring.
          */
         get: operations["health_check_healthz_get"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Refresh Backend Data
+         * @description Refresh backend data by pulling latest changes from remote Dolt repository.
+         *
+         *     This endpoint triggers a Dolt pull operation to synchronize the backend
+         *     database with the latest changes from the remote repository.
+         *
+         *     Returns:
+         *         JSON response with pull operation status and details
+         */
+        post: operations["refresh_backend_data_api_v1_refresh_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -49,8 +81,8 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get all memory blocks
-         * @description Retrieves memory blocks currently stored in the system. Can be filtered by block type.
+         * Get all memory blocks with branch context
+         * @description Retrieves memory blocks from specified Dolt branch with active branch context. Defaults to 'main' branch.
          */
         get: operations["get_all_blocks_api_v1_blocks_get"];
         put?: never;
@@ -73,10 +105,30 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get a specific memory block by ID
-         * @description Retrieves a specific memory block by its unique identifier.
+         * Get a specific memory block by ID with branch context
+         * @description Retrieves a specific memory block by its unique identifier from specified Dolt branch with active branch context.
          */
         get: operations["get_block_api_v1_blocks__block_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/branches": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get all Dolt branches with context
+         * @description Retrieves list of all available Dolt branches with their metadata including commit information, status, and active branch context.
+         */
+        get: operations["get_all_branches_api_v1_branches_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -134,7 +186,11 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /**
+         * Get all links
+         * @description Retrieves all links in the system, with optional filtering by relation type.
+         */
+        get: operations["get_all_links_api_v1_links_get"];
         put?: never;
         /**
          * Create a new link between blocks
@@ -262,6 +318,77 @@ export interface components {
             created_at?: string;
         };
         /**
+         * BlocksResponse
+         * @description Enhanced response for blocks endpoints that includes branch context.
+         *     Uses proper MemoryBlock typing for frontend TypeScript generation.
+         */
+        BlocksResponse: {
+            /**
+             * Active Branch
+             * @description Currently active Dolt branch for this operation
+             */
+            active_branch: string;
+            /**
+             * Requested Branch
+             * @description Branch requested by client (may differ from active_branch for read operations)
+             */
+            requested_branch?: string | null;
+            /**
+             * Timestamp
+             * @description UTC ISO timestamp when the operation was performed
+             */
+            timestamp: string;
+            /**
+             * Blocks
+             * @description List of memory blocks from the requested branch
+             */
+            blocks: components["schemas"]["MemoryBlock"][];
+            /**
+             * Total Count
+             * @description Total number of blocks returned
+             */
+            total_count: number;
+            /**
+             * Filters Applied
+             * @description Summary of filters applied (type, case_insensitive, etc.)
+             */
+            filters_applied?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        /**
+         * BranchesResponse
+         * @description Enhanced response for branches endpoint that includes current context.
+         *     Uses proper DoltBranchInfo typing for frontend TypeScript generation.
+         */
+        BranchesResponse: {
+            /**
+             * Active Branch
+             * @description Currently active Dolt branch for this operation
+             */
+            active_branch: string;
+            /**
+             * Requested Branch
+             * @description Branch requested by client (may differ from active_branch for read operations)
+             */
+            requested_branch?: string | null;
+            /**
+             * Timestamp
+             * @description UTC ISO timestamp when the operation was performed
+             */
+            timestamp: string;
+            /**
+             * Branches
+             * @description List of all available Dolt branches with metadata
+             */
+            branches: components["schemas"]["DoltBranchInfo"][];
+            /**
+             * Total Branches
+             * @description Total number of branches available
+             */
+            total_branches: number;
+        };
+        /**
          * CompleteQueryRequest
          * @description Extended schema for a chat request with additional parameters.
          *     This can be used for more advanced chat endpoints.
@@ -366,6 +493,58 @@ export interface components {
             created_by: string | null;
         };
         /**
+         * DoltBranchInfo
+         * @description Information about a single Dolt branch.
+         */
+        DoltBranchInfo: {
+            /**
+             * Name
+             * @description Branch name
+             */
+            name: string;
+            /**
+             * Hash
+             * @description Latest commit hash
+             */
+            hash: string;
+            /**
+             * Latest Committer
+             * @description Name of the latest committer
+             */
+            latest_committer: string;
+            /**
+             * Latest Committer Email
+             * @description Email of the latest committer
+             */
+            latest_committer_email: string;
+            /**
+             * Latest Commit Date
+             * Format: date-time
+             * @description Date of the latest commit
+             */
+            latest_commit_date: string;
+            /**
+             * Latest Commit Message
+             * @description Message of the latest commit
+             */
+            latest_commit_message: string;
+            /**
+             * Remote
+             * @description Remote name (empty if local)
+             */
+            remote: string;
+            /**
+             * Branch
+             * @description Remote branch name (empty if local)
+             */
+            branch: string;
+            /**
+             * Dirty
+             * @description Whether the branch has uncommitted changes
+             */
+            dirty: boolean;
+        };
+        /**
          * ErrorResponse
          * @description Schema for error responses.
          */
@@ -408,6 +587,9 @@ export interface components {
          * @description The primary data structure for representing a unit of memory in the Cogni system experiment.
          *     Aligns with the design specified in project-CogniMemorySystem-POC.json.
          *     Includes schema versioning support (Task 2.0).
+         *
+         *     NOTE: As of Property-Schema Split implementation, metadata is stored in the
+         *     block_properties table rather than as a JSON field on this model.
          */
         MemoryBlock: {
             /**
@@ -464,7 +646,7 @@ export interface components {
             tags?: string[];
             /**
              * Metadata
-             * @description Custom metadata based on block type
+             * @description Custom metadata based on block type (reconstructed from block_properties)
              */
             metadata?: {
                 [key: string]: unknown;
@@ -504,6 +686,30 @@ export interface components {
              */
             embedding?: number[] | null;
         };
+        /**
+         * SingleBlockResponse
+         * @description Enhanced response for single block retrieval with branch context.
+         *     Uses proper MemoryBlock typing for frontend TypeScript generation.
+         */
+        SingleBlockResponse: {
+            /**
+             * Active Branch
+             * @description Currently active Dolt branch for this operation
+             */
+            active_branch: string;
+            /**
+             * Requested Branch
+             * @description Branch requested by client (may differ from active_branch for read operations)
+             */
+            requested_branch?: string | null;
+            /**
+             * Timestamp
+             * @description UTC ISO timestamp when the operation was performed
+             */
+            timestamp: string;
+            /** @description The requested memory block */
+            block: components["schemas"]["MemoryBlock"];
+        };
         /** ValidationError */
         ValidationError: {
             /** Location */
@@ -523,6 +729,26 @@ export interface components {
 export type $defs = Record<string, never>;
 export interface operations {
     health_check_healthz_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    refresh_backend_data_api_v1_refresh_post: {
         parameters: {
             query?: never;
             header?: never;
@@ -580,8 +806,12 @@ export interface operations {
     get_all_blocks_api_v1_blocks_get: {
         parameters: {
             query?: {
+                /** @description Filter by block type (e.g., 'project', 'knowledge', 'task') */
                 type?: string;
+                /** @description Case-insensitive type filtering */
                 case_insensitive?: boolean;
+                /** @description Dolt branch to read from (default: 'main') */
+                branch?: string;
             };
             header?: never;
             path?: never;
@@ -595,7 +825,25 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["MemoryBlock"][];
+                    "application/json": components["schemas"]["BlocksResponse"];
+                };
+            };
+            /** @description Invalid branch name format */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Branch not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
             /** @description Validation Error */
@@ -662,7 +910,10 @@ export interface operations {
     };
     get_block_api_v1_blocks__block_id__get: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description Dolt branch to read from (default: 'main') */
+                branch?: string;
+            };
             header?: never;
             path: {
                 block_id: string;
@@ -677,10 +928,19 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["MemoryBlock"];
+                    "application/json": components["schemas"]["SingleBlockResponse"];
                 };
             };
-            /** @description Memory block not found */
+            /** @description Invalid branch name format */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Memory block or branch not found */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -696,6 +956,35 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_all_branches_api_v1_branches_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BranchesResponse"];
                 };
             };
             /** @description Internal server error */
@@ -757,6 +1046,48 @@ export interface operations {
                 };
                 content: {
                     "application/json": unknown;
+                };
+            };
+        };
+    };
+    get_all_links_api_v1_links_get: {
+        parameters: {
+            query?: {
+                relation?: ("related_to" | "mentions" | "child_of" | "parent_of" | "duplicate_of" | "part_of" | "contains" | "requires" | "provides" | "owned_by" | "owns" | "subtask_of" | "depends_on" | "blocks" | "is_blocked_by" | "belongs_to_epic" | "epic_contains" | "bug_affects" | "has_bug" | "derived_from" | "supersedes" | "references" | "source_of" | "cited_by") | null;
+                limit?: number;
+                cursor?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BlockLink"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
         };

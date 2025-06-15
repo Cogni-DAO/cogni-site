@@ -6,7 +6,9 @@
  * OpenAPI spec version: 0.1.0
  */
 
+export type GetBlockApiV1BlocksBlockIdGetParams = {
 /**
- * Custom metadata based on block type (reconstructed from block_properties)
+ * Dolt branch to read from (default: 'main')
  */
-export type MemoryBlockMetadata = { [key: string]: unknown };
+branch?: string;
+};

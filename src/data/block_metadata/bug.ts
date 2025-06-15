@@ -27,6 +27,7 @@ export const BugMetadataSchema = z.object({
   owner: z.union([z.string(), z.null()]).optional(),
   status: z.enum(['backlog', 'ready', 'in_progress', 'review', 'merged', 'validated', 'released', 'done', 'archived']).optional(),
   assignee: z.union([z.string(), z.null()]).optional(),
+  ordering: z.union([z.unknown(), z.null()]).optional(),
   tool_hints: z.array(z.unknown()).optional(),
   action_items: z.array(z.unknown()).optional(),
   acceptance_criteria: z.array(z.unknown()).optional(),
@@ -46,7 +47,7 @@ export const BugMetadataSchema = z.object({
   version_fixed: z.union([z.string(), z.null()]).optional(),
   steps_to_reproduce: z.union([z.string(), z.null()]).optional(),
   due_date: z.union([z.string(), z.null()]).optional(),
-  labels: z.union([z.unknown(), z.null()]).optional(),
+  tags: z.array(z.unknown()).optional(),
   confidence_score: z.union([z.unknown(), z.null()]).optional(),
   expected_behavior: z.union([z.string(), z.null()]).optional(),
   actual_behavior: z.union([z.string(), z.null()]).optional(),
@@ -83,6 +84,7 @@ export interface BugMetadata {
   owner?: string | null;
   status?: 'backlog' | 'ready' | 'in_progress' | 'review' | 'merged' | 'validated' | 'released' | 'done' | 'archived';
   assignee?: string | null;
+  ordering?: unknown | null;
   tool_hints?: unknown[];
   action_items?: unknown[];
   acceptance_criteria?: unknown[];
@@ -102,7 +104,7 @@ export interface BugMetadata {
   version_fixed?: string | null;
   steps_to_reproduce?: string | null;
   due_date?: string | null;
-  labels?: unknown | null;
+  tags?: unknown[];
   confidence_score?: unknown | null;
   expected_behavior?: string | null;
   actual_behavior?: string | null;

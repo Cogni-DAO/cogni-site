@@ -10,9 +10,11 @@ import type { BlockLink } from '@/data/models/blockLink';
 
 /**
  * Hook for fetching all block links
+ * @param branch - Optional branch name to fetch links from (defaults to 'main')
  */
-export function useLinks() {
-    const { data, error, isLoading, mutate } = useSWR('links', fetchLinks);
+export function useLinks(branch?: string) {
+    const key = branch ? ['links', branch] : 'links';
+    const { data, error, isLoading, mutate } = useSWR(key, () => fetchLinks(branch));
 
     return {
         links: data as BlockLink[] | undefined,

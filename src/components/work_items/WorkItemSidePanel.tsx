@@ -3,8 +3,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { ExternalLink, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { WorkItemRenderer } from '@/components/blocks/WorkItemRenderer';
-import { narrowWorkItemMeta } from '@/utils/workItemUtils';
+import { BlockRenderer } from '@/components/BlockRenderer';
 import { useToast } from '@/hooks/use-toast';
 import { Sheet, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import * as SheetPrimitive from "@radix-ui/react-dialog";
@@ -120,10 +119,11 @@ function ResizeHandle({
 interface WorkItemSidePanelProps {
     blockId: string | null;
     onClose: () => void;
+    branch?: string;
 }
 
-export function WorkItemSidePanel({ blockId, onClose }: WorkItemSidePanelProps) {
-    const { block, isLoading, isError } = useBlock(blockId || '');
+export function WorkItemSidePanel({ blockId, onClose, branch }: WorkItemSidePanelProps) {
+    const { block, isLoading, isError } = useBlock(blockId || '', branch);
     const { toast } = useToast();
     const [panelWidth, setPanelWidth] = useState(500);
     const [isResizing, setIsResizing] = useState(false);
@@ -132,7 +132,23 @@ export function WorkItemSidePanel({ blockId, onClose }: WorkItemSidePanelProps) 
     // Don't attempt to fetch if no blockId
     const isOpen = !!blockId;
 
-    const itemTitle = block?.metadata ? (block.metadata.title as string) || 'Work Item Details' : 'Work Item Details';
+    // Get title from block metadata or fallback
+    const getBlockTitle = () => {
+        if (!block) return 'Block Details';
+
+        // Try different title fields based on block type
+        if (block.metadata?.title && typeof block.metadata.title === 'string') {
+            return block.metadata.title;
+        }
+        if (block.metadata?.name && typeof block.metadata.name === 'string') {
+            return block.metadata.name;
+        }
+
+        // Fallback to block type
+        return `${block.type.charAt(0).toUpperCase() + block.type.slice(1)} Details`;
+    };
+
+    const itemTitle = getBlockTitle();
 
     // Handle resize
     const handleResize = (newWidth: number) => {
@@ -156,8 +172,8 @@ export function WorkItemSidePanel({ blockId, onClose }: WorkItemSidePanelProps) 
     useEffect(() => {
         if (isError && blockId) {
             toast({
-                title: 'Error loading work item',
-                description: 'There was a problem loading the selected work item.',
+                title: 'Error loading block',
+                description: 'There was a problem loading the selected block.',
                 variant: 'destructive',
             });
         }
@@ -191,23 +207,20 @@ export function WorkItemSidePanel({ blockId, onClose }: WorkItemSidePanelProps) 
         if (isError || !block) {
             return (
                 <div className="p-4 text-center">
-                    <p className="text-destructive mb-4">Failed to load work item</p>
+                    <p className="text-destructive mb-4">Failed to load block</p>
                 </div>
             );
         }
 
-        const meta = narrowWorkItemMeta(block);
-        if (!meta) {
-            return (
-                <div className="p-4 text-center">
-                    <p className="text-amber-600 mb-4">This item is not a valid work item</p>
-                </div>
-            );
-        }
-
+        // Use the general BlockRenderer for all block types
         return (
             <div className="overflow-y-auto p-4">
-                <WorkItemRenderer block={block} meta={meta} />
+                <BlockRenderer
+                    blockId={block.id || blockId || ''}
+                    blockType={block.type}
+                    blockVersion={block.block_version?.toString() || block.schema_version?.toString() || '1.0'}
+                    data={block}
+                />
             </div>
         );
     };

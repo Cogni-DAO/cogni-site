@@ -6,7 +6,4 @@
  * OpenAPI spec version: 0.1.0
  */
 
-/**
- * Custom metadata based on block type (reconstructed from block_properties)
- */
-export type MemoryBlockMetadata = { [key: string]: unknown };
+export type BlocksResponseFiltersAppliedAnyOf = { [key: string]: unknown };
