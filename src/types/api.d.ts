@@ -13,11 +13,43 @@ export interface paths {
         };
         /**
          * Health Check
-         * @description Health check endpoint for monitoring.
+         * @description Health check endpoint that validates both API and database connectivity.
+         *
+         *     Tests:
+         *     - Memory bank availability in app state
+         *     - Database connectivity via direct connection test
+         *
+         *     Returns detailed status for monitoring.
          */
         get: operations["health_check_healthz_get"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Refresh Backend Data
+         * @description Refresh backend data by pulling latest changes from remote Dolt repository.
+         *
+         *     This endpoint triggers a Dolt pull operation to synchronize the backend
+         *     database with the latest changes from the remote repository.
+         *
+         *     Returns:
+         *         JSON response with pull operation status and details
+         */
+        post: operations["refresh_backend_data_api_v1_refresh_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -134,7 +166,11 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /**
+         * Get all links
+         * @description Retrieves all links in the system, with optional filtering by relation type.
+         */
+        get: operations["get_all_links_api_v1_links_get"];
         put?: never;
         /**
          * Create a new link between blocks
@@ -408,6 +444,9 @@ export interface components {
          * @description The primary data structure for representing a unit of memory in the Cogni system experiment.
          *     Aligns with the design specified in project-CogniMemorySystem-POC.json.
          *     Includes schema versioning support (Task 2.0).
+         *
+         *     NOTE: As of Property-Schema Split implementation, metadata is stored in the
+         *     block_properties table rather than as a JSON field on this model.
          */
         MemoryBlock: {
             /**
@@ -464,7 +503,7 @@ export interface components {
             tags?: string[];
             /**
              * Metadata
-             * @description Custom metadata based on block type
+             * @description Custom metadata based on block type (reconstructed from block_properties)
              */
             metadata?: {
                 [key: string]: unknown;
@@ -523,6 +562,26 @@ export interface components {
 export type $defs = Record<string, never>;
 export interface operations {
     health_check_healthz_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    refresh_backend_data_api_v1_refresh_post: {
         parameters: {
             query?: never;
             header?: never;
@@ -757,6 +816,48 @@ export interface operations {
                 };
                 content: {
                     "application/json": unknown;
+                };
+            };
+        };
+    };
+    get_all_links_api_v1_links_get: {
+        parameters: {
+            query?: {
+                relation?: ("related_to" | "mentions" | "child_of" | "parent_of" | "duplicate_of" | "part_of" | "contains" | "requires" | "provides" | "owned_by" | "owns" | "subtask_of" | "depends_on" | "blocks" | "is_blocked_by" | "belongs_to_epic" | "epic_contains" | "bug_affects" | "has_bug" | "derived_from" | "supersedes" | "references" | "source_of" | "cited_by") | null;
+                limit?: number;
+                cursor?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BlockLink"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
         };

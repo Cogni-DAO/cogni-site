@@ -7,6 +7,6 @@
  */
 
 /**
- * Custom metadata based on block type
+ * Custom metadata based on block type (reconstructed from block_properties)
  */
 export type MemoryBlockMetadata = { [key: string]: unknown };

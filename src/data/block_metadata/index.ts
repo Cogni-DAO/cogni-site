@@ -1,4 +1,5 @@
 import { MemoryBlockType } from '@/data/models/memoryBlockType';
+import type { Base_userMetadata } from './base_user';
 import type { ProjectMetadata } from './project';
 import type { TaskMetadata } from './task';
 import type { DocMetadata } from './doc';
@@ -15,7 +16,6 @@ export interface BlockMetadataByType {
   task: TaskMetadata;
   doc: DocMetadata;
   knowledge: KnowledgeMetadata;
-  interaction: Record<string, unknown>; // No specific metadata schema for interaction type yet
   log: LogMetadata;
   epic: EpicMetadata;
   bug: BugMetadata;

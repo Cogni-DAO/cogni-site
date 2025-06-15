@@ -28,6 +28,7 @@ export const TaskMetadataSchema = z.object({
   owner: z.union([z.string(), z.null()]).optional(),
   status: z.enum(['backlog', 'ready', 'in_progress', 'review', 'merged', 'validated', 'released', 'done', 'archived']).optional(),
   assignee: z.union([z.string(), z.null()]).optional(),
+  ordering: z.union([z.unknown(), z.null()]).optional(),
   tool_hints: z.array(z.unknown()).optional(),
   action_items: z.array(z.unknown()).optional(),
   acceptance_criteria: z.array(z.unknown()).optional(),
@@ -46,7 +47,7 @@ export const TaskMetadataSchema = z.object({
   estimate_hours: z.union([z.number(), z.null()]).optional(),
   start_date: z.union([z.string(), z.null()]).optional(),
   due_date: z.union([z.string(), z.null()]).optional(),
-  labels: z.array(z.unknown()).optional(),
+  tags: z.array(z.unknown()).optional(),
   confidence_score: z.union([z.unknown(), z.null()]).optional(),
   phase: z.union([z.string(), z.null()]).optional(),
   implementation_details: z.union([z.unknown(), z.null()]).optional(),
@@ -82,6 +83,7 @@ export interface TaskMetadata {
   owner?: string | null;
   status?: 'backlog' | 'ready' | 'in_progress' | 'review' | 'merged' | 'validated' | 'released' | 'done' | 'archived';
   assignee?: string | null;
+  ordering?: unknown | null;
   tool_hints?: unknown[];
   action_items?: unknown[];
   acceptance_criteria?: unknown[];
@@ -100,7 +102,7 @@ export interface TaskMetadata {
   estimate_hours?: number | null;
   start_date?: string | null;
   due_date?: string | null;
-  labels?: unknown[];
+  tags?: unknown[];
   confidence_score?: unknown | null;
   phase?: string | null;
   implementation_details?: unknown | null;

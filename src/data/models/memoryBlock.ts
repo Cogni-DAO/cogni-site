@@ -22,6 +22,9 @@ import type { MemoryBlockEmbedding } from './memoryBlockEmbedding';
  * The primary data structure for representing a unit of memory in the Cogni system experiment.
 Aligns with the design specified in project-CogniMemorySystem-POC.json.
 Includes schema versioning support (Task 2.0).
+
+NOTE: As of Property-Schema Split implementation, metadata is stored in the
+block_properties table rather than as a JSON field on this model.
  */
 export interface MemoryBlock {
   /** Globally unique ID for this memory block */
@@ -47,7 +50,7 @@ export interface MemoryBlock {
    * @maxItems 20
    */
   tags?: string[];
-  /** Custom metadata based on block type */
+  /** Custom metadata based on block type (reconstructed from block_properties) */
   metadata?: MemoryBlockMetadata;
   /** Optional source markdown or file name */
   source_file?: MemoryBlockSourceFile;

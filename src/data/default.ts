@@ -8,7 +8,13 @@
 
 
 /**
- * Health check endpoint for monitoring.
+ * Health check endpoint that validates both API and database connectivity.
+
+Tests:
+- Memory bank availability in app state
+- Database connectivity via direct connection test
+
+Returns detailed status for monitoring.
  * @summary Health Check
  */
 export type healthCheckHealthzGetResponse200 = {
@@ -45,6 +51,53 @@ export const healthCheckHealthzGet = async ( options?: RequestInit): Promise<hea
   const data: healthCheckHealthzGetResponse['data'] = body ? JSON.parse(body) : {}
 
   return { data, status: res.status, headers: res.headers } as healthCheckHealthzGetResponse
+}
+
+
+/**
+ * Refresh backend data by pulling latest changes from remote Dolt repository.
+
+This endpoint triggers a Dolt pull operation to synchronize the backend
+database with the latest changes from the remote repository.
+
+Returns:
+    JSON response with pull operation status and details
+ * @summary Refresh Backend Data
+ */
+export type refreshBackendDataApiV1RefreshPostResponse200 = {
+  data: unknown
+  status: 200
+}
+    
+export type refreshBackendDataApiV1RefreshPostResponseComposite = refreshBackendDataApiV1RefreshPostResponse200;
+    
+export type refreshBackendDataApiV1RefreshPostResponse = refreshBackendDataApiV1RefreshPostResponseComposite & {
+  headers: Headers;
+}
+
+export const getRefreshBackendDataApiV1RefreshPostUrl = () => {
+
+
+  
+
+  return `/api/v1/refresh`
+}
+
+export const refreshBackendDataApiV1RefreshPost = async ( options?: RequestInit): Promise<refreshBackendDataApiV1RefreshPostResponse> => {
+  
+  const res = await fetch(getRefreshBackendDataApiV1RefreshPostUrl(),
+  {      
+    ...options,
+    method: 'POST'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
+  const data: refreshBackendDataApiV1RefreshPostResponse['data'] = body ? JSON.parse(body) : {}
+
+  return { data, status: res.status, headers: res.headers } as refreshBackendDataApiV1RefreshPostResponse
 }
 
 

@@ -1,8 +1,7 @@
 import { z } from 'zod';
 
 /**
- * Metadata schema for MemoryBlocks of type "knowledge".
-Structure for knowledge/fact blocks.
+ * Metadata for knowledge-type memory blocks.
  */
 export const KnowledgeMetadataSchema = z.object({
   x_timestamp: z.string().datetime().optional(),
@@ -10,16 +9,17 @@ export const KnowledgeMetadataSchema = z.object({
   x_tool_id: z.union([z.string(), z.null()]).optional(),
   x_parent_block_id: z.union([z.string(), z.null()]).optional(),
   x_session_id: z.union([z.string(), z.null()]).optional(),
+  title: z.string(),
+  description: z.union([z.string(), z.null()]).optional(),
+  owner: z.union([z.string(), z.null()]).optional(),
+  subject: z.union([z.string(), z.null()]).optional(),
+  keywords: z.union([z.unknown(), z.null()]).optional(),
   source: z.union([z.string(), z.null()]).optional(),
-  validity: z.union([z.string(), z.null()]).optional(),
-  domain: z.union([z.string(), z.null()]).optional(),
-  last_verified: z.union([z.string(), z.null()]).optional(),
-  confidence_level: z.union([z.number(), z.null()]).optional()
+  confidence: z.union([z.number(), z.null()]).optional()
 });
 
 /**
- * Metadata schema for MemoryBlocks of type "knowledge".
-Structure for knowledge/fact blocks.
+ * Metadata for knowledge-type memory blocks.
  * Manually defined to match Zod schema exactly (no z.infer<>)
  */
 export interface KnowledgeMetadata {
@@ -28,9 +28,11 @@ export interface KnowledgeMetadata {
   x_tool_id?: string | null;
   x_parent_block_id?: string | null;
   x_session_id?: string | null;
+  title: string;
+  description?: string | null;
+  owner?: string | null;
+  subject?: string | null;
+  keywords?: unknown | null;
   source?: string | null;
-  validity?: string | null;
-  domain?: string | null;
-  last_verified?: string | null;
-  confidence_level?: number | null;
+  confidence?: number | null;
 }

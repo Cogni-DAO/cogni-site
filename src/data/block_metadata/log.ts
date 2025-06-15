@@ -2,7 +2,8 @@ import { z } from 'zod';
 
 /**
  * Metadata schema for log type MemoryBlocks.
-Inherits common fields (x_timestamp, x_agent_id, x_tool_id, x_parent_block_id, x_session_id) from BaseMetadata.
+Inherits system fields (x_timestamp, x_agent_id, x_tool_id, x_parent_block_id, x_session_id) from BaseMetadata.
+Does not include user fields (title, description, owner) since logs are typically system-generated.
  */
 export const LogMetadataSchema = z.object({
   x_timestamp: z.string().datetime().optional(),
@@ -14,12 +15,16 @@ export const LogMetadataSchema = z.object({
   output_text: z.union([z.string(), z.null()]).optional(),
   model: z.union([z.string(), z.null()]).optional(),
   token_count: z.union([z.unknown(), z.null()]).optional(),
-  latency_ms: z.union([z.number(), z.null()]).optional()
+  latency_ms: z.union([z.number(), z.null()]).optional(),
+  log_level: z.union([z.string(), z.null()]).optional(),
+  component: z.union([z.string(), z.null()]).optional(),
+  event_timestamp: z.union([z.string(), z.null()]).optional()
 });
 
 /**
  * Metadata schema for log type MemoryBlocks.
-Inherits common fields (x_timestamp, x_agent_id, x_tool_id, x_parent_block_id, x_session_id) from BaseMetadata.
+Inherits system fields (x_timestamp, x_agent_id, x_tool_id, x_parent_block_id, x_session_id) from BaseMetadata.
+Does not include user fields (title, description, owner) since logs are typically system-generated.
  * Manually defined to match Zod schema exactly (no z.infer<>)
  */
 export interface LogMetadata {
@@ -33,4 +38,7 @@ export interface LogMetadata {
   model?: string | null;
   token_count?: unknown | null;
   latency_ms?: number | null;
+  log_level?: string | null;
+  component?: string | null;
+  event_timestamp?: string | null;
 }
