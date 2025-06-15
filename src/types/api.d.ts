@@ -82,7 +82,7 @@ export interface paths {
         };
         /**
          * Get all memory blocks
-         * @description Retrieves memory blocks currently stored in the system. Can be filtered by block type.
+         * @description Retrieves memory blocks from specified Dolt branch. Defaults to 'main' branch.
          */
         get: operations["get_all_blocks_api_v1_blocks_get"];
         put?: never;
@@ -106,9 +106,29 @@ export interface paths {
         };
         /**
          * Get a specific memory block by ID
-         * @description Retrieves a specific memory block by its unique identifier.
+         * @description Retrieves a specific memory block by its unique identifier from specified Dolt branch.
          */
         get: operations["get_block_api_v1_blocks__block_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/branches": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get all Dolt branches with context
+         * @description Retrieves list of all available Dolt branches with their metadata including commit information, status, and active branch context.
+         */
+        get: operations["get_all_branches_api_v1_branches_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -296,6 +316,40 @@ export interface components {
              * @description When the link was created
              */
             created_at?: string;
+        };
+        /**
+         * BranchesResponse
+         * @description Enhanced response for branches endpoint that includes current context.
+         */
+        BranchesResponse: {
+            /**
+             * Active Branch
+             * @description Currently active Dolt branch for this operation
+             */
+            active_branch: string;
+            /**
+             * Requested Branch
+             * @description Branch requested by client (may differ from active_branch for read operations)
+             */
+            requested_branch?: string | null;
+            /**
+             * Timestamp
+             * Format: date-time
+             * @description Timestamp when the operation was performed
+             */
+            timestamp?: string;
+            /**
+             * Branches
+             * @description List of all available Dolt branches with metadata
+             */
+            branches: {
+                [key: string]: unknown;
+            }[];
+            /**
+             * Total Branches
+             * @description Total number of branches available
+             */
+            total_branches: number;
         };
         /**
          * CompleteQueryRequest
@@ -639,8 +693,12 @@ export interface operations {
     get_all_blocks_api_v1_blocks_get: {
         parameters: {
             query?: {
+                /** @description Filter by block type (e.g., 'project', 'knowledge', 'task') */
                 type?: string;
+                /** @description Case-insensitive type filtering */
                 case_insensitive?: boolean;
+                /** @description Dolt branch to read from (default: 'main') */
+                branch?: string;
             };
             header?: never;
             path?: never;
@@ -655,6 +713,24 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["MemoryBlock"][];
+                };
+            };
+            /** @description Invalid branch name format */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Branch not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
             /** @description Validation Error */
@@ -721,7 +797,10 @@ export interface operations {
     };
     get_block_api_v1_blocks__block_id__get: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description Dolt branch to read from (default: 'main') */
+                branch?: string;
+            };
             header?: never;
             path: {
                 block_id: string;
@@ -739,7 +818,16 @@ export interface operations {
                     "application/json": components["schemas"]["MemoryBlock"];
                 };
             };
-            /** @description Memory block not found */
+            /** @description Invalid branch name format */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Memory block or branch not found */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -755,6 +843,35 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_all_branches_api_v1_branches_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BranchesResponse"];
                 };
             };
             /** @description Internal server error */

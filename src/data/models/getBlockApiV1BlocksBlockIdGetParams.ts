@@ -6,15 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type GetAllBlocksApiV1BlocksGetParams = {
-/**
- * Filter by block type (e.g., 'project', 'knowledge', 'task')
- */
-type?: string;
-/**
- * Case-insensitive type filtering
- */
-case_insensitive?: boolean;
+export type GetBlockApiV1BlocksBlockIdGetParams = {
 /**
  * Dolt branch to read from (default: 'main')
  */
