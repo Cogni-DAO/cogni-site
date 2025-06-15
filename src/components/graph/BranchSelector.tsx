@@ -9,15 +9,11 @@ import {
 } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { GitBranch } from 'lucide-react';
+import type { DoltBranchInfo } from '@/data/models/doltBranchInfo';
 
 interface BranchSelectorProps {
     selectedBranch?: string;
     onBranchChange: (branch: string) => void;
-}
-
-interface BranchItem {
-    name: string;
-    [key: string]: unknown;
 }
 
 export function BranchSelector({ selectedBranch, onBranchChange }: BranchSelectorProps) {
@@ -55,7 +51,7 @@ export function BranchSelector({ selectedBranch, onBranchChange }: BranchSelecto
                     <SelectValue placeholder="Select branch" />
                 </SelectTrigger>
                 <SelectContent>
-                    {branches.branches.map((branch: BranchItem) => (
+                    {branches.branches.map((branch: DoltBranchInfo) => (
                         <SelectItem key={branch.name} value={branch.name}>
                             <div className="flex items-center gap-2">
                                 <span>{branch.name}</span>

@@ -54,12 +54,15 @@ export async function fetchBlocks(branch?: string): Promise<BlocksResponse> {
 
     const data = await response.json();
 
+    // Extract blocks array from the enhanced response structure
+    const blocks = data.blocks || data;
+
     // Validate the response data
-    if (!validateBlocks(data)) {
+    if (!validateBlocks(blocks)) {
         throw new Error('Invalid blocks response from API');
     }
 
-    return data;
+    return blocks;
 }
 
 /**
@@ -82,12 +85,15 @@ export async function fetchBlockById(id: string, branch?: string): Promise<Memor
 
     const data = await response.json();
 
+    // Extract block from the enhanced response structure
+    const block = data.block || data;
+
     // Validate the response data
-    if (!validateBlock(data)) {
+    if (!validateBlock(block)) {
         throw new Error('Invalid block response from API');
     }
 
-    return data;
+    return block;
 }
 
 /**
