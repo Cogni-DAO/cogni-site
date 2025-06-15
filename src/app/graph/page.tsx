@@ -72,6 +72,7 @@ const GraphPage = () => {
         isLoading={isLoading}
         isError={isError}
         errorMessage={String(blocksError || linksError || '')}
+        branch={selectedBranch}
       />
     </div>
   );
