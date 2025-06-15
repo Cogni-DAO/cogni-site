@@ -4,7 +4,6 @@ import React, { useEffect, useState, useRef } from 'react';
 import { ExternalLink, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { BlockRenderer } from '@/components/BlockRenderer';
-import { narrowWorkItemMeta, isWorkItemType } from '@/utils/workItemUtils';
 import { useToast } from '@/hooks/use-toast';
 import { Sheet, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import * as SheetPrimitive from "@radix-ui/react-dialog";

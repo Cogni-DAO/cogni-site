@@ -1,4 +1,3 @@
-import { MemoryBlockType } from '@/data/models/memoryBlockType';
 import type { ProjectMetadata } from './project';
 import type { TaskMetadata } from './task';
 import type { DocMetadata } from './doc';
@@ -23,7 +22,7 @@ export interface BlockMetadataByType {
 /**
  * Helper function to narrow metadata type based on block type
  */
-export function narrowMetadata<T extends MemoryBlockType>(
+export function narrowMetadata<T extends keyof BlockMetadataByType>(
   blockType: T,
   metadata: unknown
 ): BlockMetadataByType[T] {
