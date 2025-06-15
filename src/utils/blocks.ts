@@ -37,10 +37,16 @@ const API_URL = '/api/v1';
 
 /**
  * Fetches memory blocks from the API with validation
+ * @param branch - Optional branch name to fetch blocks from (defaults to 'main')
  * @returns Promise resolving to a validated array of memory blocks
  */
-export async function fetchBlocks(): Promise<BlocksResponse> {
-    const response = await fetch(`${API_URL}/blocks`);
+export async function fetchBlocks(branch?: string): Promise<BlocksResponse> {
+    const url = new URL(`${API_URL}/blocks`, window.location.origin);
+    if (branch) {
+        url.searchParams.set('branch', branch);
+    }
+
+    const response = await fetch(url.toString());
 
     if (!response.ok) {
         throw new Error(`Failed to fetch blocks: ${response.status} ${response.statusText}`);
@@ -59,10 +65,16 @@ export async function fetchBlocks(): Promise<BlocksResponse> {
 /**
  * Fetches a single memory block by ID
  * @param id - The ID of the block to fetch
+ * @param branch - Optional branch name to fetch block from (defaults to 'main')
  * @returns Promise resolving to a validated memory block
  */
-export async function fetchBlockById(id: string): Promise<MemoryBlock> {
-    const response = await fetch(`${API_URL}/blocks/${id}`);
+export async function fetchBlockById(id: string, branch?: string): Promise<MemoryBlock> {
+    const url = new URL(`${API_URL}/blocks/${id}`, window.location.origin);
+    if (branch) {
+        url.searchParams.set('branch', branch);
+    }
+
+    const response = await fetch(url.toString());
 
     if (!response.ok) {
         throw new Error(`Failed to fetch block: ${response.status} ${response.statusText}`);
@@ -115,9 +127,10 @@ export async function createBlock(block: Partial<MemoryBlock>): Promise<MemoryBl
 /**
  * Fetches multiple memory blocks by their IDs in a single request
  * @param ids - Array of block IDs to fetch
+ * @param branch - Optional branch name to fetch blocks from (defaults to 'main')
  * @returns Promise resolving to a map of block ID to block data
  */
-export async function fetchBlocksByIds(ids: string[]): Promise<Map<string, MemoryBlock>> {
+export async function fetchBlocksByIds(ids: string[], branch?: string): Promise<Map<string, MemoryBlock>> {
     if (ids.length === 0) {
         return new Map();
     }
@@ -131,7 +144,7 @@ export async function fetchBlocksByIds(ids: string[]): Promise<Map<string, Memor
 
     // For now, we'll fetch all blocks and filter client-side
     // This can be optimized with a backend endpoint that accepts multiple IDs
-    const allBlocks = await fetchBlocks();
+    const allBlocks = await fetchBlocks(branch);
 
     const blockMap = new Map<string, MemoryBlock>();
     const idsSet = new Set(uniqueIds);

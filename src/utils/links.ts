@@ -34,10 +34,16 @@ const API_URL = '/api/v1';
 
 /**
  * Fetches all block links from the API with validation
+ * @param branch - Optional branch name to fetch links from (defaults to 'main')
  * @returns Promise resolving to a validated array of block links
  */
-export async function fetchLinks(): Promise<LinksResponse> {
-    const response = await fetch(`${API_URL}/links`);
+export async function fetchLinks(branch?: string): Promise<LinksResponse> {
+    const url = new URL(`${API_URL}/links`, window.location.origin);
+    if (branch) {
+        url.searchParams.set('branch', branch);
+    }
+
+    const response = await fetch(url.toString());
 
     if (!response.ok) {
         throw new Error(`Failed to fetch links: ${response.status} ${response.statusText}`);
@@ -56,10 +62,16 @@ export async function fetchLinks(): Promise<LinksResponse> {
 /**
  * Fetches links from a specific block
  * @param blockId - The ID of the block to fetch links from
+ * @param branch - Optional branch name to fetch links from (defaults to 'main')
  * @returns Promise resolving to a validated array of block links
  */
-export async function fetchLinksFrom(blockId: string): Promise<LinksResponse> {
-    const response = await fetch(`${API_URL}/links/from/${blockId}`);
+export async function fetchLinksFrom(blockId: string, branch?: string): Promise<LinksResponse> {
+    const url = new URL(`${API_URL}/links/from/${blockId}`, window.location.origin);
+    if (branch) {
+        url.searchParams.set('branch', branch);
+    }
+
+    const response = await fetch(url.toString());
 
     if (!response.ok) {
         throw new Error(`Failed to fetch links from block: ${response.status} ${response.statusText}`);
@@ -78,10 +90,16 @@ export async function fetchLinksFrom(blockId: string): Promise<LinksResponse> {
 /**
  * Fetches links to a specific block
  * @param blockId - The ID of the block to fetch links to
+ * @param branch - Optional branch name to fetch links from (defaults to 'main')
  * @returns Promise resolving to a validated array of block links
  */
-export async function fetchLinksTo(blockId: string): Promise<LinksResponse> {
-    const response = await fetch(`${API_URL}/links/to/${blockId}`);
+export async function fetchLinksTo(blockId: string, branch?: string): Promise<LinksResponse> {
+    const url = new URL(`${API_URL}/links/to/${blockId}`, window.location.origin);
+    if (branch) {
+        url.searchParams.set('branch', branch);
+    }
+
+    const response = await fetch(url.toString());
 
     if (!response.ok) {
         throw new Error(`Failed to fetch links to block: ${response.status} ${response.statusText}`);

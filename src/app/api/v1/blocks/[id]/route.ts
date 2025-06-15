@@ -6,10 +6,16 @@ export async function GET(
 ) {
     try {
         const { id } = params;
+        const { searchParams } = new URL(request.url);
 
         // Construct backend URL using environment variable
         const baseUrl = process.env.FASTAPI_URL || 'http://localhost:8000';
         const backendUrl = new URL(`${baseUrl}/api/v1/blocks/${id}`);
+
+        // Forward query parameters (including branch parameter)
+        searchParams.forEach((value, key) => {
+            backendUrl.searchParams.append(key, value);
+        });
 
         // Proxy request to backend
         const response = await fetch(backendUrl.toString(), {
