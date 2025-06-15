@@ -1,4 +1,5 @@
 import { MemoryBlockType } from '@/data/models/memoryBlockType';
+import type { Base_userMetadata } from './base_user';
 import type { ProjectMetadata } from './project';
 import type { TaskMetadata } from './task';
 import type { DocMetadata } from './doc';

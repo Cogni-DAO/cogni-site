@@ -81,8 +81,8 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get all memory blocks
-         * @description Retrieves memory blocks from specified Dolt branch. Defaults to 'main' branch.
+         * Get all memory blocks with branch context
+         * @description Retrieves memory blocks from specified Dolt branch with active branch context. Defaults to 'main' branch.
          */
         get: operations["get_all_blocks_api_v1_blocks_get"];
         put?: never;
@@ -105,8 +105,8 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get a specific memory block by ID
-         * @description Retrieves a specific memory block by its unique identifier from specified Dolt branch.
+         * Get a specific memory block by ID with branch context
+         * @description Retrieves a specific memory block by its unique identifier from specified Dolt branch with active branch context.
          */
         get: operations["get_block_api_v1_blocks__block_id__get"];
         put?: never;
@@ -318,8 +318,48 @@ export interface components {
             created_at?: string;
         };
         /**
+         * BlocksResponse
+         * @description Enhanced response for blocks endpoints that includes branch context.
+         *     Uses proper MemoryBlock typing for frontend TypeScript generation.
+         */
+        BlocksResponse: {
+            /**
+             * Active Branch
+             * @description Currently active Dolt branch for this operation
+             */
+            active_branch: string;
+            /**
+             * Requested Branch
+             * @description Branch requested by client (may differ from active_branch for read operations)
+             */
+            requested_branch?: string | null;
+            /**
+             * Timestamp
+             * @description UTC ISO timestamp when the operation was performed
+             */
+            timestamp: string;
+            /**
+             * Blocks
+             * @description List of memory blocks from the requested branch
+             */
+            blocks: components["schemas"]["MemoryBlock"][];
+            /**
+             * Total Count
+             * @description Total number of blocks returned
+             */
+            total_count: number;
+            /**
+             * Filters Applied
+             * @description Summary of filters applied (type, case_insensitive, etc.)
+             */
+            filters_applied?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        /**
          * BranchesResponse
          * @description Enhanced response for branches endpoint that includes current context.
+         *     Uses proper DoltBranchInfo typing for frontend TypeScript generation.
          */
         BranchesResponse: {
             /**
@@ -334,17 +374,14 @@ export interface components {
             requested_branch?: string | null;
             /**
              * Timestamp
-             * Format: date-time
-             * @description Timestamp when the operation was performed
+             * @description UTC ISO timestamp when the operation was performed
              */
-            timestamp?: string;
+            timestamp: string;
             /**
              * Branches
              * @description List of all available Dolt branches with metadata
              */
-            branches: {
-                [key: string]: unknown;
-            }[];
+            branches: components["schemas"]["DoltBranchInfo"][];
             /**
              * Total Branches
              * @description Total number of branches available
@@ -454,6 +491,58 @@ export interface components {
              * @default agent
              */
             created_by: string | null;
+        };
+        /**
+         * DoltBranchInfo
+         * @description Information about a single Dolt branch.
+         */
+        DoltBranchInfo: {
+            /**
+             * Name
+             * @description Branch name
+             */
+            name: string;
+            /**
+             * Hash
+             * @description Latest commit hash
+             */
+            hash: string;
+            /**
+             * Latest Committer
+             * @description Name of the latest committer
+             */
+            latest_committer: string;
+            /**
+             * Latest Committer Email
+             * @description Email of the latest committer
+             */
+            latest_committer_email: string;
+            /**
+             * Latest Commit Date
+             * Format: date-time
+             * @description Date of the latest commit
+             */
+            latest_commit_date: string;
+            /**
+             * Latest Commit Message
+             * @description Message of the latest commit
+             */
+            latest_commit_message: string;
+            /**
+             * Remote
+             * @description Remote name (empty if local)
+             */
+            remote: string;
+            /**
+             * Branch
+             * @description Remote branch name (empty if local)
+             */
+            branch: string;
+            /**
+             * Dirty
+             * @description Whether the branch has uncommitted changes
+             */
+            dirty: boolean;
         };
         /**
          * ErrorResponse
@@ -597,6 +686,30 @@ export interface components {
              */
             embedding?: number[] | null;
         };
+        /**
+         * SingleBlockResponse
+         * @description Enhanced response for single block retrieval with branch context.
+         *     Uses proper MemoryBlock typing for frontend TypeScript generation.
+         */
+        SingleBlockResponse: {
+            /**
+             * Active Branch
+             * @description Currently active Dolt branch for this operation
+             */
+            active_branch: string;
+            /**
+             * Requested Branch
+             * @description Branch requested by client (may differ from active_branch for read operations)
+             */
+            requested_branch?: string | null;
+            /**
+             * Timestamp
+             * @description UTC ISO timestamp when the operation was performed
+             */
+            timestamp: string;
+            /** @description The requested memory block */
+            block: components["schemas"]["MemoryBlock"];
+        };
         /** ValidationError */
         ValidationError: {
             /** Location */
@@ -712,7 +825,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["MemoryBlock"][];
+                    "application/json": components["schemas"]["BlocksResponse"];
                 };
             };
             /** @description Invalid branch name format */
@@ -815,7 +928,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["MemoryBlock"];
+                    "application/json": components["schemas"]["SingleBlockResponse"];
                 };
             };
             /** @description Invalid branch name format */

@@ -6,22 +6,24 @@
  * OpenAPI spec version: 0.1.0
  */
 import type {
+  BlocksResponse,
   CreateMemoryBlockInput,
   ErrorResponse,
   GetAllBlocksApiV1BlocksGetParams,
   GetBlockApiV1BlocksBlockIdGetParams,
   HTTPValidationError,
-  MemoryBlock
+  MemoryBlock,
+  SingleBlockResponse
 } from './models';
 
 
 
 /**
- * Retrieves memory blocks from specified Dolt branch. Defaults to 'main' branch.
- * @summary Get all memory blocks
+ * Retrieves memory blocks from specified Dolt branch with active branch context. Defaults to 'main' branch.
+ * @summary Get all memory blocks with branch context
  */
 export type getAllBlocksApiV1BlocksGetResponse200 = {
-  data: MemoryBlock[]
+  data: BlocksResponse
   status: 200
 }
 
@@ -122,11 +124,11 @@ export const createBlockApiV1BlocksPost = async (createMemoryBlockInput: CreateM
 
 
 /**
- * Retrieves a specific memory block by its unique identifier from specified Dolt branch.
- * @summary Get a specific memory block by ID
+ * Retrieves a specific memory block by its unique identifier from specified Dolt branch with active branch context.
+ * @summary Get a specific memory block by ID with branch context
  */
 export type getBlockApiV1BlocksBlockIdGetResponse200 = {
-  data: MemoryBlock
+  data: SingleBlockResponse
   status: 200
 }
 

@@ -6,20 +6,21 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { BranchesResponseRequestedBranch } from './branchesResponseRequestedBranch';
-import type { BranchesResponseBranchesItem } from './branchesResponseBranchesItem';
+import type { DoltBranchInfo } from './doltBranchInfo';
 
 /**
  * Enhanced response for branches endpoint that includes current context.
+Uses proper DoltBranchInfo typing for frontend TypeScript generation.
  */
 export interface BranchesResponse {
   /** Currently active Dolt branch for this operation */
   active_branch: string;
   /** Branch requested by client (may differ from active_branch for read operations) */
   requested_branch?: BranchesResponseRequestedBranch;
-  /** Timestamp when the operation was performed */
-  timestamp?: string;
+  /** UTC ISO timestamp when the operation was performed */
+  timestamp: string;
   /** List of all available Dolt branches with metadata */
-  branches: BranchesResponseBranchesItem[];
+  branches: DoltBranchInfo[];
   /** Total number of branches available */
   total_branches: number;
 }
