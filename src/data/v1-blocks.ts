@@ -6,35 +6,38 @@
  * OpenAPI spec version: 0.1.0
  */
 import type {
+  BlocksResponse,
   CreateMemoryBlockInput,
   ErrorResponse,
   GetAllBlocksApiV1BlocksGetParams,
+  GetBlockApiV1BlocksBlockIdGetParams,
   HTTPValidationError,
-  MemoryBlock
+  MemoryBlock,
+  SingleBlockResponse
 } from './models';
 
 
 
 /**
- * Retrieves memory blocks currently stored in the system. Can be filtered by block type.
- * @summary Get all memory blocks
+ * Retrieves memory blocks from specified Dolt branch with active branch context. Defaults to 'main' branch.
+ * @summary Get all memory blocks with branch context
  */
 export type getAllBlocksApiV1BlocksGetResponse200 = {
-  data: MemoryBlock[]
+  data: BlocksResponse
   status: 200
+}
+
+export type getAllBlocksApiV1BlocksGetResponse400 = {
+  data: ErrorResponse
+  status: 400
 }
 
 export type getAllBlocksApiV1BlocksGetResponse422 = {
   data: HTTPValidationError
   status: 422
 }
-
-export type getAllBlocksApiV1BlocksGetResponse500 = {
-  data: ErrorResponse
-  status: 500
-}
     
-export type getAllBlocksApiV1BlocksGetResponseComposite = getAllBlocksApiV1BlocksGetResponse200 | getAllBlocksApiV1BlocksGetResponse422 | getAllBlocksApiV1BlocksGetResponse500;
+export type getAllBlocksApiV1BlocksGetResponseComposite = getAllBlocksApiV1BlocksGetResponse200 | getAllBlocksApiV1BlocksGetResponse400 | getAllBlocksApiV1BlocksGetResponse422;
     
 export type getAllBlocksApiV1BlocksGetResponse = getAllBlocksApiV1BlocksGetResponseComposite & {
   headers: Headers;
@@ -121,17 +124,17 @@ export const createBlockApiV1BlocksPost = async (createMemoryBlockInput: CreateM
 
 
 /**
- * Retrieves a specific memory block by its unique identifier.
- * @summary Get a specific memory block by ID
+ * Retrieves a specific memory block by its unique identifier from specified Dolt branch with active branch context.
+ * @summary Get a specific memory block by ID with branch context
  */
 export type getBlockApiV1BlocksBlockIdGetResponse200 = {
-  data: MemoryBlock
+  data: SingleBlockResponse
   status: 200
 }
 
-export type getBlockApiV1BlocksBlockIdGetResponse404 = {
+export type getBlockApiV1BlocksBlockIdGetResponse400 = {
   data: ErrorResponse
-  status: 404
+  status: 400
 }
 
 export type getBlockApiV1BlocksBlockIdGetResponse422 = {
@@ -139,23 +142,32 @@ export type getBlockApiV1BlocksBlockIdGetResponse422 = {
   status: 422
 }
     
-export type getBlockApiV1BlocksBlockIdGetResponseComposite = getBlockApiV1BlocksBlockIdGetResponse200 | getBlockApiV1BlocksBlockIdGetResponse404 | getBlockApiV1BlocksBlockIdGetResponse422;
+export type getBlockApiV1BlocksBlockIdGetResponseComposite = getBlockApiV1BlocksBlockIdGetResponse200 | getBlockApiV1BlocksBlockIdGetResponse400 | getBlockApiV1BlocksBlockIdGetResponse422;
     
 export type getBlockApiV1BlocksBlockIdGetResponse = getBlockApiV1BlocksBlockIdGetResponseComposite & {
   headers: Headers;
 }
 
-export const getGetBlockApiV1BlocksBlockIdGetUrl = (blockId: string,) => {
+export const getGetBlockApiV1BlocksBlockIdGetUrl = (blockId: string,
+    params?: GetBlockApiV1BlocksBlockIdGetParams,) => {
+  const normalizedParams = new URLSearchParams();
 
+  Object.entries(params || {}).forEach(([key, value]) => {
+    
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
 
-  
+  const stringifiedParams = normalizedParams.toString();
 
-  return `/api/v1/blocks/${blockId}`
+  return stringifiedParams.length > 0 ? `/api/v1/blocks/${blockId}?${stringifiedParams}` : `/api/v1/blocks/${blockId}`
 }
 
-export const getBlockApiV1BlocksBlockIdGet = async (blockId: string, options?: RequestInit): Promise<getBlockApiV1BlocksBlockIdGetResponse> => {
+export const getBlockApiV1BlocksBlockIdGet = async (blockId: string,
+    params?: GetBlockApiV1BlocksBlockIdGetParams, options?: RequestInit): Promise<getBlockApiV1BlocksBlockIdGetResponse> => {
   
-  const res = await fetch(getGetBlockApiV1BlocksBlockIdGetUrl(blockId),
+  const res = await fetch(getGetBlockApiV1BlocksBlockIdGetUrl(blockId,params),
   {      
     ...options,
     method: 'GET'

@@ -19,6 +19,7 @@ interface GraphVisualizationProps {
   isLoading?: boolean;
   isError?: boolean;
   errorMessage?: string;
+  branch?: string;
 }
 
 // Layout presets for user selection
@@ -88,7 +89,8 @@ const GraphVisualization = ({
   centerId,
   isLoading = false,
   isError = false,
-  errorMessage = ''
+  errorMessage = '',
+  branch
 }: GraphVisualizationProps) => {
   const cyRef = useRef<any>(null); // eslint-disable-line @typescript-eslint/no-explicit-any
   const selectedNodeRef = useRef<string | null>(null);
@@ -199,9 +201,9 @@ const GraphVisualization = ({
         </div>
 
         {/* Graph Container */}
-      <div style={{ width: '100%', height: '900px', border: '1px solid #ccc' }}>
-        <div className="flex items-center justify-center h-full text-muted-foreground">
-          No blocks or links to display
+        <div style={{ width: '100%', height: '900px', border: '1px solid #ccc' }}>
+          <div className="flex items-center justify-center h-full text-muted-foreground">
+            No blocks or links to display
           </div>
         </div>
       </div>
@@ -529,13 +531,13 @@ const GraphVisualization = ({
         )}
 
         {!isLoading && !isError && elements.length > 0 && (
-        <CytoscapeComponent
-          elements={elements}
-          style={{ width: '100%', height: '100%' }}
-          stylesheet={stylesheet}
-          layout={layout}
-          cy={handleCy}
-        />
+          <CytoscapeComponent
+            elements={elements}
+            style={{ width: '100%', height: '100%' }}
+            stylesheet={stylesheet}
+            layout={layout}
+            cy={handleCy}
+          />
         )}
 
         {/* Legend */}
@@ -574,6 +576,7 @@ const GraphVisualization = ({
       <WorkItemSidePanel
         blockId={selectedNodeId}
         onClose={handleCloseSidePanel}
+        branch={branch}
       />
     </div>
   );

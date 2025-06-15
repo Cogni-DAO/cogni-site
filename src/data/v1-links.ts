@@ -13,11 +13,70 @@ import type {
   DeleteLinkApiV1LinksDeleteParams,
   DeleteLinksForBlockApiV1LinksBlockBlockIdDelete200,
   ErrorResponse,
+  GetAllLinksApiV1LinksGetParams,
   GetLinksFromApiV1LinksFromBlockIdGetParams,
   GetLinksToApiV1LinksToBlockIdGetParams,
   HTTPValidationError
 } from './models';
 
+
+
+/**
+ * Retrieves all links in the system, with optional filtering by relation type.
+ * @summary Get all links
+ */
+export type getAllLinksApiV1LinksGetResponse200 = {
+  data: BlockLink[]
+  status: 200
+}
+
+export type getAllLinksApiV1LinksGetResponse422 = {
+  data: HTTPValidationError
+  status: 422
+}
+
+export type getAllLinksApiV1LinksGetResponse500 = {
+  data: ErrorResponse
+  status: 500
+}
+    
+export type getAllLinksApiV1LinksGetResponseComposite = getAllLinksApiV1LinksGetResponse200 | getAllLinksApiV1LinksGetResponse422 | getAllLinksApiV1LinksGetResponse500;
+    
+export type getAllLinksApiV1LinksGetResponse = getAllLinksApiV1LinksGetResponseComposite & {
+  headers: Headers;
+}
+
+export const getGetAllLinksApiV1LinksGetUrl = (params?: GetAllLinksApiV1LinksGetParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/v1/links?${stringifiedParams}` : `/api/v1/links`
+}
+
+export const getAllLinksApiV1LinksGet = async (params?: GetAllLinksApiV1LinksGetParams, options?: RequestInit): Promise<getAllLinksApiV1LinksGetResponse> => {
+  
+  const res = await fetch(getGetAllLinksApiV1LinksGetUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
+  const data: getAllLinksApiV1LinksGetResponse['data'] = body ? JSON.parse(body) : {}
+
+  return { data, status: res.status, headers: res.headers } as getAllLinksApiV1LinksGetResponse
+}
 
 
 /**

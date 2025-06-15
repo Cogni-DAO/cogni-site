@@ -18,7 +18,7 @@ const KnowledgeRenderer: React.FC<KnowledgeRendererProps> = ({ block }) => {
     const knowledgeMeta = narrowMetadata(MemoryBlockType.knowledge, block.metadata);
     return (
       <h3 className="text-lg font-serif font-semibold">
-        {knowledgeMeta?.domain || knowledgeMeta?.validity || block.text?.substring(0, 50) || 'Untitled Knowledge'}
+        {knowledgeMeta?.title || knowledgeMeta?.subject || block.text?.substring(0, 50) || 'Untitled Knowledge'}
       </h3>
     );
   };

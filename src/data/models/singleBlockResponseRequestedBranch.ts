@@ -7,6 +7,6 @@
  */
 
 /**
- * Custom metadata based on block type (reconstructed from block_properties)
+ * Branch requested by client (may differ from active_branch for read operations)
  */
-export type MemoryBlockMetadata = { [key: string]: unknown };
+export type SingleBlockResponseRequestedBranch = string | null;

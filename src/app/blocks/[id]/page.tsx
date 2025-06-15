@@ -1,6 +1,6 @@
 'use client';
 
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useBlock } from '@/hooks/useBlock';
 import { BlockRenderer } from '@/components/BlockRenderer';
 import { Button } from '@/components/ui/button';
@@ -9,7 +9,9 @@ import { ChevronLeft } from 'lucide-react';
 export default function BlockDetailPage() {
     const router = useRouter();
     const { id } = useParams() as { id: string };
-    const { block, isLoading, isError } = useBlock(id);
+    const searchParams = useSearchParams();
+    const branch = searchParams.get('branch') || undefined;
+    const { block, isLoading, isError } = useBlock(id, branch);
 
     return (
         <div className="container mx-auto px-4 py-8 max-w-4xl">
