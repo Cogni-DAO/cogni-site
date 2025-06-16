@@ -38,12 +38,16 @@ const API_URL = '/api/v1';
 /**
  * Fetches memory blocks from the API with validation
  * @param branch - Optional branch name to fetch blocks from (defaults to 'main')
+ * @param namespace - Optional namespace to filter blocks (defaults to 'legacy')
  * @returns Promise resolving to a validated array of memory blocks
  */
-export async function fetchBlocks(branch?: string): Promise<BlocksResponse> {
+export async function fetchBlocks(branch?: string, namespace?: string): Promise<BlocksResponse> {
     const url = new URL(`${API_URL}/blocks`, window.location.origin);
     if (branch) {
         url.searchParams.set('branch', branch);
+    }
+    if (namespace) {
+        url.searchParams.set('namespace', namespace);
     }
 
     const response = await fetch(url.toString());
@@ -69,12 +73,16 @@ export async function fetchBlocks(branch?: string): Promise<BlocksResponse> {
  * Fetches a single memory block by ID
  * @param id - The ID of the block to fetch
  * @param branch - Optional branch name to fetch block from (defaults to 'main')
+ * @param namespace - Optional namespace to filter blocks (defaults to 'legacy')
  * @returns Promise resolving to a validated memory block
  */
-export async function fetchBlockById(id: string, branch?: string): Promise<MemoryBlock> {
+export async function fetchBlockById(id: string, branch?: string, namespace?: string): Promise<MemoryBlock> {
     const url = new URL(`${API_URL}/blocks/${id}`, window.location.origin);
     if (branch) {
         url.searchParams.set('branch', branch);
+    }
+    if (namespace) {
+        url.searchParams.set('namespace', namespace);
     }
 
     const response = await fetch(url.toString());
@@ -134,9 +142,10 @@ export async function createBlock(block: Partial<MemoryBlock>): Promise<MemoryBl
  * Fetches multiple memory blocks by their IDs in a single request
  * @param ids - Array of block IDs to fetch
  * @param branch - Optional branch name to fetch blocks from (defaults to 'main')
+ * @param namespace - Optional namespace to filter blocks (defaults to 'legacy')
  * @returns Promise resolving to a map of block ID to block data
  */
-export async function fetchBlocksByIds(ids: string[], branch?: string): Promise<Map<string, MemoryBlock>> {
+export async function fetchBlocksByIds(ids: string[], branch?: string, namespace?: string): Promise<Map<string, MemoryBlock>> {
     if (ids.length === 0) {
         return new Map();
     }
@@ -150,7 +159,7 @@ export async function fetchBlocksByIds(ids: string[], branch?: string): Promise<
 
     // For now, we'll fetch all blocks and filter client-side
     // This can be optimized with a backend endpoint that accepts multiple IDs
-    const allBlocks = await fetchBlocks(branch);
+    const allBlocks = await fetchBlocks(branch, namespace);
 
     const blockMap = new Map<string, MemoryBlock>();
     const idsSet = new Set(uniqueIds);
