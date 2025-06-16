@@ -15,6 +15,7 @@ export * from './blockLinkRelation';
 export * from './blocksResponse';
 export * from './blocksResponseFiltersApplied';
 export * from './blocksResponseFiltersAppliedAnyOf';
+export * from './blocksResponseNamespaceContext';
 export * from './blocksResponseRequestedBranch';
 export * from './branchesResponse';
 export * from './branchesResponseBranchesItem';

@@ -6,13 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type GetBlockApiV1BlocksBlockIdGetParams = {
 /**
- * Dolt branch to read from (default: 'main')
+ * Active namespace used for filtering (when namespace filter applied)
  */
-branch?: string;
-/**
- * Filter by namespace (default: 'legacy')
- */
-namespace?: string;
-};
+export type BlocksResponseNamespaceContext = string | null;

@@ -8,6 +8,6 @@
 import type { BlocksResponseFiltersAppliedAnyOf } from './blocksResponseFiltersAppliedAnyOf';
 
 /**
- * Summary of filters applied (type, case_insensitive, etc.)
+ * Summary of filters applied (type, case_insensitive, namespace, etc.)
  */
 export type BlocksResponseFiltersApplied = BlocksResponseFiltersAppliedAnyOf | null;

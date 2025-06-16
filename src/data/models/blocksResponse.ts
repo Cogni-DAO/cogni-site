@@ -8,6 +8,7 @@
 import type { BlocksResponseRequestedBranch } from './blocksResponseRequestedBranch';
 import type { MemoryBlock } from './memoryBlock';
 import type { BlocksResponseFiltersApplied } from './blocksResponseFiltersApplied';
+import type { BlocksResponseNamespaceContext } from './blocksResponseNamespaceContext';
 
 /**
  * Enhanced response for blocks endpoints that includes branch context.
@@ -24,6 +25,8 @@ export interface BlocksResponse {
   blocks: MemoryBlock[];
   /** Total number of blocks returned */
   total_count: number;
-  /** Summary of filters applied (type, case_insensitive, etc.) */
+  /** Summary of filters applied (type, case_insensitive, namespace, etc.) */
   filters_applied?: BlocksResponseFiltersApplied;
+  /** Active namespace used for filtering (when namespace filter applied) */
+  namespace_context?: BlocksResponseNamespaceContext;
 }

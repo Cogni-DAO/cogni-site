@@ -19,4 +19,8 @@ case_insensitive?: boolean;
  * Dolt branch to read from (default: 'main')
  */
 branch?: string;
+/**
+ * Filter by namespace (default: 'legacy')
+ */
+namespace?: string;
 };

@@ -20,6 +20,8 @@ export interface CreateMemoryBlockInput {
   type: string;
   /** Primary content of the memory block */
   text: string;
+  /** Namespace ID for multi-tenant organization (defaults to 'legacy') */
+  namespace_id?: string;
   /** Initial state of the block */
   state?: CreateMemoryBlockInputState;
   /** Visibility level of the block */

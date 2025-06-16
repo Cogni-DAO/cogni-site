@@ -350,11 +350,16 @@ export interface components {
             total_count: number;
             /**
              * Filters Applied
-             * @description Summary of filters applied (type, case_insensitive, etc.)
+             * @description Summary of filters applied (type, case_insensitive, namespace, etc.)
              */
             filters_applied?: {
                 [key: string]: unknown;
             } | null;
+            /**
+             * Namespace Context
+             * @description Active namespace used for filtering (when namespace filter applied)
+             */
+            namespace_context?: string | null;
         };
         /**
          * BranchesResponse
@@ -454,6 +459,12 @@ export interface components {
              * @description Primary content of the memory block
              */
             text: string;
+            /**
+             * Namespace Id
+             * @description Namespace ID for multi-tenant organization (defaults to 'legacy')
+             * @default legacy
+             */
+            namespace_id: string;
             /**
              * State
              * @description Initial state of the block
@@ -597,6 +608,12 @@ export interface components {
              * @description Globally unique ID for this memory block
              */
             id?: string;
+            /**
+             * Namespace Id
+             * @description Foreign key to namespaces.id for multi-tenant organization
+             * @default legacy
+             */
+            namespace_id: string;
             /**
              * Type
              * @description Block type used to determine structure and relationships
@@ -812,6 +829,8 @@ export interface operations {
                 case_insensitive?: boolean;
                 /** @description Dolt branch to read from (default: 'main') */
                 branch?: string;
+                /** @description Filter by namespace (default: 'legacy') */
+                namespace?: string;
             };
             header?: never;
             path?: never;
@@ -913,6 +932,8 @@ export interface operations {
             query?: {
                 /** @description Dolt branch to read from (default: 'main') */
                 branch?: string;
+                /** @description Filter by namespace (default: 'legacy') */
+                namespace?: string;
             };
             header?: never;
             path: {
