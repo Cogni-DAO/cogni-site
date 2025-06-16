@@ -35,12 +35,16 @@ const API_URL = '/api/v1';
 /**
  * Fetches all block links from the API with validation
  * @param branch - Optional branch name to fetch links from (defaults to 'main')
+ * @param namespace - Optional namespace to filter links (defaults to 'legacy')
  * @returns Promise resolving to a validated array of block links
  */
-export async function fetchLinks(branch?: string): Promise<LinksResponse> {
+export async function fetchLinks(branch?: string, namespace?: string): Promise<LinksResponse> {
     const url = new URL(`${API_URL}/links`, window.location.origin);
     if (branch) {
         url.searchParams.set('branch', branch);
+    }
+    if (namespace) {
+        url.searchParams.set('namespace', namespace);
     }
 
     const response = await fetch(url.toString());

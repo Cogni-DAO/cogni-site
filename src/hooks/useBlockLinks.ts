@@ -11,10 +11,15 @@ import type { BlockLink } from '@/data/models/blockLink';
 /**
  * Hook for fetching all block links
  * @param branch - Optional branch name to fetch links from (defaults to 'main')
+ * @param namespace - Optional namespace to filter links (defaults to 'legacy')
  */
-export function useLinks(branch?: string) {
-    const key = branch ? ['links', branch] : 'links';
-    const { data, error, isLoading, mutate } = useSWR(key, () => fetchLinks(branch));
+export function useLinks(branch?: string, namespace?: string) {
+    const key = [
+        'links',
+        ...(branch ? [branch] : []),
+        ...(namespace ? [namespace] : [])
+    ];
+    const { data, error, isLoading, mutate } = useSWR(key, () => fetchLinks(branch, namespace));
 
     return {
         links: data as BlockLink[] | undefined,

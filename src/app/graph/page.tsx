@@ -5,13 +5,15 @@ import { useBlocks } from '@/hooks/useBlocks';
 import { useLinks } from '@/hooks/useBlockLinks';
 import GraphVisualization from '@/components/graph/GraphVisualization';
 import { BranchSelector } from '@/components/graph/BranchSelector';
+import { NamespaceSelector } from '@/components/graph/NamespaceSelector';
 import { Button } from '@/components/ui/button';
 import { RefreshCw } from 'lucide-react';
 
 const GraphPage = () => {
   const [selectedBranch, setSelectedBranch] = useState<string>();
-  const { blocks, isLoading: blocksLoading, isError: blocksError, mutate: mutateBlocks } = useBlocks(selectedBranch);
-  const { links, isLoading: linksLoading, isError: linksError, mutate: mutateLinks } = useLinks(selectedBranch);
+  const [selectedNamespace, setSelectedNamespace] = useState<string>();
+  const { blocks, isLoading: blocksLoading, isError: blocksError, mutate: mutateBlocks } = useBlocks(selectedBranch, selectedNamespace);
+  const { links, isLoading: linksLoading, isError: linksError, mutate: mutateLinks } = useLinks(selectedBranch, selectedNamespace);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const isLoading = blocksLoading || linksLoading;
@@ -42,6 +44,10 @@ const GraphPage = () => {
     setSelectedBranch(branch);
   };
 
+  const handleNamespaceChange = (namespace: string) => {
+    setSelectedNamespace(namespace);
+  };
+
   return (
     <div className="p-4">
       <div className="flex items-center justify-between mb-4">
@@ -52,6 +58,10 @@ const GraphPage = () => {
           <BranchSelector
             selectedBranch={selectedBranch}
             onBranchChange={handleBranchChange}
+          />
+          <NamespaceSelector
+            selectedNamespace={selectedNamespace}
+            onNamespaceChange={handleNamespaceChange}
           />
           <Button
             onClick={handleRefresh}
