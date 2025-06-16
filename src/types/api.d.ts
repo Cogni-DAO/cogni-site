@@ -137,6 +137,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/namespaces": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get all available namespaces with context
+         * @description Retrieves list of all available namespaces with their metadata including creation information, ownership, and active status.
+         */
+        get: operations["get_all_namespaces_api_v1_namespaces_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/schemas/{block_type}/{version}": {
         parameters: {
             query?: never;
@@ -704,6 +724,81 @@ export interface components {
             embedding?: number[] | null;
         };
         /**
+         * NamespaceInfo
+         * @description Information about a single namespace.
+         */
+        NamespaceInfo: {
+            /**
+             * Id
+             * @description Namespace ID
+             */
+            id: string;
+            /**
+             * Name
+             * @description Human-readable namespace name
+             */
+            name: string;
+            /**
+             * Slug
+             * @description URL-safe namespace identifier
+             */
+            slug: string;
+            /**
+             * Owner Id
+             * @description ID of the namespace owner
+             */
+            owner_id: string;
+            /**
+             * Created At
+             * Format: date-time
+             * @description When namespace was created
+             */
+            created_at: string;
+            /**
+             * Description
+             * @description Optional namespace description
+             */
+            description?: string | null;
+            /**
+             * Is Active
+             * @description Whether the namespace is active
+             * @default true
+             */
+            is_active: boolean;
+        };
+        /**
+         * NamespacesResponse
+         * @description Enhanced response for namespaces endpoint that includes current context.
+         *     Uses proper NamespaceInfo typing for frontend TypeScript generation.
+         */
+        NamespacesResponse: {
+            /**
+             * Active Branch
+             * @description Currently active Dolt branch for this operation
+             */
+            active_branch: string;
+            /**
+             * Requested Branch
+             * @description Branch requested by client (may differ from active_branch for read operations)
+             */
+            requested_branch?: string | null;
+            /**
+             * Timestamp
+             * @description UTC ISO timestamp when the operation was performed
+             */
+            timestamp: string;
+            /**
+             * Namespaces
+             * @description List of all available namespaces with metadata
+             */
+            namespaces: components["schemas"]["NamespaceInfo"][];
+            /**
+             * Total Count
+             * @description Total number of namespaces available
+             */
+            total_count: number;
+        };
+        /**
          * SingleBlockResponse
          * @description Enhanced response for single block retrieval with branch context.
          *     Uses proper MemoryBlock typing for frontend TypeScript generation.
@@ -1006,6 +1101,35 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["BranchesResponse"];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_all_namespaces_api_v1_namespaces_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NamespacesResponse"];
                 };
             };
             /** @description Internal server error */
