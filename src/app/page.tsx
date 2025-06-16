@@ -2,17 +2,18 @@
 
 // Update this page (the content is just a fallback if you fail to update the page)
 
-import React from 'react'
+import React, { Suspense } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { ArrowRight, BookOpen, Users, Star } from 'lucide-react'
 import Chat from '@/components/chat'
-import { useBlocks } from '@/hooks/useBlocks'
+import { useBlocks, useNamespace } from '@/hooks'
 import MemoryBlockListItem from '@/components/MemoryBlockListItem'
 
-export default function Home() {
-  const { blocks, isLoading } = useBlocks()
+function HomeContent() {
+  const namespace = useNamespace()
+  const { blocks, isLoading } = useBlocks(undefined, namespace)
 
   // Just take the first 6 blocks for the featured section
   const featuredBlocks = blocks?.slice(0, 6) || []
@@ -114,5 +115,22 @@ export default function Home() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={
+      <div className="container mx-auto px-4 py-8 max-w-7xl">
+        <div className="py-10 md:py-16 text-center">
+          <div className="animate-pulse">
+            <div className="h-12 bg-muted rounded w-1/2 mx-auto mb-4"></div>
+            <div className="h-6 bg-muted rounded w-3/4 mx-auto mb-8"></div>
+          </div>
+        </div>
+      </div>
+    }>
+      <HomeContent />
+    </Suspense>
   )
 }
