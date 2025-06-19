@@ -14,7 +14,7 @@ const GraphPage = () => {
   const [selectedBranch, setSelectedBranch] = useState<string>();
   const [selectedNamespace, setSelectedNamespace] = useState<string>();
   const { blocks, isLoading: blocksLoading, isError: blocksError, mutate: mutateBlocks } = useBlocks(selectedBranch, selectedNamespace);
-  const { links, isLoading: linksLoading, isError: linksError, mutate: mutateLinks } = useLinks(selectedBranch, selectedNamespace);
+  const { links, isLoading: linksLoading, isError: linksError, mutate: mutateLinks } = useLinks(selectedBranch, selectedNamespace, undefined, 1000);
   const { mutate: mutateBranches } = useBranches();
   const [isRefreshing, setIsRefreshing] = useState(false);
 
