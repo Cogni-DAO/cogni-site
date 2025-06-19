@@ -208,7 +208,7 @@ export interface paths {
         };
         /**
          * Get all links
-         * @description Retrieves all links in the system, with optional filtering by relation type.
+         * @description Retrieves all links in the system, with optional filtering by relation type. Max limit: 1000, default: 100
          */
         get: operations["get_all_links_api_v1_links_get"];
         put?: never;
@@ -236,7 +236,7 @@ export interface paths {
         };
         /**
          * Get links from a block
-         * @description Retrieves all links originating from a specific block, with optional filtering.
+         * @description Retrieves all links originating from a specific block, with optional filtering. Max limit: 1000
          */
         get: operations["get_links_from_api_v1_links_from__block_id__get"];
         put?: never;
@@ -256,7 +256,7 @@ export interface paths {
         };
         /**
          * Get links to a block
-         * @description Retrieves all links pointing to a specific block, with optional filtering.
+         * @description Retrieves all links pointing to a specific block, with optional filtering. Max limit: 1000
          */
         get: operations["get_links_to_api_v1_links_to__block_id__get"];
         put?: never;
@@ -799,6 +799,26 @@ export interface components {
             total_count: number;
         };
         /**
+         * PaginatedLinksResponse
+         * @description Response model for paginated links.
+         */
+        PaginatedLinksResponse: {
+            /** Links */
+            links: components["schemas"]["BlockLink"][];
+            /** Next Cursor */
+            next_cursor?: string | null;
+            /**
+             * Page Size
+             * @description Number of items in this page
+             */
+            page_size: number;
+            /**
+             * Total Available
+             * @description Total count (if cheaply computable)
+             */
+            total_available?: number | null;
+        };
+        /**
          * SingleBlockResponse
          * @description Enhanced response for single block retrieval with branch context.
          *     Uses proper MemoryBlock typing for frontend TypeScript generation.
@@ -1208,13 +1228,31 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful Response */
+            /** @description Complete page of results */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["BlockLink"][];
+                    "application/json": components["schemas"]["PaginatedLinksResponse"];
+                };
+            };
+            /** @description Partial results, more available via Link header */
+            206: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedLinksResponse"];
+                };
+            };
+            /** @description Bad Request - Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
             /** @description Validation Error */
@@ -1384,13 +1422,22 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful Response */
+            /** @description Complete page of results */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["BlockLink"][];
+                    "application/json": components["schemas"]["PaginatedLinksResponse"];
+                };
+            };
+            /** @description Partial results, more available */
+            206: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedLinksResponse"];
                 };
             };
             /** @description Bad Request - Invalid parameters */
@@ -1439,13 +1486,22 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful Response */
+            /** @description Complete page of results */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["BlockLink"][];
+                    "application/json": components["schemas"]["PaginatedLinksResponse"];
+                };
+            };
+            /** @description Partial results, more available */
+            206: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedLinksResponse"];
                 };
             };
             /** @description Bad Request - Invalid parameters */
