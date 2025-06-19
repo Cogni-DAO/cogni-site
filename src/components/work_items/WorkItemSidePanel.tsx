@@ -120,10 +120,11 @@ interface WorkItemSidePanelProps {
     blockId: string | null;
     onClose: () => void;
     branch?: string;
+    namespace?: string;
 }
 
-export function WorkItemSidePanel({ blockId, onClose, branch }: WorkItemSidePanelProps) {
-    const { block, isLoading, isError } = useBlock(blockId || '', branch);
+export function WorkItemSidePanel({ blockId, onClose, branch, namespace }: WorkItemSidePanelProps) {
+    const { block, isLoading, isError } = useBlock(blockId || '', branch, namespace);
     const { toast } = useToast();
     const [panelWidth, setPanelWidth] = useState(500);
     const [isResizing, setIsResizing] = useState(false);

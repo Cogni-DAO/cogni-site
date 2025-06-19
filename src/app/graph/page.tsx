@@ -85,6 +85,7 @@ const GraphPage = () => {
         isError={isError}
         errorMessage={String(blocksError || linksError || '')}
         branch={selectedBranch}
+        namespace={selectedNamespace}
       />
     </div>
   );

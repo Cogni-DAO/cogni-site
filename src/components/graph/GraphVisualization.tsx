@@ -20,6 +20,7 @@ interface GraphVisualizationProps {
   isError?: boolean;
   errorMessage?: string;
   branch?: string;
+  namespace?: string;
 }
 
 // Layout presets for user selection
@@ -90,7 +91,8 @@ const GraphVisualization = ({
   isLoading = false,
   isError = false,
   errorMessage = '',
-  branch
+  branch,
+  namespace
 }: GraphVisualizationProps) => {
   const cyRef = useRef<any>(null); // eslint-disable-line @typescript-eslint/no-explicit-any
   const selectedNodeRef = useRef<string | null>(null);
@@ -577,6 +579,7 @@ const GraphVisualization = ({
         blockId={selectedNodeId}
         onClose={handleCloseSidePanel}
         branch={branch}
+        namespace={namespace}
       />
     </div>
   );
