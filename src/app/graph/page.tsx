@@ -12,7 +12,7 @@ import { RefreshCw } from 'lucide-react';
 
 const GraphPage = () => {
   const [selectedBranch, setSelectedBranch] = useState<string>();
-  const [selectedNamespace, setSelectedNamespace] = useState<string>();
+  const [selectedNamespace, setSelectedNamespace] = useState<string>('ai-education');
   const { blocks, isLoading: blocksLoading, isError: blocksError, mutate: mutateBlocks } = useBlocks(selectedBranch, selectedNamespace);
   const { links, isLoading: linksLoading, isError: linksError, mutate: mutateLinks } = useLinks(selectedBranch, selectedNamespace, undefined, 1000);
   const { mutate: mutateBranches } = useBranches();
