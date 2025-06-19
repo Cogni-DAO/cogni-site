@@ -137,6 +137,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/namespaces": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get all available namespaces with context
+         * @description Retrieves list of all available namespaces with their metadata including creation information, ownership, and active status.
+         */
+        get: operations["get_all_namespaces_api_v1_namespaces_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/schemas/{block_type}/{version}": {
         parameters: {
             query?: never;
@@ -188,7 +208,7 @@ export interface paths {
         };
         /**
          * Get all links
-         * @description Retrieves all links in the system, with optional filtering by relation type.
+         * @description Retrieves all links in the system, with optional filtering by relation type. Max limit: 1000, default: 100
          */
         get: operations["get_all_links_api_v1_links_get"];
         put?: never;
@@ -216,7 +236,7 @@ export interface paths {
         };
         /**
          * Get links from a block
-         * @description Retrieves all links originating from a specific block, with optional filtering.
+         * @description Retrieves all links originating from a specific block, with optional filtering. Max limit: 1000
          */
         get: operations["get_links_from_api_v1_links_from__block_id__get"];
         put?: never;
@@ -236,7 +256,7 @@ export interface paths {
         };
         /**
          * Get links to a block
-         * @description Retrieves all links pointing to a specific block, with optional filtering.
+         * @description Retrieves all links pointing to a specific block, with optional filtering. Max limit: 1000
          */
         get: operations["get_links_to_api_v1_links_to__block_id__get"];
         put?: never;
@@ -350,11 +370,16 @@ export interface components {
             total_count: number;
             /**
              * Filters Applied
-             * @description Summary of filters applied (type, case_insensitive, etc.)
+             * @description Summary of filters applied (type, case_insensitive, namespace, etc.)
              */
             filters_applied?: {
                 [key: string]: unknown;
             } | null;
+            /**
+             * Namespace Context
+             * @description Active namespace used for filtering (when namespace filter applied)
+             */
+            namespace_context?: string | null;
         };
         /**
          * BranchesResponse
@@ -454,6 +479,12 @@ export interface components {
              * @description Primary content of the memory block
              */
             text: string;
+            /**
+             * Namespace Id
+             * @description Namespace ID for multi-tenant organization (defaults to 'legacy')
+             * @default legacy
+             */
+            namespace_id: string;
             /**
              * State
              * @description Initial state of the block
@@ -598,6 +629,12 @@ export interface components {
              */
             id?: string;
             /**
+             * Namespace Id
+             * @description Foreign key to namespaces.id for multi-tenant organization
+             * @default legacy
+             */
+            namespace_id: string;
+            /**
              * Type
              * @description Block type used to determine structure and relationships
              * @enum {string}
@@ -685,6 +722,101 @@ export interface components {
              * @description Optional vector embedding of the block's content
              */
             embedding?: number[] | null;
+        };
+        /**
+         * NamespaceInfo
+         * @description Information about a single namespace.
+         */
+        NamespaceInfo: {
+            /**
+             * Id
+             * @description Namespace ID
+             */
+            id: string;
+            /**
+             * Name
+             * @description Human-readable namespace name
+             */
+            name: string;
+            /**
+             * Slug
+             * @description URL-safe namespace identifier
+             */
+            slug: string;
+            /**
+             * Owner Id
+             * @description ID of the namespace owner
+             */
+            owner_id: string;
+            /**
+             * Created At
+             * Format: date-time
+             * @description When namespace was created
+             */
+            created_at: string;
+            /**
+             * Description
+             * @description Optional namespace description
+             */
+            description?: string | null;
+            /**
+             * Is Active
+             * @description Whether the namespace is active
+             * @default true
+             */
+            is_active: boolean;
+        };
+        /**
+         * NamespacesResponse
+         * @description Enhanced response for namespaces endpoint that includes current context.
+         *     Uses proper NamespaceInfo typing for frontend TypeScript generation.
+         */
+        NamespacesResponse: {
+            /**
+             * Active Branch
+             * @description Currently active Dolt branch for this operation
+             */
+            active_branch: string;
+            /**
+             * Requested Branch
+             * @description Branch requested by client (may differ from active_branch for read operations)
+             */
+            requested_branch?: string | null;
+            /**
+             * Timestamp
+             * @description UTC ISO timestamp when the operation was performed
+             */
+            timestamp: string;
+            /**
+             * Namespaces
+             * @description List of all available namespaces with metadata
+             */
+            namespaces: components["schemas"]["NamespaceInfo"][];
+            /**
+             * Total Count
+             * @description Total number of namespaces available
+             */
+            total_count: number;
+        };
+        /**
+         * PaginatedLinksResponse
+         * @description Response model for paginated links.
+         */
+        PaginatedLinksResponse: {
+            /** Links */
+            links: components["schemas"]["BlockLink"][];
+            /** Next Cursor */
+            next_cursor?: string | null;
+            /**
+             * Page Size
+             * @description Number of items in this page
+             */
+            page_size: number;
+            /**
+             * Total Available
+             * @description Total count (if cheaply computable)
+             */
+            total_available?: number | null;
         };
         /**
          * SingleBlockResponse
@@ -812,6 +944,8 @@ export interface operations {
                 case_insensitive?: boolean;
                 /** @description Dolt branch to read from (default: 'main') */
                 branch?: string;
+                /** @description Filter by namespace (default: 'legacy') */
+                namespace?: string;
             };
             header?: never;
             path?: never;
@@ -913,6 +1047,8 @@ export interface operations {
             query?: {
                 /** @description Dolt branch to read from (default: 'main') */
                 branch?: string;
+                /** @description Filter by namespace (default: 'legacy') */
+                namespace?: string;
             };
             header?: never;
             path: {
@@ -998,6 +1134,35 @@ export interface operations {
             };
         };
     };
+    get_all_namespaces_api_v1_namespaces_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NamespacesResponse"];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     get_schema_api_v1_schemas__block_type___version__get: {
         parameters: {
             query?: never;
@@ -1063,13 +1228,31 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful Response */
+            /** @description Complete page of results */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["BlockLink"][];
+                    "application/json": components["schemas"]["PaginatedLinksResponse"];
+                };
+            };
+            /** @description Partial results, more available via Link header */
+            206: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedLinksResponse"];
+                };
+            };
+            /** @description Bad Request - Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
             /** @description Validation Error */
@@ -1239,13 +1422,22 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful Response */
+            /** @description Complete page of results */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["BlockLink"][];
+                    "application/json": components["schemas"]["PaginatedLinksResponse"];
+                };
+            };
+            /** @description Partial results, more available */
+            206: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedLinksResponse"];
                 };
             };
             /** @description Bad Request - Invalid parameters */
@@ -1294,13 +1486,22 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful Response */
+            /** @description Complete page of results */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["BlockLink"][];
+                    "application/json": components["schemas"]["PaginatedLinksResponse"];
+                };
+            };
+            /** @description Partial results, more available */
+            206: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedLinksResponse"];
                 };
             };
             /** @description Bad Request - Invalid parameters */

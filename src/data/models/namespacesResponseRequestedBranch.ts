@@ -6,13 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type GetBlockApiV1BlocksBlockIdGetParams = {
 /**
- * Dolt branch to read from (default: 'main')
+ * Branch requested by client (may differ from active_branch for read operations)
  */
-branch?: string;
-/**
- * Filter by namespace (default: 'legacy')
- */
-namespace?: string;
-};
+export type NamespacesResponseRequestedBranch = string | null;

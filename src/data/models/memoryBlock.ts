@@ -29,6 +29,8 @@ block_properties table rather than as a JSON field on this model.
 export interface MemoryBlock {
   /** Globally unique ID for this memory block */
   id?: string;
+  /** Foreign key to namespaces.id for multi-tenant organization */
+  namespace_id?: string;
   /** Block type used to determine structure and relationships */
   type: MemoryBlockType;
   /** Version of the schema this block adheres to (links to node_schemas table) */

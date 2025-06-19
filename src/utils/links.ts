@@ -1,16 +1,23 @@
 import type { BlockLink } from '@/data/models/blockLink';
+import type { PaginatedLinksResponse } from '@/data/models/paginatedLinksResponse';
 
 // Type for the response from the /links endpoint
-export type LinksResponse = BlockLink[];
+export type LinksResponse = PaginatedLinksResponse;
 
 /**
- * Validates an array of block links against the schema
+ * Validates a paginated links response against the schema
  * @param data - The data to validate
- * @returns Type predicate indicating if the data matches the LinksResponse schema
+ * @returns Type predicate indicating if the data matches the PaginatedLinksResponse schema
  */
-export function validateLinks(data: unknown): data is LinksResponse {
-    // Basic array check, specific item validation will be handled by Zod via Orval
-    return Array.isArray(data);
+export function validateLinks(data: unknown): data is PaginatedLinksResponse {
+    return Boolean(
+        data &&
+        typeof data === 'object' &&
+        'links' in data &&
+        Array.isArray((data as Record<string, unknown>).links) &&
+        'page_size' in data &&
+        typeof (data as Record<string, unknown>).page_size === 'number'
+    );
 }
 
 /**
@@ -35,12 +42,29 @@ const API_URL = '/api/v1';
 /**
  * Fetches all block links from the API with validation
  * @param branch - Optional branch name to fetch links from (defaults to 'main')
- * @returns Promise resolving to a validated array of block links
+ * @param namespace - Optional namespace to filter links (defaults to 'legacy')
+ * @param cursor - Optional cursor for pagination
+ * @param limit - Optional limit for number of results
+ * @returns Promise resolving to a validated paginated links response
  */
-export async function fetchLinks(branch?: string): Promise<LinksResponse> {
+export async function fetchLinks(
+    branch?: string,
+    namespace?: string,
+    cursor?: string,
+    limit?: number
+): Promise<LinksResponse> {
     const url = new URL(`${API_URL}/links`, window.location.origin);
     if (branch) {
         url.searchParams.set('branch', branch);
+    }
+    if (namespace) {
+        url.searchParams.set('namespace', namespace);
+    }
+    if (cursor) {
+        url.searchParams.set('cursor', cursor);
+    }
+    if (limit !== undefined) {
+        url.searchParams.set('limit', limit.toString());
     }
 
     const response = await fetch(url.toString());
@@ -63,12 +87,25 @@ export async function fetchLinks(branch?: string): Promise<LinksResponse> {
  * Fetches links from a specific block
  * @param blockId - The ID of the block to fetch links from
  * @param branch - Optional branch name to fetch links from (defaults to 'main')
- * @returns Promise resolving to a validated array of block links
+ * @param cursor - Optional cursor for pagination
+ * @param limit - Optional limit for number of results
+ * @returns Promise resolving to a validated paginated links response
  */
-export async function fetchLinksFrom(blockId: string, branch?: string): Promise<LinksResponse> {
+export async function fetchLinksFrom(
+    blockId: string,
+    branch?: string,
+    cursor?: string,
+    limit?: number
+): Promise<LinksResponse> {
     const url = new URL(`${API_URL}/links/from/${blockId}`, window.location.origin);
     if (branch) {
         url.searchParams.set('branch', branch);
+    }
+    if (cursor) {
+        url.searchParams.set('cursor', cursor);
+    }
+    if (limit !== undefined) {
+        url.searchParams.set('limit', limit.toString());
     }
 
     const response = await fetch(url.toString());
@@ -91,12 +128,25 @@ export async function fetchLinksFrom(blockId: string, branch?: string): Promise<
  * Fetches links to a specific block
  * @param blockId - The ID of the block to fetch links to
  * @param branch - Optional branch name to fetch links from (defaults to 'main')
- * @returns Promise resolving to a validated array of block links
+ * @param cursor - Optional cursor for pagination
+ * @param limit - Optional limit for number of results
+ * @returns Promise resolving to a validated paginated links response
  */
-export async function fetchLinksTo(blockId: string, branch?: string): Promise<LinksResponse> {
+export async function fetchLinksTo(
+    blockId: string,
+    branch?: string,
+    cursor?: string,
+    limit?: number
+): Promise<LinksResponse> {
     const url = new URL(`${API_URL}/links/to/${blockId}`, window.location.origin);
     if (branch) {
         url.searchParams.set('branch', branch);
+    }
+    if (cursor) {
+        url.searchParams.set('cursor', cursor);
+    }
+    if (limit !== undefined) {
+        url.searchParams.set('limit', limit.toString());
     }
 
     const response = await fetch(url.toString());

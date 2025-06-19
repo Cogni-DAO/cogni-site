@@ -16,31 +16,32 @@ import type {
   GetAllLinksApiV1LinksGetParams,
   GetLinksFromApiV1LinksFromBlockIdGetParams,
   GetLinksToApiV1LinksToBlockIdGetParams,
-  HTTPValidationError
+  HTTPValidationError,
+  PaginatedLinksResponse
 } from './models';
 
 
 
 /**
- * Retrieves all links in the system, with optional filtering by relation type.
+ * Retrieves all links in the system, with optional filtering by relation type. Max limit: 1000, default: 100
  * @summary Get all links
  */
 export type getAllLinksApiV1LinksGetResponse200 = {
-  data: BlockLink[]
+  data: PaginatedLinksResponse
   status: 200
+}
+
+export type getAllLinksApiV1LinksGetResponse400 = {
+  data: ErrorResponse
+  status: 400
 }
 
 export type getAllLinksApiV1LinksGetResponse422 = {
   data: HTTPValidationError
   status: 422
 }
-
-export type getAllLinksApiV1LinksGetResponse500 = {
-  data: ErrorResponse
-  status: 500
-}
     
-export type getAllLinksApiV1LinksGetResponseComposite = getAllLinksApiV1LinksGetResponse200 | getAllLinksApiV1LinksGetResponse422 | getAllLinksApiV1LinksGetResponse500;
+export type getAllLinksApiV1LinksGetResponseComposite = getAllLinksApiV1LinksGetResponse200 | getAllLinksApiV1LinksGetResponse400 | getAllLinksApiV1LinksGetResponse422;
     
 export type getAllLinksApiV1LinksGetResponse = getAllLinksApiV1LinksGetResponseComposite & {
   headers: Headers;
@@ -198,11 +199,11 @@ export const deleteLinkApiV1LinksDelete = async (params: DeleteLinkApiV1LinksDel
 
 
 /**
- * Retrieves all links originating from a specific block, with optional filtering.
+ * Retrieves all links originating from a specific block, with optional filtering. Max limit: 1000
  * @summary Get links from a block
  */
 export type getLinksFromApiV1LinksFromBlockIdGetResponse200 = {
-  data: BlockLink[]
+  data: PaginatedLinksResponse
   status: 200
 }
 
@@ -258,11 +259,11 @@ export const getLinksFromApiV1LinksFromBlockIdGet = async (blockId: string,
 
 
 /**
- * Retrieves all links pointing to a specific block, with optional filtering.
+ * Retrieves all links pointing to a specific block, with optional filtering. Max limit: 1000
  * @summary Get links to a block
  */
 export type getLinksToApiV1LinksToBlockIdGetResponse200 = {
-  data: BlockLink[]
+  data: PaginatedLinksResponse
   status: 200
 }
 
