@@ -138,8 +138,20 @@ export default function Chat() {
           // Decode the chunk and process it
           const chunk = decoder.decode(value, { stream: true });
 
-          // Simply append the chunk directly to streamedContent
-          streamedContent += chunk;
+          // Filter LangGraph stream to extract only AI message content
+          const lines = chunk.split('\n');
+          for (const line of lines) {
+            if (line.startsWith('data:')) {
+              try {
+                const payload = JSON.parse(line.slice(5).trim());
+                const msgs = payload.messages ?? [];
+                const aiMsg = msgs.filter((m: any) => m.type === 'ai').at(-1);
+                if (aiMsg) {
+                  streamedContent = aiMsg.content;
+                }
+              } catch {}
+            }
+          }
 
           // Update the UI with each chunk
           setMessages(prev =>
