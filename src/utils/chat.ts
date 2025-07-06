@@ -7,11 +7,7 @@ export type ChatRequest = components['schemas']['CompleteQueryRequest'];
 
 export function createChatRequest(message: string, opts?: { stream?: boolean }): ChatRequest {
     const payload: Partial<ChatRequest> = {
-        message,
-        // Required fields from the schema
-        model: 'gpt-4o',
-        temperature: 0.7,
-        system_message: 'You are a helpful AI assistant.'
+        message
     };
 
     // Add optional fields
