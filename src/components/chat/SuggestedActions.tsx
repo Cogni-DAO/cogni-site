@@ -16,9 +16,9 @@ function PureSuggestedActions({ onSuggestionClick }: SuggestedActionsProps) {
       action: 'What are the active work items?',
     },
     {
-      title: 'How can I',
-      label: 'use the platform?',
-      action: 'How can I use the CogniDAO platform?',
+      title: 'What memory',
+      label: 'does Cogni have?',
+      action: 'What memory does Cogni have? Get global memory inventory',
     },
     {
       title: 'Show me',
