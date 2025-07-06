@@ -104,7 +104,7 @@ export async function POST(req: Request) {
     let response;
     try {
       const fastapiUrl = process.env.FASTAPI_URL || 'http://localhost:8000'; // Fallback for safety
-      response = await fetch(`${fastapiUrl}/chat`, {
+      response = await fetch(`${fastapiUrl}/api/v1/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
