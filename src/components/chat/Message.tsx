@@ -45,7 +45,7 @@ export function MessageComponent({
             className={cn('px-0 py-0 text-foreground')}
           >
             {message.role === 'assistant' ? (
-              <div className="prose prose-sm dark:prose-invert max-w-none text-left">
+              <div className="prose dark:prose-invert max-w-none text-left">
                 <ReactMarkdown>
                   {message.content}
                 </ReactMarkdown>
