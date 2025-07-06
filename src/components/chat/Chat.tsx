@@ -11,6 +11,11 @@ import { generateUUID } from "@/lib/utils";
 import type { ChatRequest } from "@/utils/chat";
 import { createChatRequest } from "@/utils/chat";
 
+interface LangGraphMessage {
+  type: 'human' | 'ai';
+  content: string;
+}
+
 export default function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -145,11 +150,11 @@ export default function Chat() {
               try {
                 const payload = JSON.parse(line.slice(5).trim());
                 const msgs = payload.messages ?? [];
-                const aiMsg = msgs.filter((m: any) => m.type === 'ai').at(-1);
+                const aiMsg = msgs.filter((m: LangGraphMessage) => m.type === 'ai').at(-1);
                 if (aiMsg) {
                   streamedContent = aiMsg.content;
                 }
-              } catch {}
+              } catch { }
             }
           }
 
