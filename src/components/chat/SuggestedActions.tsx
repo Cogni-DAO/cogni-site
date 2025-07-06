@@ -11,9 +11,9 @@ function PureSuggestedActions({ onSuggestionClick }: SuggestedActionsProps) {
   console.log("[SuggestedActions] Rendering component.");
   const suggestedActions = [
     {
-      title: 'What is',
-      label: 'CogniDAO?',
-      action: 'What is CogniDAO?',
+      title: 'What are the',
+      label: 'active work items?',
+      action: 'What are the active work items?',
     },
     {
       title: 'How can I',
@@ -21,9 +21,9 @@ function PureSuggestedActions({ onSuggestionClick }: SuggestedActionsProps) {
       action: 'How can I use the CogniDAO platform?',
     },
     {
-      title: 'Tell me about',
-      label: 'AI-powered organizations',
-      action: 'Tell me about AI-powered organizations',
+      title: 'Show me',
+      label: 'recent project updates',
+      action: 'Show me recent project updates and their current status',
     },
     {
       title: 'What tools',
