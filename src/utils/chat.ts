@@ -1,27 +1,39 @@
+import type { CompleteQueryRequest, HistoryMessage } from '@/schemas/generated/completequeryrequest';
+
+// For validation, we can import from the OpenAPI types as a fallback
 import type { components } from '@/types/api';
 
-export type ChatRequest = components['schemas']['CompleteQueryRequest'];
+// Re-export the proper type for consistency
+export type ChatRequest = CompleteQueryRequest;
 
-// // Ajv schema ID is always `#/components/schemas/<Name>`
-// const isChatRequest = getValidator<ChatRequest>('#/components/schemas/CompleteQueryRequest');
+// // Ajv schema validation - can be enabled when needed
+// import Ajv from 'ajv';
+// import completequerySchema from '@/schemas/generated/completequeryrequest.schema.json';
+// const ajv = new Ajv();
+// const validateCompleteQueryRequest = ajv.compile(completequerySchema);
 
-export function createChatRequest(message: string, opts?: { stream?: boolean }): ChatRequest {
-    const payload: Partial<ChatRequest> = {
-        message
+export function createChatRequest(
+    message: string,
+    opts?: {
+        model?: string;
+        temperature?: number;
+        system_message?: string | null;
+        message_history?: HistoryMessage[] | null;
+    }
+): ChatRequest {
+    // Build the request with proper defaults matching the schema
+    const request: ChatRequest = {
+        message,
+        model: opts?.model || "gpt-3.5-turbo",
+        temperature: opts?.temperature !== undefined ? opts.temperature : 0.7,
+        system_message: opts?.system_message !== undefined ? opts.system_message : "You are a helpful AI assistant.",
+        message_history: opts?.message_history || null,
     };
 
-    // Add optional fields
-    if (opts?.stream !== undefined) {
-        // If stream is added to schema later, this will work
-        (payload as any).stream = opts.stream;
-    }
-
-    // Type assertion after we've built a valid object
-    const request = payload as ChatRequest;
-
-    // if (!isChatRequest(request)) {
-    //     // Access errors from ajv instance
-    //     throw new Error('ChatRequest failed validation');
+    // Optional validation
+    // if (!validateCompleteQueryRequest(request)) {
+    //   throw new Error(`ChatRequest validation failed: ${JSON.stringify(validateCompleteQueryRequest.errors)}`);
     // }
+
     return request;
 } 
