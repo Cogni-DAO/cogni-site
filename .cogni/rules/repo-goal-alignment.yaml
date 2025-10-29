@@ -5,20 +5,21 @@ workflow_id: goal-evaluations
 
 # Edit this! Update it with a clear description of the repo's goal.
 evaluations:
-  - repo-goal: This PR directly advances [DESCRIBE YOUR REPO'S CORE MISSION].
+  - information-display: This PR improves display or visibility of project goals or project management.
+  - contributor-signals: This PR adds or enhances functionality for collecting contributor signals.
+  - test-coverage: This PR improves test coverage or reliability of existing features.
+  - dao-control: This PR improves DAO control, modularity, or configurability of site content.
   # - clear-sub-goals: This PR only uses open source tools and does not introduce new paid dependencies.
-
-
-
-# Code-aware capabilities (vendor-prefixed for non-breaking compatibility)
-x_capabilities:
-  - diff_summary      # Enable enhanced diff summary with file stats
-  - file_patches      # Include actual patch content for analysis
+  # - alignment: the content displayed by the site is aligned with the DAO's goals
 
 success_criteria:
   neutral_on_missing_metrics: true
-  require:
-    - metric: repo-goal
-      gte: 0.8
-    # - metric: clear-sub-goal
-    #   gte: 0.8
+  any_of:
+    - metric: information-display
+      gte: 0.7
+    - metric: contributor-signals
+      gte: 0.7
+    - metric: test-coverage
+      gte: 0.7
+    - metric: dao-control
+      gte: 0.7
