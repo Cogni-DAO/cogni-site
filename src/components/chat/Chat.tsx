@@ -11,6 +11,8 @@ import { generateUUID } from "@/lib/utils";
 import type { ChatRequest } from "@/utils/chat";
 import { createChatRequest } from "@/utils/chat";
 
+// Manual SSE parsing for reliable streaming
+
 export default function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -102,8 +104,8 @@ export default function Chat() {
     isStreamingRef.current = true;
 
     try {
-      // Create a validated request payload
-      const chatRequest: ChatRequest = createChatRequest(userMessage, { stream: true });
+      // Create a validated request payload  
+      const chatRequest: ChatRequest = createChatRequest(userMessage);
 
       // Send the request to the API with streaming enabled
       const response = await fetch("/api/chat", {
@@ -128,6 +130,7 @@ export default function Chat() {
       // Read the stream
       const decoder = new TextDecoder();
       let streamedContent = "";
+      let buffer = ""; // Buffer for incomplete lines
 
       while (isStreamingRef.current && !userRequestedStopRef.current) {
         try {
@@ -135,11 +138,26 @@ export default function Chat() {
 
           if (done) break;
 
-          // Decode the chunk and process it
-          const chunk = decoder.decode(value, { stream: true });
+          // Decode the chunk and add to buffer
+          buffer += decoder.decode(value, { stream: true });
 
-          // Simply append the chunk directly to streamedContent
-          streamedContent += chunk;
+          // Process complete lines from buffer
+          const lines = buffer.split('\n');
+          // Keep the last potentially incomplete line in buffer
+          buffer = lines.pop() || "";
+
+          for (const line of lines) {
+            if (line.startsWith('data:')) {
+              try {
+                const payload = JSON.parse(line.slice(5).trim());
+                // Backend sends array with first element being the AI message chunk
+                const aiMsg = payload[0];
+                if (aiMsg && aiMsg.content !== undefined && aiMsg.type === 'AIMessageChunk') {
+                  streamedContent += aiMsg.content;
+                }
+              } catch { }
+            }
+          }
 
           // Update the UI with each chunk
           setMessages(prev =>

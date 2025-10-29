@@ -2,6 +2,7 @@
 
 import { cn } from '@/lib/utils';
 import { SparklesIcon, UserIcon } from './icons';
+import ReactMarkdown from 'react-markdown';
 
 export type MessageRole = 'user' | 'assistant';
 
@@ -43,7 +44,15 @@ export function MessageComponent({
             data-testid="message-content"
             className={cn('px-0 py-0 text-foreground')}
           >
-            {message.content}
+            {message.role === 'assistant' ? (
+              <div className="prose dark:prose-invert max-w-none text-left">
+                <ReactMarkdown>
+                  {message.content}
+                </ReactMarkdown>
+              </div>
+            ) : (
+              message.content
+            )}
             {message.isStreaming && (
               <span className="ml-1 inline-block w-2 h-4 bg-muted animate-pulse" />
             )}

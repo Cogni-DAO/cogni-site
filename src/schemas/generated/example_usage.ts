@@ -15,7 +15,7 @@ async function sendMessage(message: string): Promise<ReadableStream> {
   };
 
   // Send the request to the API
-  const response = await fetch('http://localhost:8000/chat', {
+  const response = await fetch('http://localhost:8000/api/v1/chat', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

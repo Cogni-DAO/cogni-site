@@ -1,0 +1,28 @@
+id: patterns-and-docs
+schema_version: "0.3"
+blocking: true
+workflow_id: goal-evaluations
+
+evaluations:
+  - follows-patterns: >
+      This PR follows established patterns visible in the codebase
+      (e.g., uses existing UI components, global Tailwind and CSS styling).
+      If deviating from patterns, there is clear justification for the change.
+  
+  - documents-new-patterns: >
+      If this PR introduces a new pattern or approach not seen before in the codebase,
+      it documents the pattern clearly so other contributors can follow it.
+
+  - healthy-deps: Any external dependencies added are clearly documented
+
+success_criteria:
+  neutral_on_missing_metrics: true
+  any_of:
+    - metric: follows-patterns
+      gte: 0.8
+    - metric: documents-new-patterns
+      gte: 0.8
+    - metric: accessible-docs
+      gte: 0.8
+    - metric: healthy-deps
+      gte: 0.8
