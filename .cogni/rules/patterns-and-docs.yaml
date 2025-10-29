@@ -6,7 +6,7 @@ workflow_id: goal-evaluations
 evaluations:
   - follows-patterns: >
       This PR follows established patterns visible in the codebase
-      (e.g., consistent framework usage, architectural conventions, error handling approaches).
+      (e.g., uses existing UI components, global Tailwind and CSS styling).
       If deviating from patterns, there is clear justification for the change.
   
   - documents-new-patterns: >
