@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
-import { Code, Coins, Settings, Database, Bot, Shield, AlertTriangle } from 'lucide-react'
+import { Code, Coins, Settings, Database, Bot, Shield } from 'lucide-react'
 
 export default function Home() {
   return (
@@ -24,11 +24,23 @@ export default function Home() {
           CogniDAO
         </h1>
         <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-4">
-          Empowering communities to build code and data together.
+          Building an open source launchpad for community run codebases.
         </p>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
-          This site, cognidao.org, is the first DAO-controlled AI run codebase
-        </p>
+        <div className="container mx-auto px-4 py-8 max-w-7xl">
+          <h2 className="text-2xl font-serif font-bold mb-6 text-center">The Goal:</h2>
+          <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-4">
+          People spark an idea, and it spawns a new codebase. AI and fair governance empower a community to build and benefit from it together.
+          </p>
+        </div>
+        <div className="container mx-auto px-4 py-8 max-w-7xl">
+          <h2 className="text-2xl font-serif font-bold mb-6 text-center">The Current</h2>
+          <ul className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto">
+            <li className="py-6">Each repo has <code>.cogni/repo-spec.yaml</code> that sets its code acceptance rules.</li>
+            <li className="py-6">AI reviews code against the repo's goals.</li>
+            <li className="py-6">Code gets to main → Autodeploy.</li>
+            <li className="py-6">Unhappy that AI rejected your code? Start a DAO vote to override and merge.</li>
+          </ul>
+        </div>
       </div>
 
       {/* What We're Doing Section */}
@@ -43,15 +55,23 @@ export default function Home() {
               <div className="h-4 bg-muted rounded w-5/6 mb-2"></div>
             </div>
           ))}
+          
+          <p className="text-sm text-muted-foreground max-w-2xl mx-auto mb-8">did you really leave all these tiles blank?</p>
+
+          <p className="text-sm text-muted-foreground max-w-2xl mx-auto mb-8">Yeah, it's a metaphor</p>
         </div>
       </div>
 
       {/* GitHub Repos Section */}
       <div className="mb-12">
-        <h2 className="text-2xl font-serif font-bold mb-6 text-center">Our GitHub Repositories</h2>
+        <h2 className="text-2xl font-serif font-bold mb-6 text-center">
+          Our GitHub Repositories
+        </h2>
+        <p className="text-md md:text-xl text-muted-foreground max-w-3xl mx-auto mb-4">
+          Each repo produced by CogniDAO will be a DAO-controlled codebase. Pick an area you'd like to contribute to. They all need help.
+        </p>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-        <a
+          <a
             href="https://github.com/Cogni-DAO/cogni-git-admin"
             target="_blank"
             rel="noopener noreferrer"
@@ -150,6 +170,25 @@ export default function Home() {
               Careful, there be dragons here.
             </p>
           </a>
+          <a
+            href="https://github.com/sourcecred"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="content-block hover:border-knowledge group text-center"
+          >
+            <div className="flex flex-col items-center mb-3">
+              <div className="bg-secondary h-16 w-16 rounded-lg flex items-center justify-center mb-3">
+                <Coins className="h-8 w-8 text-knowledge" />
+              </div>
+              <h3 className="text-lg font-medium group-hover:text-knowledge transition-colors duration-200 mb-2">
+                SourceCred
+              </h3>
+              <Badge variant="secondary">Typescript, probably</Badge>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              Credit People for their work. SourceCred crashed 3 years ago, we need to rebuild it.
+            </p>
+          </a>
         </div>
       </div>
 
@@ -160,19 +199,15 @@ export default function Home() {
           <h2 className="text-2xl font-serif font-bold">Security Model</h2>
         </div>
 
-        {/* Mermaid Diagram Placeholder */}
+        {/* Value Flow Placeholder */}
         <Card className="mb-8">
           <CardHeader>
-            <CardTitle>DAO Governance Security Architecture</CardTitle>
-            <CardDescription>
-              Visual representation of our security model and governance flows
-            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="bg-muted rounded-lg p-8 text-center border-2 border-dashed border-border">
-              <AlertTriangle className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+              <Shield className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
               <p className="text-muted-foreground">
-                Mermaid diagram placeholder - Security architecture visualization coming soon
+                Hey where did our model go? 
               </p>
             </div>
           </CardContent>
@@ -181,9 +216,9 @@ export default function Home() {
         {/* Known Issues Table */}
         <Card>
           <CardHeader>
-            <CardTitle>Known Security Considerations</CardTitle>
+            <CardTitle>Known Issues</CardTitle>
             <CardDescription>
-              Current security gaps and their resolution status → eventual design
+              Are we an autonomous cobebase controlled by a DAO yet?
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -198,22 +233,28 @@ export default function Home() {
               </TableHeader>
               <TableBody>
                 <TableRow>
-                  <TableCell className="font-medium">Authentication Model</TableCell>
+                  <TableCell className="font-medium">Stability</TableCell>
                   <TableCell><Badge variant="destructive">High</Badge></TableCell>
-                  <TableCell><Badge variant="outline">Identified</Badge></TableCell>
-                  <TableCell>Define comprehensive authentication and authorization framework for DAO governance</TableCell>
+                  <TableCell><Badge variant="secondary">Self-reflecting</Badge></TableCell>
+                  <TableCell>I created 50 test DAOs this week. How long will this testnet DAO last before we redeploy?</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell className="font-medium">Automated Code Review</TableCell>
-                  <TableCell><Badge variant="secondary">Medium</Badge></TableCell>
-                  <TableCell><Badge variant="secondary">In Progress</Badge></TableCell>
-                  <TableCell>Implement automated security scanning for all contributions</TableCell>
+                  <TableCell className="font-medium">Git Admin Granular Permissions</TableCell>
+                  <TableCell><Badge variant="destructive">High</Badge></TableCell>
+                  <TableCell><Badge variant="outline">In Progress</Badge></TableCell>
+                  <TableCell>Currently:1 DAO has control over all codebases the github app is installed on.</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell className="font-medium">Role-Based Access Control</TableCell>
+                  <TableCell className="font-medium">Tokenomics</TableCell>
+                  <TableCell><Badge variant="secondary">Medium</Badge></TableCell>
+                  <TableCell><Badge variant="secondary">Scared</Badge></TableCell>
+                  <TableCell>Sourcred Weights will take a lot of trial+error. Tokenomics: will model after: Helium, Hivemapper, Akash</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium">Github Org Owner</TableCell>
                   <TableCell><Badge variant="secondary">Medium</Badge></TableCell>
                   <TableCell><Badge variant="outline">Identified</Badge></TableCell>
-                  <TableCell>Establish granular permissions for different contributor roles</TableCell>
+                  <TableCell>Github MUST have a person owner. Plan: Standardized Gitlab selfhosting</TableCell>
                 </TableRow>
               </TableBody>
             </Table>
@@ -225,7 +266,7 @@ export default function Home() {
       <div className="bg-secondary/60 rounded-xl p-8 text-center mt-12">
         <h2 className="text-2xl font-serif font-bold mb-4">Ready to Join the DAO?</h2>
         <p className="text-muted-foreground max-w-2xl mx-auto mb-6">
-          Help us build the first truly decentralized, AI-powered codebase governed by the community.
+          Well these buttons don't work. You want to code them?
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button variant="outline">Learn More</Button>
