@@ -44,6 +44,8 @@ const Header = () => {
         </form>
 
         <nav className="flex items-center space-x-4">
+          <Link href="/about" className="text-sm font-medium hover:text-knowledge">About</Link>
+          <Link href="/memory" className="text-sm font-medium hover:text-knowledge">Memory</Link>
           <Link href="/explore" className="text-sm font-medium hover:text-knowledge">Explore</Link>
           <Link href="/work-items" className="text-sm font-medium hover:text-knowledge">Work Items</Link>
           <Link href="/graph" className="text-sm font-medium hover:text-knowledge">Graph</Link>
