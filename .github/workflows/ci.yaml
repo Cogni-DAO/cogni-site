@@ -24,6 +24,6 @@ jobs:
           npm install -g repolinter
           repolinter lint -c repolinter.json .
       - name: Install dependencies
-        run: npm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
       - name: Run lint
         run: pnpm run lint
