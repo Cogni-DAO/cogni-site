@@ -27,9 +27,12 @@ export default function Home() {
           Building an open source launchpad for community run codebases.
         </p>
         <div className="container mx-auto px-4 py-8 max-w-7xl">
-          <h2 className="text-2xl font-serif font-bold mb-6 text-center">The Goal:</h2>
+          <h2 className="text-2xl font-serif font-bold mb-6 text-center">The Goal</h2>
           <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-4">
-          People spark an idea, and it spawns a new codebase. AI and fair governance empower a community to build and benefit from it together.
+          People spark an idea, and it spawns a new DAO-codebase. AI and fair governance empower a community to build and benefit from it together.
+          </p>
+          <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-4">
+          These DAO-codebases can network together to form... 
           </p>
         </div>
         <div className="container mx-auto px-4 py-8 max-w-7xl">
