@@ -35,6 +35,7 @@ export default function Home() {
         <div className="container mx-auto px-4 py-8 max-w-7xl">
           <h2 className="text-2xl font-serif font-bold mb-6 text-center">The Current</h2>
           <ul className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto">
+            <li className="py-6"><a href="https://app.aragon.org/dao/ethereum-sepolia/0x067d3d827fAb4F3cE7c7A3D3b97F5898d490761D/dashboard?members=tokenvoting&proposals=tokenvoting" target="_blank" rel="noopener noreferrer" className="text-knowledge hover:underline">One Lonely DAO</a></li>
             <li className="py-6">Each repo has <code>.cogni/repo-spec.yaml</code> that sets its code acceptance rules.</li>
             <li className="py-6">AI reviews code against the repo's goals.</li>
             <li className="py-6">Code gets to main → Autodeploy.</li>
