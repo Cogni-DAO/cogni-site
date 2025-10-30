@@ -1,26 +1,15 @@
-'use client';
-
-// Update this page (the content is just a fallback if you fail to update the page)
-
-import React, { Suspense } from 'react'
-import Link from 'next/link'
+import React from 'react'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
-import { ArrowRight, BookOpen, Users, Star } from 'lucide-react'
-import Chat from '@/components/chat'
-import { useBlocks, useNamespace } from '@/hooks'
-import MemoryBlockListItem from '@/components/MemoryBlockListItem'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { Badge } from '@/components/ui/badge'
+import { Code, Coins, Settings, Bot, Shield, AlertTriangle } from 'lucide-react'
 
-function HomeContent() {
-  const namespace = useNamespace()
-  const { blocks, isLoading } = useBlocks(undefined, namespace)
-
-  // Just take the first 6 blocks for the featured section
-  const featuredBlocks = blocks?.slice(0, 6) || []
-
+export default function Home() {
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl">
-      {/* Hero Section with Chat */}
+      {/* Hero Section */}
       <div className="py-10 md:py-16 text-center">
         <div className="mb-6 flex justify-center">
           <Image
@@ -34,80 +23,189 @@ function HomeContent() {
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-4 pb-5 bg-gradient-to-r from-[hsl(var(--brain-purple))] via-[hsl(var(--accent))] to-[hsl(var(--brain-cyan))] bg-clip-text text-transparent">
           CogniDAO
         </h1>
-        <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-8">
+        <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-4">
           Empowering communities to build fairly
         </p>
-        <Chat />
+        <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
+          This site, cognidao.org, is the first DAO-controlled AI run codebase
+        </p>
       </div>
-      {/* Features Section */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 py-12 border-y border-border my-12">
-        <div className="text-center">
-          <div className="bg-secondary h-12 w-12 rounded-full flex items-center justify-center mx-auto mb-4">
-            <BookOpen className="h-6 w-6 text-knowledge" />
-          </div>
-          <h3 className="text-lg font-medium mb-2">Structured Knowledge</h3>
-          <p className="text-muted-foreground">
-            Explore complex topics broken down into intuitive, interconnected blocks of information.
-          </p>
-        </div>
-        <div className="text-center">
-          <div className="bg-secondary h-12 w-12 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Users className="h-6 w-6 text-knowledge" />
-          </div>
-          <h3 className="text-lg font-medium mb-2">Community Verified</h3>
-          <p className="text-muted-foreground">
-            Content is progressively refined through expert and community verification processes.
-          </p>
-        </div>
-        <div className="text-center">
-          <div className="bg-secondary h-12 w-12 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Star className="h-6 w-6 text-knowledge" />
-          </div>
-          <h3 className="text-lg font-medium mb-2">Provide Feedback</h3>
-          <p className="text-muted-foreground">
-            Contribute to knowledge quality by providing feedback on specific content blocks.
-          </p>
-        </div>
-      </div>
-      {/* Featured Memory Blocks */}
+
+      {/* What We're Doing Section */}
       <div className="mb-12">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-serif font-bold">Featured Memory Blocks</h2>
-          <Link href="/explore" className="text-knowledge flex items-center hover:text-knowledge-dark">
-            View all blocks
-            <ArrowRight className="h-4 w-4 ml-1" />
-          </Link>
+        <h2 className="text-2xl font-serif font-bold mb-6 text-center">What We're Doing</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+          {/* Placeholder tiles - space for ~5 tiles */}
+          {[1, 2, 3, 4, 5].map((i) => (
+            <div key={i} className="content-block">
+              <div className="h-5 bg-muted rounded w-2/3 mb-2"></div>
+              <div className="h-4 bg-muted rounded w-full mb-2"></div>
+              <div className="h-4 bg-muted rounded w-5/6 mb-2"></div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* GitHub Repos Section */}
+      <div className="mb-12">
+        <h2 className="text-2xl font-serif font-bold mb-6 text-center">Our GitHub Repositories</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        <a
+            href="https://github.com/Cogni-DAO/cogni-git-admin"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="content-block hover:border-knowledge group text-center"
+          >
+            <div className="flex flex-col items-center mb-3">
+              <div className="bg-secondary h-16 w-16 rounded-lg flex items-center justify-center mb-3">
+                <Settings className="h-8 w-8 text-knowledge" />
+              </div>
+              <h3 className="text-lg font-medium group-hover:text-knowledge transition-colors duration-200 mb-2">
+                cogni-git-admin
+              </h3>
+              <Badge variant="secondary">Typescript Git App</Badge>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              The first direct connection between a DAO and admin Git repo actions.
+            </p>
+          </a>
+
+          <a
+            href="https://github.com/Cogni-DAO/cogni-site"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="content-block hover:border-knowledge group text-center"
+          >
+            <div className="flex flex-col items-center mb-3">
+              <div className="bg-secondary h-16 w-16 rounded-lg flex items-center justify-center mb-3">
+                <Code className="h-8 w-8 text-knowledge" />
+              </div>
+              <h3 className="text-lg font-medium group-hover:text-knowledge transition-colors duration-200 mb-2">
+                cogni-site
+              </h3>
+              <Badge variant="secondary">U Are Here</Badge>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              Next.js frontend application for CogniDAO's memory and knowledge management system.
+            </p>
+          </a>
+
+          <a
+            href="https://github.com/Cogni-DAO/cogni-git-review"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="content-block hover:border-knowledge group text-center"
+          >
+            <div className="flex flex-col items-center mb-3">
+              <div className="bg-secondary h-16 w-16 rounded-lg flex items-center justify-center mb-3">
+                <Bot className="h-8 w-8 text-knowledge" />
+              </div>
+              <h3 className="text-lg font-medium group-hover:text-knowledge transition-colors duration-200 mb-2">
+                cogni-git-review
+              </h3>
+              <Badge variant="secondary">AI Code Review</Badge>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              Configurable Code Review Agent that stands between your code and the DAO's main branch.
+            </p>
+          </a>
+
+          <a
+            href="https://github.com/Cogni-DAO/cogni-signal-evm-contracts"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="content-block hover:border-knowledge group text-center"
+          >
+            <div className="flex flex-col items-center mb-3">
+              <div className="bg-secondary h-16 w-16 rounded-lg flex items-center justify-center mb-3">
+                <Coins className="h-8 w-8 text-knowledge" />
+              </div>
+              <h3 className="text-lg font-medium group-hover:text-knowledge transition-colors duration-200 mb-2">
+                cogni-signal-evm-contracts
+              </h3>
+              <Badge variant="destructive">Smart Contracts</Badge>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              EVM smart contracts for DAO governance, signaling, and blockchain integrations.
+            </p>
+          </a>
+        </div>
+      </div>
+
+      {/* Security Model Section */}
+      <div className="mt-12">
+        <div className="flex items-center space-x-3 mb-6 justify-center">
+          <Shield className="h-6 w-6 text-knowledge" />
+          <h2 className="text-2xl font-serif font-bold">Security Model</h2>
         </div>
 
-        {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className="content-block animate-pulse">
-                <div className="h-5 bg-muted rounded w-2/3 mb-2"></div>
-                <div className="h-2 bg-muted rounded mb-3"></div>
-                <div className="h-4 bg-muted rounded w-full mb-2"></div>
-                <div className="h-4 bg-muted rounded w-5/6 mb-2"></div>
-              </div>
-            ))}
-          </div>
-        ) : featuredBlocks.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {featuredBlocks.map((block) => (
-              <MemoryBlockListItem
-                key={block.id || `block-${Math.random()}`}
-                block={block}
-              />
-            ))}
-          </div>
-        ) : (
-          <p className="text-center text-muted-foreground py-12">No memory blocks available.</p>
-        )}
+        {/* Mermaid Diagram Placeholder */}
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle>DAO Governance Security Architecture</CardTitle>
+            <CardDescription>
+              Visual representation of our security model and governance flows
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="bg-muted rounded-lg p-8 text-center border-2 border-dashed border-border">
+              <AlertTriangle className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+              <p className="text-muted-foreground">
+                Mermaid diagram placeholder - Security architecture visualization coming soon
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Known Issues Table */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Known Security Considerations</CardTitle>
+            <CardDescription>
+              Current security gaps and their resolution status → eventual design
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Issue</TableHead>
+                  <TableHead>Severity</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Description</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell className="font-medium">Authentication Model</TableCell>
+                  <TableCell><Badge variant="destructive">High</Badge></TableCell>
+                  <TableCell><Badge variant="outline">Identified</Badge></TableCell>
+                  <TableCell>Define comprehensive authentication and authorization framework for DAO governance</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium">Automated Code Review</TableCell>
+                  <TableCell><Badge variant="secondary">Medium</Badge></TableCell>
+                  <TableCell><Badge variant="secondary">In Progress</Badge></TableCell>
+                  <TableCell>Implement automated security scanning for all contributions</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium">Role-Based Access Control</TableCell>
+                  <TableCell><Badge variant="secondary">Medium</Badge></TableCell>
+                  <TableCell><Badge variant="outline">Identified</Badge></TableCell>
+                  <TableCell>Establish granular permissions for different contributor roles</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
       </div>
+
       {/* CTA Section */}
-      <div className="bg-secondary/60 rounded-xl p-8 text-center mb-12">
-        <h2 className="text-2xl font-serif font-bold mb-4">Ready to Contribute?</h2>
+      <div className="bg-secondary/60 rounded-xl p-8 text-center mt-12">
+        <h2 className="text-2xl font-serif font-bold mb-4">Ready to Join the DAO?</h2>
         <p className="text-muted-foreground max-w-2xl mx-auto mb-6">
-          Join our community of knowledge contributors and help refine, expand, and verify the CogniDAO knowledge base.
+          Help us build the first truly decentralized, AI-powered codebase governed by the community.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button variant="outline">Learn More</Button>
@@ -115,22 +213,5 @@ function HomeContent() {
         </div>
       </div>
     </div>
-  )
-}
-
-export default function Home() {
-  return (
-    <Suspense fallback={
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
-        <div className="py-10 md:py-16 text-center">
-          <div className="animate-pulse">
-            <div className="h-12 bg-muted rounded w-1/2 mx-auto mb-4"></div>
-            <div className="h-6 bg-muted rounded w-3/4 mx-auto mb-8"></div>
-          </div>
-        </div>
-      </div>
-    }>
-      <HomeContent />
-    </Suspense>
   )
 }
