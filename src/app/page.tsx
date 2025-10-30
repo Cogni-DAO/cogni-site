@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
-import { Code, Coins, Settings, Bot, Shield, AlertTriangle } from 'lucide-react'
+import { Code, Coins, Settings, Database, Bot, Shield, AlertTriangle } from 'lucide-react'
 
 export default function Home() {
   return (
@@ -24,7 +24,7 @@ export default function Home() {
           CogniDAO
         </h1>
         <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-4">
-          Empowering communities to build fairly
+          Empowering communities to build code and data together.
         </p>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
           This site, cognidao.org, is the first DAO-controlled AI run codebase
@@ -62,9 +62,9 @@ export default function Home() {
                 <Settings className="h-8 w-8 text-knowledge" />
               </div>
               <h3 className="text-lg font-medium group-hover:text-knowledge transition-colors duration-200 mb-2">
-                cogni-git-admin
+                Git Admin App
               </h3>
-              <Badge variant="secondary">Typescript Git App</Badge>
+              <Badge variant="secondary">Typscript</Badge>
             </div>
             <p className="text-sm text-muted-foreground">
               The first direct connection between a DAO and admin Git repo actions.
@@ -82,7 +82,7 @@ export default function Home() {
                 <Code className="h-8 w-8 text-knowledge" />
               </div>
               <h3 className="text-lg font-medium group-hover:text-knowledge transition-colors duration-200 mb-2">
-                cogni-site
+                Cogni Site
               </h3>
               <Badge variant="secondary">U Are Here</Badge>
             </div>
@@ -102,9 +102,9 @@ export default function Home() {
                 <Bot className="h-8 w-8 text-knowledge" />
               </div>
               <h3 className="text-lg font-medium group-hover:text-knowledge transition-colors duration-200 mb-2">
-                cogni-git-review
+                AI Code Review
               </h3>
-              <Badge variant="secondary">AI Code Review</Badge>
+              <Badge variant="secondary">Langgraph.js</Badge>
             </div>
             <p className="text-sm text-muted-foreground">
               Configurable Code Review Agent that stands between your code and the DAO's main branch.
@@ -122,12 +122,32 @@ export default function Home() {
                 <Coins className="h-8 w-8 text-knowledge" />
               </div>
               <h3 className="text-lg font-medium group-hover:text-knowledge transition-colors duration-200 mb-2">
-                cogni-signal-evm-contracts
+                EVM Smart Contract
               </h3>
-              <Badge variant="destructive">Smart Contracts</Badge>
+              <Badge variant="secondary">Solidity</Badge>
             </div>
             <p className="text-sm text-muted-foreground">
-              EVM smart contracts for DAO governance, signaling, and blockchain integrations.
+              CogniSignal that the Admin app listens for, and deploy scripts for creating a new DAO.
+            </p>
+          </a>
+
+          <a
+            href="https://github.com/Cogni-DAO/CogniDAO-Memory"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="content-block hover:border-knowledge group text-center"
+          >
+            <div className="flex flex-col items-center mb-3">
+              <div className="bg-secondary h-16 w-16 rounded-lg flex items-center justify-center mb-3">
+                <Database className="h-8 w-8 text-knowledge" />
+              </div>
+              <h3 className="text-lg font-medium group-hover:text-knowledge transition-colors duration-200 mb-2">
+                AI Agents + Decentralized Memory
+              </h3>
+              <Badge variant="secondary">Langgraph, Prefect, MCP, Dolt DB</Badge>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              Careful, there be dragons here.
             </p>
           </a>
         </div>
