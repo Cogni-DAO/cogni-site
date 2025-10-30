@@ -13,7 +13,7 @@ export default function About() {
       </div>
 
       <div className="mb-8">
-        <h2 className="text-2xl font-serif font-bold mb-6">Simple FAQ — "Are you X?"</h2>
+        <h2 className="text-2xl font-serif font-bold mb-6">Simple FAQ — &ldquo;Are you X?&rdquo;</h2>
         
         <div className="space-y-4">
 
@@ -34,7 +34,7 @@ export default function About() {
 
           <div>
             <h3 className="font-semibold mb-1">Open-source foundation?</h3>
-            <p className="text-muted-foreground">No. We're starting with open source code, but many codebases will be private.</p>
+            <p className="text-muted-foreground">No. We&rsquo;re starting with open source code, but many codebases will be private.</p>
           </div>
 
           <div>

@@ -37,7 +37,7 @@ export default function Home() {
           <ul className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto">
             <li className="py-6"><a href="https://app.aragon.org/dao/ethereum-sepolia/0x067d3d827fAb4F3cE7c7A3D3b97F5898d490761D/dashboard?members=tokenvoting&proposals=tokenvoting" target="_blank" rel="noopener noreferrer" className="text-knowledge hover:underline">One Lonely DAO</a>, DM me to join</li>
             <li className="py-6">Each repo has <code>.cogni/repo-spec.yaml</code> that sets its code acceptance rules.</li>
-            <li className="py-6">AI reviews code against the repo's goals.</li>
+            <li className="py-6">AI reviews code against the repo&rsquo;s goals.</li>
             <li className="py-6">Code gets to main → Autodeploy.</li>
             <li className="py-6">Unhappy that AI rejected your code? Start a DAO vote to override and merge.</li>
           </ul>
@@ -46,7 +46,7 @@ export default function Home() {
 
       {/* What We're Doing Section */}
       <div className="mb-12">
-        <h2 className="text-2xl font-serif font-bold mb-6 text-center">What We're Doing</h2>
+        <h2 className="text-2xl font-serif font-bold mb-6 text-center">What We&rsquo;re Doing</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           {/* Placeholder tiles - space for ~5 tiles */}
           {[1, 2, 3, 4, 5].map((i) => (
@@ -59,7 +59,7 @@ export default function Home() {
           
           <p className="text-sm text-muted-foreground max-w-2xl mx-auto mb-8">did you really leave all these tiles blank?</p>
 
-          <p className="text-sm text-muted-foreground max-w-2xl mx-auto mb-8">Yeah, it's a metaphor</p>
+          <p className="text-sm text-muted-foreground max-w-2xl mx-auto mb-8">Yeah, it&rsquo;s a metaphor</p>
         </div>
       </div>
 
@@ -69,7 +69,7 @@ export default function Home() {
           Our GitHub Repositories
         </h2>
         <p className="text-md md:text-xl text-muted-foreground max-w-3xl mx-auto mb-4">
-          Each repo produced by CogniDAO will be a DAO-controlled codebase. Pick an area you'd like to contribute to. They all need help.
+          Each repo produced by CogniDAO will be a DAO-controlled codebase. Pick an area you&rsquo;d like to contribute to. They all need help.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <a
@@ -108,7 +108,7 @@ export default function Home() {
               <Badge variant="secondary">U Are Here</Badge>
             </div>
             <p className="text-sm text-muted-foreground">
-              Next.js frontend application for CogniDAO's memory and knowledge management system.
+              Next.js frontend application for CogniDAO&rsquo;s memory and knowledge management system.
             </p>
           </a>
 
@@ -128,7 +128,7 @@ export default function Home() {
               <Badge variant="secondary">Langgraph.js</Badge>
             </div>
             <p className="text-sm text-muted-foreground">
-              Configurable Code Review Agent that stands between your code and the DAO's main branch.
+              Configurable Code Review Agent that stands between your code and the DAO&rsquo;s main branch.
             </p>
           </a>
 
@@ -267,7 +267,7 @@ export default function Home() {
       <div className="bg-secondary/60 rounded-xl p-8 text-center mt-12">
         <h2 className="text-2xl font-serif font-bold mb-4">Ready to Join the DAO?</h2>
         <p className="text-muted-foreground max-w-2xl mx-auto mb-6">
-          Well these buttons don't work. You want to code them?
+          Well these buttons don&rsquo;t work. You want to code them?
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button variant="outline">Learn More</Button>
