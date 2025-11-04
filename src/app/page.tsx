@@ -28,7 +28,7 @@ export default function Home() {
         </p>
         <div className="container mx-auto px-4 pt-8 pb-4 max-w-7xl">
           <h2 className="text-2xl font-serif font-bold mb-6 text-center">The Problem</h2>
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-4">Web3 doesn't know how to control Web2 Code</p>
+          <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-4">Web3 doesn&rsquo;t know how to control Web2 Code</p>
           <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-4">Yet.</p>
         </div>
         <div className="container mx-auto px-4 pt-8 pb-4 max-w-7xl">
