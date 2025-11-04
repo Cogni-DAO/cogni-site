@@ -8,14 +8,12 @@ Next.js App Router pages providing the main user interface for CogniDAO site.
 ### `/` (page.tsx)
 Static homepage with CogniDAO branding and project overview. Contains:
 - Hero section with logo and tagline
-- "The Goal" explanation of vision
-- "The Current" status with DAO link and current capabilities
-- Repository showcase grid linking to GitHub projects
-- Known Issues transparency table documenting limitations
-- Call-to-action section
+- "The Problem" and "The Goal" sections
+- Repository showcase using Card components
+- Known Issues table and call-to-action
 
-**Dependencies**: UI components from shadcn/ui, Lucide icons
-**Data**: Static content only, no API calls
+**Dependencies**: shadcn/ui Card components, Lucide icons
+**Data**: Static content only
 
 ### `/about` (about/page.tsx)
 FAQ page positioning CogniDAO as platform cooperative. Contains:
