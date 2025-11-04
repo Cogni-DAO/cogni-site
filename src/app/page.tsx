@@ -21,35 +21,24 @@ export default function Home() {
           />
         </div>
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-4 pb-5 bg-gradient-to-r from-[hsl(var(--brain-purple))] via-[hsl(var(--accent))] to-[hsl(var(--brain-cyan))] bg-clip-text text-transparent">
-          CogniDAO
+          Cogni
         </h1>
         <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-4">
-          Building an open source launchpad for community run codebases.
+          Community-owned. AI-powered. Open source. 
         </p>
-        <div className="container mx-auto px-4 py-8 max-w-7xl">
-          <h2 className="text-2xl font-serif font-bold mb-6 text-center">The Goal</h2>
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-4">
-          People spark an idea, and it spawns a new DAO-codebase. AI and fair governance empower a community to build and benefit from it together.
-          </p>
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-4">
-          These DAO-codebases can network together to form... 
-          </p>
+        <div className="container mx-auto px-4 pt-8 pb-4 max-w-7xl">
+          <h2 className="text-2xl font-serif font-bold mb-6 text-center">The Problem</h2>
+          <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-4">Web3 doesn't know how to control Web2 Code</p>
+          <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-4">Yet.</p>
         </div>
-        <div className="container mx-auto px-4 py-8 max-w-7xl">
-          <h2 className="text-2xl font-serif font-bold mb-6 text-center">The Current</h2>
-          <ul className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto">
-            <li className="py-6"><a href="https://app.aragon.org/dao/ethereum-sepolia/0x067d3d827fAb4F3cE7c7A3D3b97F5898d490761D/dashboard?members=tokenvoting&proposals=tokenvoting" target="_blank" rel="noopener noreferrer" className="text-knowledge hover:underline">One Lonely DAO</a>, DM me to join</li>
-            <li className="py-6">Each repo has <code>.cogni/repo-spec.yaml</code> that sets its code acceptance rules.</li>
-            <li className="py-6">AI reviews code against the repo&rsquo;s goals.</li>
-            <li className="py-6">Code gets to main → Autodeploy.</li>
-            <li className="py-6">Unhappy that AI rejected your code? Start a DAO vote to override and merge.</li>
-          </ul>
+        <div className="container mx-auto px-4 pt-8 pb-4 max-w-7xl">
+          <h2 className="text-2xl font-serif font-bold mb-6 text-center">The Goal</h2>
+          <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-4">Launch a web3-controlled, AI-powered company with 1 click.</p>
+          <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-4">Build it together with people around the world.</p>
         </div>
       </div>
-
-
       {/* GitHub Repos Section */}
-      <div className="mb-12">
+      <div className="mb-12 mt-6">
         <h2 className="text-2xl font-serif font-bold mb-6 text-center">
           Our GitHub Repositories
         </h2>
