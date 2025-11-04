@@ -21,53 +21,24 @@ export default function Home() {
           />
         </div>
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-4 pb-5 bg-gradient-to-r from-[hsl(var(--brain-purple))] via-[hsl(var(--accent))] to-[hsl(var(--brain-cyan))] bg-clip-text text-transparent">
-          CogniDAO
+          Cogni
         </h1>
         <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-4">
-          Building an open source launchpad for community run codebases.
+          Community-owned. AI-powered. Open source. 
         </p>
-        <div className="container mx-auto px-4 py-8 max-w-7xl">
+        <div className="container mx-auto px-4 pt-8 pb-4 max-w-7xl">
+          <h2 className="text-2xl font-serif font-bold mb-6 text-center">The Problem</h2>
+          <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-4">Web3 doesn't know how to control Web2 Code</p>
+          <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-4">Yet.</p>
+        </div>
+        <div className="container mx-auto px-4 pt-8 pb-4 max-w-7xl">
           <h2 className="text-2xl font-serif font-bold mb-6 text-center">The Goal</h2>
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-4">
-          People spark an idea, and it spawns a new DAO-codebase. AI and fair governance empower a community to build and benefit from it together.
-          </p>
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-4">
-          These DAO-codebases can network together to form... 
-          </p>
-        </div>
-        <div className="container mx-auto px-4 py-8 max-w-7xl">
-          <h2 className="text-2xl font-serif font-bold mb-6 text-center">The Current</h2>
-          <ul className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto">
-            <li className="py-6"><a href="https://app.aragon.org/dao/ethereum-sepolia/0x067d3d827fAb4F3cE7c7A3D3b97F5898d490761D/dashboard?members=tokenvoting&proposals=tokenvoting" target="_blank" rel="noopener noreferrer" className="text-knowledge hover:underline">One Lonely DAO</a>, DM me to join</li>
-            <li className="py-6">Each repo has <code>.cogni/repo-spec.yaml</code> that sets its code acceptance rules.</li>
-            <li className="py-6">AI reviews code against the repo&rsquo;s goals.</li>
-            <li className="py-6">Code gets to main → Autodeploy.</li>
-            <li className="py-6">Unhappy that AI rejected your code? Start a DAO vote to override and merge.</li>
-          </ul>
+          <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-4">Launch a web3-controlled, AI-powered company with 1 click.</p>
+          <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-4">Build it together with people around the world.</p>
         </div>
       </div>
-
-      {/* What We're Doing Section */}
-      <div className="mb-12">
-        <h2 className="text-2xl font-serif font-bold mb-6 text-center">What We&rsquo;re Doing</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          {/* Placeholder tiles - space for ~5 tiles */}
-          {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className="content-block">
-              <div className="h-5 bg-muted rounded w-2/3 mb-2"></div>
-              <div className="h-4 bg-muted rounded w-full mb-2"></div>
-              <div className="h-4 bg-muted rounded w-5/6 mb-2"></div>
-            </div>
-          ))}
-          
-          <p className="text-sm text-muted-foreground max-w-2xl mx-auto mb-8">did you really leave all these tiles blank?</p>
-
-          <p className="text-sm text-muted-foreground max-w-2xl mx-auto mb-8">Yeah, it&rsquo;s a metaphor</p>
-        </div>
-      </div>
-
       {/* GitHub Repos Section */}
-      <div className="mb-12">
+      <div className="mb-12 mt-6">
         <h2 className="text-2xl font-serif font-bold mb-6 text-center">
           Our GitHub Repositories
         </h2>
@@ -75,124 +46,148 @@ export default function Home() {
           Each repo produced by CogniDAO will be a DAO-controlled codebase. Pick an area you&rsquo;d like to contribute to. They all need help.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <a
-            href="https://github.com/Cogni-DAO/cogni-git-admin"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="content-block hover:border-knowledge group text-center"
-          >
-            <div className="flex flex-col items-center mb-3">
-              <div className="bg-secondary h-16 w-16 rounded-lg flex items-center justify-center mb-3">
-                <Settings className="h-8 w-8 text-knowledge" />
-              </div>
-              <h3 className="text-lg font-medium group-hover:text-knowledge transition-colors duration-200 mb-2">
-                Git Admin App
-              </h3>
-              <Badge variant="secondary">Typscript</Badge>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              The first direct connection between a DAO and admin Git repo actions.
-            </p>
-          </a>
+          <Card className="hover:border-knowledge group transition-colors duration-200">
+            <CardContent className="p-6">
+              <a
+                href="https://github.com/Cogni-DAO/cogni-git-admin"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-center block"
+              >
+                <div className="flex flex-col items-center mb-3">
+                  <div className="bg-secondary h-16 w-16 rounded-lg flex items-center justify-center mb-3">
+                    <Settings className="h-8 w-8 text-knowledge" />
+                  </div>
+                  <h3 className="text-lg font-medium group-hover:text-knowledge transition-colors duration-200 mb-2">
+                    Git Admin App
+                  </h3>
+                  <Badge variant="secondary">Typscript</Badge>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  The first direct connection between a DAO and admin Git repo actions.
+                </p>
+              </a>
+            </CardContent>
+          </Card>
 
-          <a
-            href="https://github.com/Cogni-DAO/cogni-site"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="content-block hover:border-knowledge group text-center"
-          >
-            <div className="flex flex-col items-center mb-3">
-              <div className="bg-secondary h-16 w-16 rounded-lg flex items-center justify-center mb-3">
-                <Code className="h-8 w-8 text-knowledge" />
-              </div>
-              <h3 className="text-lg font-medium group-hover:text-knowledge transition-colors duration-200 mb-2">
-                Cogni Site
-              </h3>
-              <Badge variant="secondary">U Are Here</Badge>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              Next.js frontend application for CogniDAO&rsquo;s memory and knowledge management system.
-            </p>
-          </a>
+          <Card className="hover:border-knowledge group transition-colors duration-200">
+            <CardContent className="p-6">
+              <a
+                href="https://github.com/Cogni-DAO/cogni-site"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-center block"
+              >
+                <div className="flex flex-col items-center mb-3">
+                  <div className="bg-secondary h-16 w-16 rounded-lg flex items-center justify-center mb-3">
+                    <Code className="h-8 w-8 text-knowledge" />
+                  </div>
+                  <h3 className="text-lg font-medium group-hover:text-knowledge transition-colors duration-200 mb-2">
+                    Cogni Site
+                  </h3>
+                  <Badge variant="secondary">U Are Here</Badge>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Next.js frontend application for CogniDAO&rsquo;s memory and knowledge management system.
+                </p>
+              </a>
+            </CardContent>
+          </Card>
 
-          <a
-            href="https://github.com/Cogni-DAO/cogni-git-review"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="content-block hover:border-knowledge group text-center"
-          >
-            <div className="flex flex-col items-center mb-3">
-              <div className="bg-secondary h-16 w-16 rounded-lg flex items-center justify-center mb-3">
-                <Bot className="h-8 w-8 text-knowledge" />
-              </div>
-              <h3 className="text-lg font-medium group-hover:text-knowledge transition-colors duration-200 mb-2">
-                AI Code Review
-              </h3>
-              <Badge variant="secondary">Langgraph.js</Badge>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              Configurable Code Review Agent that stands between your code and the DAO&rsquo;s main branch.
-            </p>
-          </a>
+          <Card className="hover:border-knowledge group transition-colors duration-200">
+            <CardContent className="p-6">
+              <a
+                href="https://github.com/Cogni-DAO/cogni-git-review"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-center block"
+              >
+                <div className="flex flex-col items-center mb-3">
+                  <div className="bg-secondary h-16 w-16 rounded-lg flex items-center justify-center mb-3">
+                    <Bot className="h-8 w-8 text-knowledge" />
+                  </div>
+                  <h3 className="text-lg font-medium group-hover:text-knowledge transition-colors duration-200 mb-2">
+                    AI Code Review
+                  </h3>
+                  <Badge variant="secondary">Langgraph.js</Badge>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Configurable Code Review Agent that stands between your code and the DAO&rsquo;s main branch.
+                </p>
+              </a>
+            </CardContent>
+          </Card>
 
-          <a
-            href="https://github.com/Cogni-DAO/cogni-signal-evm-contracts"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="content-block hover:border-knowledge group text-center"
-          >
-            <div className="flex flex-col items-center mb-3">
-              <div className="bg-secondary h-16 w-16 rounded-lg flex items-center justify-center mb-3">
-                <Coins className="h-8 w-8 text-knowledge" />
-              </div>
-              <h3 className="text-lg font-medium group-hover:text-knowledge transition-colors duration-200 mb-2">
-                EVM Smart Contract
-              </h3>
-              <Badge variant="secondary">Solidity</Badge>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              CogniSignal that the Admin app listens for, and deploy scripts for creating a new DAO.
-            </p>
-          </a>
+          <Card className="hover:border-knowledge group transition-colors duration-200">
+            <CardContent className="p-6">
+              <a
+                href="https://github.com/Cogni-DAO/cogni-signal-evm-contracts"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-center block"
+              >
+                <div className="flex flex-col items-center mb-3">
+                  <div className="bg-secondary h-16 w-16 rounded-lg flex items-center justify-center mb-3">
+                    <Coins className="h-8 w-8 text-knowledge" />
+                  </div>
+                  <h3 className="text-lg font-medium group-hover:text-knowledge transition-colors duration-200 mb-2">
+                    EVM Smart Contract
+                  </h3>
+                  <Badge variant="secondary">Solidity</Badge>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  CogniSignal that the Admin app listens for, and deploy scripts for creating a new DAO.
+                </p>
+              </a>
+            </CardContent>
+          </Card>
 
-          <a
-            href="https://github.com/Cogni-DAO/CogniDAO-Memory"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="content-block hover:border-knowledge group text-center"
-          >
-            <div className="flex flex-col items-center mb-3">
-              <div className="bg-secondary h-16 w-16 rounded-lg flex items-center justify-center mb-3">
-                <Database className="h-8 w-8 text-knowledge" />
-              </div>
-              <h3 className="text-lg font-medium group-hover:text-knowledge transition-colors duration-200 mb-2">
-                AI Agents + Decentralized Memory
-              </h3>
-              <Badge variant="secondary">Langgraph, Prefect, MCP, Dolt DB</Badge>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              Careful, there be dragons here.
-            </p>
-          </a>
-          <a
-            href="https://github.com/sourcecred"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="content-block hover:border-knowledge group text-center"
-          >
-            <div className="flex flex-col items-center mb-3">
-              <div className="bg-secondary h-16 w-16 rounded-lg flex items-center justify-center mb-3">
-                <Coins className="h-8 w-8 text-knowledge" />
-              </div>
-              <h3 className="text-lg font-medium group-hover:text-knowledge transition-colors duration-200 mb-2">
-                SourceCred
-              </h3>
-              <Badge variant="secondary">Typescript, probably</Badge>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              Credit People for their work. SourceCred crashed 3 years ago, we need to rebuild it.
-            </p>
-          </a>
+          <Card className="hover:border-knowledge group transition-colors duration-200">
+            <CardContent className="p-6">
+              <a
+                href="https://github.com/Cogni-DAO/CogniDAO-Memory"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-center block"
+              >
+                <div className="flex flex-col items-center mb-3">
+                  <div className="bg-secondary h-16 w-16 rounded-lg flex items-center justify-center mb-3">
+                    <Database className="h-8 w-8 text-knowledge" />
+                  </div>
+                  <h3 className="text-lg font-medium group-hover:text-knowledge transition-colors duration-200 mb-2">
+                    AI Agents + Decentralized Memory
+                  </h3>
+                  <Badge variant="secondary">Langgraph, Prefect, MCP, Dolt DB</Badge>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Careful, there be dragons here.
+                </p>
+              </a>
+            </CardContent>
+          </Card>
+          <Card className="hover:border-knowledge group transition-colors duration-200">
+            <CardContent className="p-6">
+              <a
+                href="https://github.com/sourcecred"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-center block"
+              >
+                <div className="flex flex-col items-center mb-3">
+                  <div className="bg-secondary h-16 w-16 rounded-lg flex items-center justify-center mb-3">
+                    <Coins className="h-8 w-8 text-knowledge" />
+                  </div>
+                  <h3 className="text-lg font-medium group-hover:text-knowledge transition-colors duration-200 mb-2">
+                    SourceCred
+                  </h3>
+                  <Badge variant="secondary">Typescript, probably</Badge>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Credit People for their work. SourceCred crashed 3 years ago, we need to rebuild it.
+                </p>
+              </a>
+            </CardContent>
+          </Card>
         </div>
       </div>
 
